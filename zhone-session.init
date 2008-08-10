@@ -12,9 +12,9 @@
 set -e
 
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
-DESC="Openmoko Framework Testing Image"
-NAME=openmoko-fso
-PROG_FSO=/usr/bin/openmoko-fso-session
+DESC="Zhone Session Startup"
+NAME=zhone-session
+PROG_FSO=/usr/bin/zhone-session
 PROG_XSESSION=/etc/X11/Xsession
 PROG_XINIT=/usr/bin/xinit
 PIDDIR=/var/run/
