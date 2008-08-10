@@ -1,0 +1,18 @@
+Source: zhone-session
+Section: misc
+Priority: extra
+Maintainer: Joachim Breitner <nomeata@debian.org>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.8.0
+
+Package: zhone-session
+Architecture: all
+Depends: frameworkd, zhone, matchbox-window-manager, matchbox-keyboard, python-dbus
+Conflicts: gdm, kdm, x-display-manager
+Description: starts zhone at system start
+ This packages prepares the system, which should be a smartphone, to
+ automatically start zhone at system start.
+ .
+ It should not be installed on a regular Debian system, as it would interfere
+ with an installed display manager.
+

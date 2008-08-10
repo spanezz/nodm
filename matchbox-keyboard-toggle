@@ -1,0 +1,31 @@
+#!/usr/bin/python
+
+#  Needs python-dbus and psmisc
+
+import dbus
+import dbus.glib
+import gobject
+
+import os
+
+keyboard_shown=False
+
+def signal_handler(name, action, seconds):
+    global keyboard_shown
+
+    if name == "AUX" and action == "pressed":
+        if keyboard_shown:
+            os.system("kill -s KILL `pidof /usr/bin/matchbox-keyboard`")
+        else:
+            os.system("matchbox-keyboard &")
+        keyboard_shown = not keyboard_shown
+
+
+bus = dbus.SystemBus()
+bus.add_signal_receiver(signal_handler,
+		dbus_interface="org.freesmartphone.Device.Input",
+		signal_name="Event")
+
+
+loop = gobject.MainLoop()
+loop.run()

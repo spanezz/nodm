@@ -1,0 +1,56 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:       openmoko-fso
+# Required-Start: $remote_fs frameworkd
+# Required-Stop:
+# Default-Start:  2 3 4 5
+# Default-Stop:
+# Short-Description: Openmoko Framework Testing Image
+### END INIT INFO
+
+
+set -e
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+DESC="Openmoko Framework Testing Image"
+NAME=openmoko-fso
+PROG_FSO=/usr/bin/openmoko-fso-session
+PROG_XSESSION=/etc/X11/Xsession
+PROG_XINIT=/usr/bin/xinit
+PIDDIR=/var/run/
+PIDFILE=${PIDDIR}/${NAME}.pid
+
+
+# Gracefully exit if the package has been removed (but not purged).
+[ -x "$PROG_FSO" -o -x "$PROG_XINIT" ] || exit 0
+
+# Load the VERBOSE setting and other rcS variables
+. /lib/init/vars.sh
+
+# Define LSB log_* functions.
+. /lib/lsb/init-functions
+
+
+case "$1" in
+  start)
+        [ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
+        start-stop-daemon --start --pidfile ${PIDFILE} --make-pidfile --background --exec ${PROG_XINIT} -- ${PROG_XSESSION} ${PROG_FSO} -- vt4
+        [ "$VERBOSE" != no ] && log_end_msg $?
+        ;;
+    stop)
+        [ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
+        start-stop-daemon --stop --pidfile ${PIDFILE} --oknodo
+        [ "$VERBOSE" != no ] && log_end_msg $?
+        ;;
+    restart|force-reload)
+        $0 stop
+        $0 start
+        ;;
+    *)
+        log_success_msg "Usage: $0 {start|stop|restart|force-reload}" >&2
+        exit 1
+        ;;
+esac
+
+
+exit 0

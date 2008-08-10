@@ -1,0 +1,5 @@
+#!/bin/sh
+
+zhone &
+matchbox-keyboard-toggle &
+exec matchbox-window-manager -use_titlebar no
