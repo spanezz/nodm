@@ -1,3 +1,2 @@
-zhone-session.init /etc/init.d
 matchbox-keyboard-toggle /usr/bin
 zhone-session /usr/bin/
