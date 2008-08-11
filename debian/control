@@ -4,6 +4,8 @@ Priority: extra
 Maintainer: Joachim Breitner <nomeata@debian.org>
 Build-Depends: debhelper (>= 7)
 Standards-Version: 3.8.0
+Vcs-Git: http://git.debian.org/git/pkg-fso/zhone-session.git
+Vcs-Browser: http://git.debian.org/?p=pkg-fso/zhone-session.git;a=summary
 
 Package: zhone-session
 Architecture: all
