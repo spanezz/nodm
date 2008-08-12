@@ -1,3 +1,9 @@
+zhone-session (0.2) pkg-fso; urgency=low
+
+  * Depend on fso-frameworkd
+
+ -- Joachim Breitner <nomeata@debian.org>  Tue, 12 Aug 2008 20:17:07 -0300
+
 zhone-session (0.1) pkg-fso; urgency=low
 
   * Initial release.
