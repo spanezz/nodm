@@ -9,7 +9,7 @@ Vcs-Browser: http://git.debian.org/?p=pkg-fso/zhone-session.git;a=summary
 
 Package: zhone-session
 Architecture: all
-Depends: frameworkd, zhone, matchbox-window-manager, matchbox-keyboard, python-dbus, python
+Depends: fso-frameworkd, zhone, matchbox-window-manager, matchbox-keyboard, python-dbus, python
 Conflicts: gdm, kdm, x-display-manager
 Description: starts zhone at system start
  This packages prepares the system, which should be a smartphone, to
@@ -17,4 +17,7 @@ Description: starts zhone at system start
  .
  It should not be installed on a regular Debian system, as it would interfere
  with an installed display manager.
+ .
+ This package is part of the freesmartphone.org software stack packaging and is
+ targeted for smartphones.
 

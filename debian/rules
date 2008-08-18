@@ -10,7 +10,9 @@ clean:
 
 install: build install-stamp
 install-stamp:
-	dh install
+	dh install --before dh_installinit
+	dh_installinit -r
+	dh install --after dh_installinit
 	touch install-stamp
 
 binary-arch: install
