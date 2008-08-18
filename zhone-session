@@ -2,4 +2,4 @@
 
 zhone &
 matchbox-keyboard-toggle &
-exec matchbox-window-manager -use_titlebar no
+exec matchbox-window-manager -use_titlebar no -use_cursor no
