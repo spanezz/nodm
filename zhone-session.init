@@ -33,7 +33,7 @@ PIDFILE=${PIDDIR}/${NAME}.pid
 
 
 case "$1" in
-  start)
+    start)
         [ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
         start-stop-daemon --start --pidfile ${PIDFILE} --make-pidfile --background --exec ${PROG_XINIT} -- ${PROG_XSESSION} ${PROG_FSO} -- $X_OPTIONS
         [ "$VERBOSE" != no ] && log_end_msg $?
