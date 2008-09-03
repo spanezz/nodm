@@ -1,3 +1,19 @@
+zhone-session (0.3) pkg-fso; urgency=low
+
+  [ Luca Capello ]
+  * debian/control: add Vcs-* fields
+  * zhone-session: do not show cursor
+  * zhone-session.init: (Closes: #496344) check for all binaries
+    available
+  * debian/control: Depends: on xinit and x11-common for the init script
+
+  [ Joachim Breitner ]
+  * copyright file and description
+  * Do not restart zhone-session on restart, to not kill X sessions
+  * Disable tcp listening for the X server
+
+ -- Joachim Breitner <nomeata@debian.org>  Wed, 03 Sep 2008 22:21:46 +0200
+
 zhone-session (0.2) pkg-fso; urgency=low
 
   * Depend on fso-frameworkd
