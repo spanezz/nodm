@@ -42,6 +42,7 @@ case "$1" in
     stop)
         [ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
         start-stop-daemon --stop --pidfile ${PIDFILE} --oknodo
+	rm -f ${PIDFILE}
         [ "$VERBOSE" != no ] && log_end_msg $?
         ;;
     restart|force-reload)
