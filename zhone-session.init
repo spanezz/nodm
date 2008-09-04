@@ -20,6 +20,7 @@ PROG_XINIT=/usr/bin/xinit
 X_OPTIONS="vt4 -nolisten tcp"
 PIDDIR=/var/run/
 PIDFILE=${PIDDIR}/${NAME}.pid
+USER=root
 
 
 # Gracefully exit if the package or its dependencies have been removed (but not purged).
@@ -35,7 +36,7 @@ PIDFILE=${PIDDIR}/${NAME}.pid
 case "$1" in
     start)
         [ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
-        start-stop-daemon --start --pidfile ${PIDFILE} --make-pidfile --background --exec ${PROG_XINIT} -- ${PROG_XSESSION} ${PROG_FSO} -- $X_OPTIONS
+        start-stop-daemon --start --pidfile ${PIDFILE} --make-pidfile --background --exec ${PROG_XINIT} -- /bin/su --login --preserve-environment --command "${PROG_XSESSION} ${PROG_FSO}" $USER -- $X_OPTIONS
         [ "$VERBOSE" != no ] && log_end_msg $?
         ;;
     stop)
