@@ -22,6 +22,9 @@ PIDDIR=/var/run/
 PIDFILE=${PIDDIR}/${NAME}.pid
 USER=root
 
+# If you change the user to a non-root user, make sure you
+# set allowed_users=anybody in /etc/X11/Xwrapper.config
+
 
 # Gracefully exit if the package or its dependencies have been removed (but not purged).
 [ -x "$PROG_FSO" -a -x "$PROG_XSESSION" -a -x "$PROG_XINIT" ] || exit 0
