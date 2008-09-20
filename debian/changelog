@@ -1,3 +1,11 @@
+zhone-session (0.4) pkg-fso; urgency=low
+
+  * Use su -l to start session, for a proper environment
+  * Remove pidfile after stopping
+  * Add comment about /etc/X11/Xwrapper.config
+
+ -- Joachim Breitner <nomeata@debian.org>  Sat, 20 Sep 2008 23:31:53 +0200
+
 zhone-session (0.3) pkg-fso; urgency=low
 
   [ Luca Capello ]
