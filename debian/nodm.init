@@ -38,7 +38,7 @@ USER=root
 case "$1" in
     start)
         [ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
-        start-stop-daemon --start --pidfile ${PIDFILE} --make-pidfile --background --exec /bin/su -- --login --command "${PROG_XINIT} ${PROG_XSESSION} -- $X_OPTIONS" $USER
+        start-stop-daemon --start --oknodo --pidfile ${PIDFILE} --make-pidfile --background --exec /bin/su -- --login --command "${PROG_XINIT} ${PROG_XSESSION} -- $X_OPTIONS" $USER
         [ "$VERBOSE" != no ] && log_end_msg $?
         ;;
     stop)
