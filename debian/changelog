@@ -1,9 +1,10 @@
-nodm (0.1) UNRELEASED; urgency=low
+nodm (0.1) pkg-fso; urgency=low
 
   * Rename to nodm
   * Removal of zhone-session and matchbox-keyboard-toggle
+  * Make sure upgrades do not fail beause nodm is alreay running
 
- -- Joachim Breitner <nomeata@debian.org>  Tue, 07 Oct 2008 20:33:54 +0200
+ -- Joachim Breitner <nomeata@debian.org>  Tue, 07 Oct 2008 22:44:27 +0200
 
 zhone-session (0.4) pkg-fso; urgency=low
 
