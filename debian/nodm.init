@@ -1,20 +1,20 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:       openmoko-fso
-# Required-Start: $remote_fs frameworkd
+# Provides:       nodm
+# Should-Start:   console-screen
+# Required-Start: $remote_fs
 # Required-Stop:
 # Default-Start:  2 3 4 5
 # Default-Stop:
-# Short-Description: Openmoko Framework Testing Image
+# Short-Description: No Display Manager
 ### END INIT INFO
 
 
 set -e
 
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
-DESC="Zhone Session Startup"
-NAME=zhone-session
-PROG_FSO=/usr/bin/zhone-session
+DESC="Automatic Display Manager"
+NAME=nodm
 PROG_XSESSION=/etc/X11/Xsession
 PROG_XINIT=/usr/bin/xinit
 X_OPTIONS="vt4 -nolisten tcp"
@@ -25,9 +25,8 @@ USER=root
 # If you change the user to a non-root user, make sure you
 # set allowed_users=anybody in /etc/X11/Xwrapper.config
 
-
 # Gracefully exit if the package or its dependencies have been removed (but not purged).
-[ -x "$PROG_FSO" -a -x "$PROG_XSESSION" -a -x "$PROG_XINIT" ] || exit 0
+[ -x "$PROG_XSESSION" -a -x "$PROG_XINIT" ] || exit 0
 
 # Load the VERBOSE setting and other rcS variables
 . /lib/init/vars.sh
@@ -39,7 +38,7 @@ USER=root
 case "$1" in
     start)
         [ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
-        start-stop-daemon --start --pidfile ${PIDFILE} --make-pidfile --background --exec /bin/su -- --login --command "${PROG_XINIT} ${PROG_XSESSION} ${PROG_FSO} -- $X_OPTIONS" $USER
+        start-stop-daemon --start --pidfile ${PIDFILE} --make-pidfile --background --exec /bin/su -- --login --command "${PROG_XINIT} ${PROG_XSESSION} -- $X_OPTIONS" $USER
         [ "$VERBOSE" != no ] && log_end_msg $?
         ;;
     stop)

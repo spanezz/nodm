@@ -1,3 +1,10 @@
+nodm (0.1) UNRELEASED; urgency=low
+
+  * Rename to nodm
+  * Removal of zhone-session and matchbox-keyboard-toggle
+
+ -- Joachim Breitner <nomeata@debian.org>  Tue, 07 Oct 2008 20:33:54 +0200
+
 zhone-session (0.4) pkg-fso; urgency=low
 
   * Use su -l to start session, for a proper environment
