@@ -11,7 +11,7 @@ clean:
 install: build install-stamp
 install-stamp:
 	dh install --before dh_installinit
-	dh_installinit -r
+	dh_installinit -r -u "defaults 30 01"
 	dh install --after dh_installinit
 	touch install-stamp
 
