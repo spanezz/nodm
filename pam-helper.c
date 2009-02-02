@@ -75,14 +75,9 @@ static struct pam_conv conv = {
 #ifndef PAM_DELETE_CRED
 #define PAM_DELETE_CRED PAM_CRED_DELETE
 #endif
-#ifndef PAM_NEW_AUTHTOK_REQD
-#define PAM_NEW_AUTHTOK_REQD PAM_AUTHTOKEN_REQD
-#endif
-#ifndef PAM_DATA_SILENT
-#define PAM_DATA_SILENT 0
-#endif
 
 #define _(...) (__VA_ARGS__)
+
 /* Copy string pointed by B to array A with size checking.  It was originally
    in lmain.c but is _very_ useful elsewhere.  Some setuid root programs with
    very sloppy coding used to assume that BUFSIZ will always be enough...  */
@@ -110,9 +105,8 @@ static struct pam_conv conv = {
 /*
  * Global variables
  */
-/* not needed by sulog.c anymore */
+/* User we are changing to */
 static char name[BUFSIZ];
-static char oldname[BUFSIZ];
 
 static pam_handle_t *pamh = NULL;
 static int caught = 0;
@@ -200,20 +194,6 @@ static void sulog (const char *tty, int success, const char *oldname, const char
                         "FAILED su for %s by %s",name,oldname);
         }
 }
-
-static void su_failure (const char *tty)
-{
-	sulog (tty, 0, oldname, name);	/* log failed attempt */
-#ifdef USE_SYSLOG
-	if (getdef_bool ("SYSLOG_SU_ENAB"))
-		syslog (pwent.pw_uid ? LOG_INFO : LOG_NOTICE,
-			 "- %s %s:%s", tty,
-			 oldname[0] ? oldname : "???", name[0] ? name : "???");
-	closelog ();
-#endif
-	exit (1);
-}
-
 
 /* Signal handler for parent process later */
 static void catch_signals (int sig)
@@ -325,28 +305,6 @@ static void run_shell ()
 	      : WTERMSIG (status) + 128);
 }
 
-static struct passwd *get_my_pwent (void)
-{
-	struct passwd *pw;
-	const char *cp = getlogin ();
-	uid_t ruid = getuid ();
-
-	/*
-	 * Try getlogin() first - if it fails or returns a non-existent
-	 * username, or a username which doesn't match the real UID, fall
-	 * back to getpwuid(getuid()).  This should work reasonably with
-	 * usernames longer than the utmp limit (8 characters), as well as
-	 * shared UIDs - but not both at the same time...
-	 *
-	 * XXX - when running from su, will return the current user (not
-	 * the original user, like getlogin() does).  Does this matter?
-	 */
-	if (cp && *cp && (pw = getpwnam (cp)) && pw->pw_uid == ruid)
-		return pw;
-
-	return getpwuid (ruid);
-}
-
 /*
  * su - switch user id
  *
@@ -405,20 +363,9 @@ int main (int argc, char **argv)
 	if (getenv("NODM_USER") == NULL)
 		strcpy(name, "root");
 	else
-		strncpy(name, getenv("NODM_USER"), BUFSIZ);
+		STRFCPY(name, getenv("NODM_USER"));
 
-	/*
-	 * Get the user's real name. The current UID is used to determine
-	 * who has executed us. That user ID must exist.
-	 */
-	pw = get_my_pwent ();
-	if (!pw) {
-		syslog (LOG_CRIT, "Unknown UID: %u", my_uid);
-		su_failure (tty);
-	}
-	STRFCPY (oldname, pw->pw_name);
-
-	ret = pam_start ("su", name, &conv, &pamh);
+	ret = pam_start (NAME, name, &conv, &pamh);
 	if (ret != PAM_SUCCESS) {
 		syslog (LOG_ERR, "pam_start: error %d", ret);
 			fprintf (stderr, _("%s: pam_start: error %d\n"),
@@ -428,7 +375,7 @@ int main (int argc, char **argv)
 
 	ret = pam_set_item (pamh, PAM_TTY, (const void *) tty);
 	if (ret == PAM_SUCCESS)
-		ret = pam_set_item (pamh, PAM_RUSER, (const void *) oldname);
+		ret = pam_set_item (pamh, PAM_RUSER, (const void *) "root");
 	if (ret != PAM_SUCCESS) {
 		syslog (LOG_ERR, "pam_set_item: %s",
 			 pam_strerror (pamh, ret));
@@ -466,11 +413,11 @@ int main (int argc, char **argv)
 
 	setenv ("PATH", "/bin:/usr/bin", 1);
 
-	sulog (tty, 1, oldname, name);	/* save SU information */
+	sulog (tty, 1, "root", name);	/* save SU information */
 
 #ifdef USE_SYSLOG
 	syslog (LOG_INFO, "+ %s %s:%s", tty,
-		 oldname[0] ? oldname : "???", name[0] ? name : "???");
+		 "root", name[0] ? name : "???");
 #endif
 
 	/* set primary group id and supplementary groups */
