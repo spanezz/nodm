@@ -1,6 +1,6 @@
 /*
  * Copyright 1989 - 1994, Julianne Frances Haugh
- * Copyright 2008, Enrico Zini
+ * Copyright 2009, Enrico Zini
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
