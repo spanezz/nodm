@@ -82,7 +82,6 @@ static struct pam_conv conv = {
 #define PAM_DATA_SILENT 0
 #endif
 
-#define SYSLOG(x) syslog x
 #define _(...) (__VA_ARGS__)
 /* Copy string pointed by B to array A with size checking.  It was originally
    in lmain.c but is _very_ useful elsewhere.  Some setuid root programs with
@@ -152,8 +151,8 @@ static int setup_groups (const struct passwd *info)
 	 */
 	if (setgid (info->pw_gid) == -1) {
 		perror ("setgid");
-		SYSLOG ((LOG_ERR, "bad group ID `%d' for user `%s': %m\n",
-			 info->pw_gid, info->pw_name));
+		syslog (LOG_ERR, "bad group ID `%d' for user `%s': %m\n",
+			 info->pw_gid, info->pw_name);
 		closelog ();
 		return -1;
 	}
@@ -164,8 +163,8 @@ static int setup_groups (const struct passwd *info)
 	 */
 	if (initgroups (info->pw_name, info->pw_gid) == -1) {
 		perror ("initgroups");
-		SYSLOG ((LOG_ERR, "initgroups failed for user `%s': %m\n",
-			 info->pw_name));
+		syslog (LOG_ERR, "initgroups failed for user `%s': %m\n",
+			 info->pw_name);
 		closelog ();
 		return -1;
 	}
@@ -180,8 +179,8 @@ int change_uid (const struct passwd *info)
 	 */
 	if (setuid (info->pw_uid)) {
 		perror ("setuid");
-		SYSLOG ((LOG_ERR, "bad user ID `%d' for user `%s': %m\n",
-			 (int) info->pw_uid, info->pw_name));
+		syslog (LOG_ERR, "bad user ID `%d' for user `%s': %m\n",
+			 (int) info->pw_uid, info->pw_name);
 		closelog ();
 		return -1;
 	}
@@ -194,11 +193,11 @@ int change_uid (const struct passwd *info)
 static void sulog (const char *tty, int success, const char *oldname, const char *name)
 {
         if (success) {
-                SYSLOG ((LOG_INFO,
-                        "Successful su for %s by %s",name,oldname));
+                syslog (LOG_INFO,
+                        "Successful su for %s by %s",name,oldname);
         } else {
-                SYSLOG ((LOG_NOTICE,
-                        "FAILED su for %s by %s",name,oldname));
+                syslog (LOG_NOTICE,
+                        "FAILED su for %s by %s",name,oldname);
         }
 }
 
@@ -207,9 +206,9 @@ static void su_failure (const char *tty)
 	sulog (tty, 0, oldname, name);	/* log failed attempt */
 #ifdef USE_SYSLOG
 	if (getdef_bool ("SYSLOG_SU_ENAB"))
-		SYSLOG ((pwent.pw_uid ? LOG_INFO : LOG_NOTICE,
+		syslog (pwent.pw_uid ? LOG_INFO : LOG_NOTICE,
 			 "- %s %s:%s", tty,
-			 oldname[0] ? oldname : "???", name[0] ? name : "???"));
+			 oldname[0] ? oldname : "???", name[0] ? name : "???");
 	closelog ();
 #endif
 	exit (1);
@@ -255,7 +254,7 @@ static void run_shell ()
 		exit (errno == ENOENT ? E_CMD_NOTFOUND : E_CMD_NOEXEC);
 	} else if (child == -1) {
 		(void) fprintf (stderr, "%s: Cannot fork user shell\n", Prog);
-		SYSLOG ((LOG_WARNING, "Cannot execute %s", argv0));
+		syslog (LOG_WARNING, "Cannot execute %s", argv0);
 		closelog ();
 		exit (1);
 	}
@@ -305,8 +304,8 @@ static void run_shell ()
 
 	ret = pam_close_session (pamh, 0);
 	if (ret != PAM_SUCCESS) {
-		SYSLOG ((LOG_ERR, "pam_close_session: %s",
-			 pam_strerror (pamh, ret)));
+		syslog (LOG_ERR, "pam_close_session: %s",
+			 pam_strerror (pamh, ret));
 		fprintf (stderr, _("%s: %s\n"), Prog, pam_strerror (pamh, ret));
 		pam_end (pamh, ret);
 		exit (1);
@@ -402,6 +401,7 @@ int main (int argc, char **argv)
 		tty = "???";
 	}
 
+	/* Get the user we should run the session for */
 	if (getenv("NODM_USER") == NULL)
 		strcpy(name, "root");
 	else
@@ -409,20 +409,20 @@ int main (int argc, char **argv)
 
 	/*
 	 * Get the user's real name. The current UID is used to determine
-	 * who has executed su. That user ID must exist.
+	 * who has executed us. That user ID must exist.
 	 */
 	pw = get_my_pwent ();
 	if (!pw) {
-		SYSLOG ((LOG_CRIT, "Unknown UID: %u", my_uid));
+		syslog (LOG_CRIT, "Unknown UID: %u", my_uid);
 		su_failure (tty);
 	}
 	STRFCPY (oldname, pw->pw_name);
 
 	ret = pam_start ("su", name, &conv, &pamh);
 	if (ret != PAM_SUCCESS) {
-		SYSLOG ((LOG_ERR, "pam_start: error %d", ret);
+		syslog (LOG_ERR, "pam_start: error %d", ret);
 			fprintf (stderr, _("%s: pam_start: error %d\n"),
-				 Prog, ret));
+				 Prog, ret);
 		exit (1);
 	}
 
@@ -430,8 +430,8 @@ int main (int argc, char **argv)
 	if (ret == PAM_SUCCESS)
 		ret = pam_set_item (pamh, PAM_RUSER, (const void *) oldname);
 	if (ret != PAM_SUCCESS) {
-		SYSLOG ((LOG_ERR, "pam_set_item: %s",
-			 pam_strerror (pamh, ret)));
+		syslog (LOG_ERR, "pam_set_item: %s",
+			 pam_strerror (pamh, ret));
 		fprintf (stderr, _("%s: %s\n"), Prog, pam_strerror (pamh, ret));
 		pam_end (pamh, ret);
 		exit (1);
@@ -469,8 +469,8 @@ int main (int argc, char **argv)
 	sulog (tty, 1, oldname, name);	/* save SU information */
 
 #ifdef USE_SYSLOG
-	SYSLOG ((LOG_INFO, "+ %s %s:%s", tty,
-		 oldname[0] ? oldname : "???", name[0] ? name : "???"));
+	syslog (LOG_INFO, "+ %s %s:%s", tty,
+		 oldname[0] ? oldname : "???", name[0] ? name : "???");
 #endif
 
 	/* set primary group id and supplementary groups */
@@ -485,7 +485,7 @@ int main (int argc, char **argv)
 	 */
 	ret = pam_setcred (pamh, PAM_ESTABLISH_CRED);
 	if (ret != PAM_SUCCESS) {
-		SYSLOG ((LOG_ERR, "pam_setcred: %s", pam_strerror (pamh, ret)));
+		syslog (LOG_ERR, "pam_setcred: %s", pam_strerror (pamh, ret));
 		fprintf (stderr, _("%s: %s\n"), Prog, pam_strerror (pamh, ret));
 		pam_end (pamh, ret);
 		exit (1);
@@ -493,8 +493,8 @@ int main (int argc, char **argv)
 
 	ret = pam_open_session (pamh, 0);
 	if (ret != PAM_SUCCESS) {
-		SYSLOG ((LOG_ERR, "pam_open_session: %s",
-			 pam_strerror (pamh, ret)));
+		syslog (LOG_ERR, "pam_open_session: %s",
+			 pam_strerror (pamh, ret));
 		fprintf (stderr, _("%s: %s\n"), Prog, pam_strerror (pamh, ret));
 		pam_setcred (pamh, PAM_DELETE_CRED);
 		pam_end (pamh, ret);
