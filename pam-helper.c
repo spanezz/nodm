@@ -46,7 +46,8 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 
-#define PACKAGE "nodm"
+#define NAME "nodm"
+#define PACKAGE NAME
 
 #include <getopt.h>
 #include <grp.h>
@@ -81,11 +82,7 @@ static struct pam_conv conv = {
 #define PAM_DATA_SILENT 0
 #endif
 
-#define LOG_WARN LOG_WARNING
 #define SYSLOG(x) syslog x
-#define SYSLOG_OPTIONS (LOG_PID)
-#define SYSLOG_FACILITY LOG_AUTHPRIV
-#define OPENLOG(progname) openlog(progname, SYSLOG_OPTIONS, SYSLOG_FACILITY)
 #define _(...) (__VA_ARGS__)
 /* Copy string pointed by B to array A with size checking.  It was originally
    in lmain.c but is _very_ useful elsewhere.  Some setuid root programs with
@@ -108,8 +105,6 @@ static struct pam_conv conv = {
 #define E_CMD_NOEXEC            126     /* can't run command/shell */
 #define E_CMD_NOTFOUND          127     /* can't find command/shell to run */
 
-#define RETSIGTYPE void
-
 /*
  * Assorted #defines to control su's behavior
  */
@@ -123,6 +118,7 @@ static char oldname[BUFSIZ];
 static pam_handle_t *pamh = NULL;
 static int caught = 0;
 
+/* Program name used in error messages */
 static char *Prog;
 struct passwd pwent;
 
@@ -259,7 +255,7 @@ static void run_shell ()
 		exit (errno == ENOENT ? E_CMD_NOTFOUND : E_CMD_NOEXEC);
 	} else if (child == -1) {
 		(void) fprintf (stderr, "%s: Cannot fork user shell\n", Prog);
-		SYSLOG ((LOG_WARN, "Cannot execute %s", argv0));
+		SYSLOG ((LOG_WARNING, "Cannot execute %s", argv0));
 		closelog ();
 		exit (1);
 	}
@@ -366,7 +362,6 @@ int main (int argc, char **argv)
 {
 	char *cp;
 	const char *tty = 0;	/* Name of tty SU is run from        */
-	int amroot = 0;
 	uid_t my_uid;
 	struct passwd *pw = 0;
 	char **envcp;
@@ -378,14 +373,21 @@ int main (int argc, char **argv)
 	 */
 	Prog = Basename (argv[0]);
 
-	OPENLOG ("su");
+	openlog(NAME, LOG_PID, LOG_AUTHPRIV);
 
 	/*
 	 * Process the command line arguments. 
 	 */
 
+	// TODO command line processing
+
+	/* We only run if we are root */
 	my_uid = getuid ();
-	amroot = (my_uid == 0);
+	if (my_uid != 0)
+	{
+		fprintf (stderr, _("%s: can only be run by root\n"), Prog);
+		return E_NOPERM;
+	}
 
 	/*
 	 * Get the tty name. Entries will be logged indicating that the user
@@ -397,14 +399,6 @@ int main (int argc, char **argv)
 		else
 			tty = cp;
 	} else {
-		/*
-		 * Be more paranoid, like su from SimplePAMApps.  --marekm
-		 */
-		if (!amroot) {
-			fprintf (stderr,
-				 _("%s: must be run from a terminal\n"), Prog);
-			exit (1);
-		}
 		tty = "???";
 	}
 
@@ -463,27 +457,8 @@ int main (int argc, char **argv)
 
 	ret = pam_acct_mgmt (pamh, 0);
 	if (ret != PAM_SUCCESS) {
-		if (amroot) {
-			fprintf (stderr, _("%s: %s\n(Ignored)\n"), Prog,
-				 pam_strerror (pamh, ret));
-		} else if (ret == PAM_NEW_AUTHTOK_REQD) {
-			ret = pam_chauthtok (pamh, PAM_CHANGE_EXPIRED_AUTHTOK);
-			if (ret != PAM_SUCCESS) {
-				SYSLOG ((LOG_ERR, "pam_chauthtok: %s",
-					 pam_strerror (pamh, ret)));
-				fprintf (stderr, _("%s: %s\n"), Prog,
-					 pam_strerror (pamh, ret));
-				pam_end (pamh, ret);
-				su_failure (tty);
-			}
-		} else {
-			SYSLOG ((LOG_ERR, "pam_acct_mgmt: %s",
-				 pam_strerror (pamh, ret)));
-			fprintf (stderr, _("%s: %s\n"), Prog,
-				 pam_strerror (pamh, ret));
-			pam_end (pamh, ret);
-			su_failure (tty);
-		}
+		fprintf (stderr, _("%s: %s\n(Ignored)\n"), Prog,
+			 pam_strerror (pamh, ret));
 	}
 
 	signal (SIGINT, SIG_DFL);
