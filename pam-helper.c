@@ -47,7 +47,6 @@
 
 
 #define NAME "nodm"
-#define PACKAGE NAME
 
 #include <getopt.h>
 #include <grp.h>
