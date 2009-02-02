@@ -53,11 +53,13 @@
 #include <pwd.h>
 #include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <syslog.h>
+#include <time.h>
 
 #include <security/pam_appl.h>
 #include <security/pam_misc.h>
@@ -190,18 +192,25 @@ static void catch_signals (int sig)
  * have been applied.  Some work was needed to get it integrated into
  * su.c from shadow.
  */
-static void run_shell ()
+static int run_shell (int* status)
 {
 	int child;
 	sigset_t ourset;
-	int status;
-	int ret;
 	char* argv0 = getenv("NODM_XINIT");
 	if (argv0 == NULL)
 		argv0 = "/usr/bin/xinit";
 
 	child = fork ();
 	if (child == 0) {	/* child shell */
+		/*
+		 * This is a workaround for Linux libc bug/feature (?) - the
+		 * /dev/log file descriptor is open without the close-on-exec flag
+		 * and used to be passed to the new shell. There is "fcntl(LogFile,
+		 * F_SETFD, 1)" in libc/misc/syslog.c, but it is commented out (at
+		 * least in 5.4.33). Why?  --marekm
+		 */
+		closelog ();
+
 		/*
 		 * PAM_DATA_SILENT is not supported by some modules, and
 		 * there is no strong need to clean up the process space's
@@ -221,7 +230,7 @@ static void run_shell ()
 		(void) fprintf (stderr, "%s: Cannot fork user shell\n", Prog);
 		syslog (LOG_WARNING, "Cannot execute %s", argv0);
 		closelog ();
-		exit (1);
+		return 1;
 	}
 	/* parent only */
 	sigfillset (&ourset);
@@ -252,42 +261,56 @@ static void run_shell ()
 		do {
 			int pid;
 
-			pid = waitpid (-1, &status, WUNTRACED);
+			pid = waitpid (-1, status, WUNTRACED);
 
-			if (WIFSTOPPED (status)) {
+			if (WIFSTOPPED (*status)) {
 				kill (getpid (), SIGSTOP);
 				/* once we get here, we must have resumed */
 				kill (pid, SIGCONT);
 			}
-		} while (WIFSTOPPED (status));
+		} while (WIFSTOPPED (*status));
 	}
 
 	if (caught) {
 		fprintf (stderr, "\nSession terminated, killing shell...");
 		kill (child, SIGTERM);
-	}
-
-	ret = pam_close_session (pamh, 0);
-	if (ret != PAM_SUCCESS) {
-		syslog (LOG_ERR, "pam_close_session: %s",
-			 pam_strerror (pamh, ret));
-		fprintf (stderr, _("%s: %s\n"), Prog, pam_strerror (pamh, ret));
-		pam_end (pamh, ret);
-		exit (1);
-	}
-
-	ret = pam_end (pamh, PAM_SUCCESS);
-
-	if (caught) {
 		sleep (2);
 		kill (child, SIGKILL);
 		fprintf (stderr, " ...killed.\n");
-		exit (-1);
+		return -1;
 	}
 
-	exit (WIFEXITED (status)
-	      ? WEXITSTATUS (status)
-	      : WTERMSIG (status) + 128);
+	return 0;
+}
+
+void run_session()
+{
+	int restart_count = 0;
+	char* s_mst = getenv("NODM_MIN_SESSION_TIME");
+	int mst = s_mst ? atoi(s_mst) : 60;
+
+	while (1)
+	{
+		/* Run the shell */
+		time_t begin = time(NULL);
+		time_t end;
+		int status;
+		if (run_shell(&status))
+			return;
+		end = time(NULL);
+
+		/* Check if the session was too short */
+		if (end - begin > mst)
+		{
+			if (restart_count < 6)
+				++restart_count;
+		}
+		else
+			restart_count = 0;
+
+		/* Sleep a bit if the session was too short */
+		sleep(1 << restart_count);
+	}
 }
 
 /*
@@ -455,17 +478,19 @@ int main (int argc, char **argv)
 	setenv ("USER", pwent.pw_name, 1);
 	setenv ("LOGNAME", pwent.pw_name, 1);
 
-	/*
-	 * This is a workaround for Linux libc bug/feature (?) - the
-	 * /dev/log file descriptor is open without the close-on-exec flag
-	 * and used to be passed to the new shell. There is "fcntl(LogFile,
-	 * F_SETFD, 1)" in libc/misc/syslog.c, but it is commented out (at
-	 * least in 5.4.33). Why?  --marekm
-	 */
+	run_session();
+
+	ret = pam_close_session (pamh, 0);
+	if (ret != PAM_SUCCESS) {
+		syslog (LOG_ERR, "pam_close_session: %s",
+			 pam_strerror (pamh, ret));
+		fprintf (stderr, _("%s: %s\n"), Prog, pam_strerror (pamh, ret));
+		pam_end (pamh, ret);
+		return 1;
+	}
+
+	ret = pam_end (pamh, PAM_SUCCESS);
+
 	closelog ();
-
-	run_shell();
-
-	/* NOT REACHED */
-	exit (1);
+	return 0;
 }

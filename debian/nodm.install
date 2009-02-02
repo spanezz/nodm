@@ -1,3 +1,2 @@
 nodm		/usr/sbin/
-pam-helper	/usr/lib/nodm/
 debian/defaults/nodm /etc/defaults/

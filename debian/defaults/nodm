@@ -1,18 +1,20 @@
 # nodm configuration
 
+# Set NODM_ENABLED to something different than 'no' to enable nodm
+NODM_ENABLED=no
+
 # User to autologin for
-# Note: if NODM_USER is not set to any value, nodm will not start
-# NODM_USER=root
+NODM_USER=root
 
 # xinit program
-# NODM_XINIT=/usr/bin/xinit
+NODM_XINIT=/usr/bin/xinit
 
 # X session
-# NODM_XSESSION=/etc/X11/Xsession
+NODM_XSESSION=/etc/X11/Xsession
 
 # Options for the X server
-# NODM_X_OPTIONS="vt7 -nolisten tcp"
+NODM_X_OPTIONS="vt7 -nolisten tcp"
 
-# If an X session will run for less than this time in seconds, it will be
-# considered an X configuration error and the session will not be restarted
-# NODM_MIN_SESSION_TIME=10
+# If an X session will run for less than this time in seconds, nodm will wait an
+# increasing bit of time before restarting the session.
+NODM_MIN_SESSION_TIME=60

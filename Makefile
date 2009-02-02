@@ -1,5 +1,5 @@
-pam-helper: pam-helper.c
+nodm: nodm.c
 	gcc -o $@ $< -lpam -lpam_misc -Wall
 
 clean:
-	rm pam-helper
+	rm -f nodm

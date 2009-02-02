@@ -18,13 +18,19 @@ NAME=nodm
 PIDDIR=/var/run/
 PIDFILE=${PIDDIR}/${NAME}.pid
 
+NODM_ENABLED=no
+NODM_XINIT=/usr/bin/xinit
+NODM_XSESSION=/etc/X11/Xsession
+NODM_X_OPTIONS="vt7 -nolisten tcp"
+NODM_USER=root
+NODM_MIN_SESSION_TIME=60
+
 if [ -f /etc/defaults/$NAME ]
 then
 	. /etc/defaults/$NAME
-	NODM_XINIT=${NODM_XINIT:-"/usr/bin/xinit"}
-	NODM_XSESSION=${NODM_XSESSION:-"/etc/X11/Xsession"}
-	export NODM_XINIT NODM_XSESSION NODM_X_OPTIONS NODM_USER NODM_MIN_SESSION_TIME
 fi
+
+export NODM_XINIT NODM_XSESSION NODM_X_OPTIONS NODM_USER NODM_MIN_SESSION_TIME
 
 # If you change the user to a non-root user, make sure you
 # set allowed_users=anybody in /etc/X11/Xwrapper.config
@@ -42,9 +48,9 @@ fi
 case "$1" in
     start)
         [ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
-    	if [ -z "$NODM_USER" ]
+    	if [ "$NODM_ENABLED" == "no" ]
 	then
-		log_warning_msg "Not starting $NAME because NODM_USER has not been set in /etc/defaults/$NAME"
+		log_warning_msg "Not starting $NAME because NODM_ENABLED is 'no' in /etc/defaults/$NAME"
 	else
 		start-stop-daemon --start --oknodo --pidfile ${PIDFILE} --make-pidfile --background --exec /usr/sbin/nodm
 	fi
