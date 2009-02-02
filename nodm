@@ -13,7 +13,7 @@ NODM_MIN_SESSION_TIME=${NODM_MIN_SESSION_TIME:-"10"}
 run()
 {
 	start=`date +%s`
-	./pam-helper
+	/usr/lib/nodm/pam-helper
 	end=`date +%s`
 	if [ `expr $end - $start` -ge $NODM_MIN_SESSION_TIME ]
 	then

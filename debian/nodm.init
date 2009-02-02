@@ -15,18 +15,22 @@ set -e
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
 DESC="Automatic Display Manager"
 NAME=nodm
-PROG_XSESSION=/etc/X11/Xsession
-PROG_XINIT=/usr/bin/xinit
-X_OPTIONS="vt4 -nolisten tcp"
 PIDDIR=/var/run/
 PIDFILE=${PIDDIR}/${NAME}.pid
-USER=root
+
+if [ -f /etc/defaults/$NAME ]
+then
+	. /etc/defaults/$NAME
+	NODM_XINIT=${NODM_XINIT:-"/usr/bin/xinit"}
+	NODM_XSESSION=${NODM_XSESSION:-"/etc/X11/Xsession"}
+	export NODM_XINIT NODM_XSESSION NODM_X_OPTIONS NODM_USER NODM_MIN_SESSION_TIME
+fi
 
 # If you change the user to a non-root user, make sure you
 # set allowed_users=anybody in /etc/X11/Xwrapper.config
 
 # Gracefully exit if the package or its dependencies have been removed (but not purged).
-[ -x "$PROG_XSESSION" -a -x "$PROG_XINIT" ] || exit 0
+[ -x "$NODM_XSESSION" -a -x "$NODM_XINIT" ] || exit 0
 
 # Load the VERBOSE setting and other rcS variables
 . /lib/init/vars.sh
@@ -38,7 +42,12 @@ USER=root
 case "$1" in
     start)
         [ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
-        start-stop-daemon --start --oknodo --pidfile ${PIDFILE} --make-pidfile --background --exec /bin/su -- --login --command "${PROG_XINIT} ${PROG_XSESSION} -- $X_OPTIONS" $USER
+    	if [ -z "$NODM_USER" ]
+	then
+		log_warning_msg "Not starting $NAME because NODM_USER has not been set in /etc/defaults/$NAME"
+	else
+		start-stop-daemon --start --oknodo --pidfile ${PIDFILE} --make-pidfile --background --exec /usr/sbin/nodm
+	fi
         [ "$VERBOSE" != no ] && log_end_msg $?
         ;;
     stop)
