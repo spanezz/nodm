@@ -181,20 +181,6 @@ int change_uid (const struct passwd *info)
 	return 0;
 }
 
-/*
- * sulog - log a SU command execution result
- */
-static void sulog (const char *tty, int success, const char *oldname, const char *name)
-{
-        if (success) {
-                syslog (LOG_INFO,
-                        "Successful su for %s by %s",name,oldname);
-        } else {
-                syslog (LOG_NOTICE,
-                        "FAILED su for %s by %s",name,oldname);
-        }
-}
-
 /* Signal handler for parent process later */
 static void catch_signals (int sig)
 {
@@ -413,7 +399,8 @@ int main (int argc, char **argv)
 
 	setenv ("PATH", "/bin:/usr/bin", 1);
 
-	sulog (tty, 1, "root", name);	/* save SU information */
+	/* save SU information */
+	syslog (LOG_INFO, "Successful su for %s by %s", name, "root");
 
 #ifdef USE_SYSLOG
 	syslog (LOG_INFO, "+ %s %s:%s", tty,
