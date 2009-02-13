@@ -1,2 +1,2 @@
 nodm		/usr/sbin/
-debian/defaults/nodm /etc/defaults/
+debian/default/nodm /etc/default/
