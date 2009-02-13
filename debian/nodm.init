@@ -25,9 +25,9 @@ NODM_X_OPTIONS="vt7 -nolisten tcp"
 NODM_USER=root
 NODM_MIN_SESSION_TIME=60
 
-if [ -f /etc/defaults/$NAME ]
+if [ -f /etc/default/$NAME ]
 then
-	. /etc/defaults/$NAME
+	. /etc/default/$NAME
 fi
 
 export NODM_XINIT NODM_XSESSION NODM_X_OPTIONS NODM_USER NODM_MIN_SESSION_TIME
@@ -48,9 +48,9 @@ export NODM_XINIT NODM_XSESSION NODM_X_OPTIONS NODM_USER NODM_MIN_SESSION_TIME
 case "$1" in
     start)
         [ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
-    	if [ "$NODM_ENABLED" == "no" ]
+    	if [ "$NODM_ENABLED" == "no" ] || [ "$NODM_ENABLED" == "false" ]
 	then
-		log_warning_msg "Not starting $NAME because NODM_ENABLED is 'no' in /etc/defaults/$NAME"
+		log_warning_msg "Not starting $NAME because NODM_ENABLED is 'no' in /etc/default/$NAME"
 	else
 		start-stop-daemon --start --oknodo --pidfile ${PIDFILE} --make-pidfile --background --exec /usr/sbin/nodm
 	fi

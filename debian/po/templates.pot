@@ -1,0 +1,114 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
+"POT-Creation-Date: 2009-02-13 14:52+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: boolean
+#. Description
+#: ../nodm.templates:1001
+msgid "Start nodm on boot?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../nodm.templates:1001
+msgid ""
+"nodm starts an X session for a user without asking for authentication.  "
+"While this is welcome for embedded or kiosks systems, it is a security "
+"problem in most other machines, so by default nodm is configured not to "
+"start."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../nodm.templates:1001
+msgid "If you need autologin on this machine, enable nodm."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../nodm.templates:2001
+msgid "User to start a session for:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../nodm.templates:2001
+msgid ""
+"nodm starts an X session for a user without asking for authentication.  What "
+"user should be used for the session?"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../nodm.templates:3001
+msgid "Options for the X server:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../nodm.templates:3001
+msgid "Options to pass to the X server when starting the session."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../nodm.templates:4001
+msgid "Minimum time (in seconds) for a session to be considered ok"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../nodm.templates:4001
+msgid ""
+"If an X session will run for less than this time in seconds, nodm will wait "
+"an amount of time before restarting the session.  The waiting time will grow "
+"until a session lasts longer than this amount."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../nodm.templates:5001
+msgid "xinit program to use"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../nodm.templates:5001
+msgid "You can change this to use a different xinit program."
+msgstr ""
+
+#. Type: string
+#. Description
+#. Type: string
+#. Description
+#: ../nodm.templates:5001 ../nodm.templates:6001
+msgid ""
+"nodm will start the X session with the command: $NODM_XINIT $NODM_XSESSION "
+"-- $NODM_X_OPTIONS"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../nodm.templates:6001
+msgid "X session to use"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../nodm.templates:6001
+msgid "You can change this to use a different X session script."
+msgstr ""

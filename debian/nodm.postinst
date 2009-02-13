@@ -1,0 +1,37 @@
+#! /bin/sh
+# postinst script for nodm
+
+set -e
+
+. /usr/share/debconf/confmodule
+
+if [ "$1" = "configure" ] ; then
+    # Update /etc/default/nodm
+    db_get nodm/enabled
+    NODM_ENABLED="$RET"
+    db_get nodm/user
+    NODM_USER="$RET"
+    db_get nodm/x_options
+    NODM_X_OPTIONS="$RET"
+    db_get nodm/min_session_time
+    NODM_MIN_SESSION_TIME="$RET"
+    db_get nodm/xinit
+    NODM_XINIT="$RET"
+    db_get nodm/xsession
+    NODM_XSESSION="$RET"
+
+    sed -i -r -e "s,^NODM_ENABLED=.+,NODM_ENABLED=$NODM_ENABLED," \
+              -e "s,^NODM_USER=.+,NODM_USER=$NODM_USER," \
+	      -e "s,^NODM_X_OPTIONS=.+,NODM_X_OPTIONS='$NODM_X_OPTIONS'," \
+	      -e "s,^NODM_MIN_SESSION_TIME=.+,NODM_MIN_SESSION_TIME=$NODM_MIN_SESSION_TIME," \
+	      -e "s,^NODM_XINIT=.+,NODM_XINIT=$NODM_XINIT," \
+	      -e "s,^NODM_XSESSION=.+,NODM_XSESSION=$NODM_XSESSION," \
+	      /etc/default/nodm
+fi
+	
+#DEBHELPER#
+
+# tell debconf we are done. otherwise, it hangs waiting for the daemon.
+db_stop;
+
+exit 0

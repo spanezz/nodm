@@ -1,7 +1,7 @@
 # nodm configuration
 
-# Set NODM_ENABLED to something different than 'no' to enable nodm
-NODM_ENABLED=no
+# Set NODM_ENABLED to something different than 'false' to enable nodm
+NODM_ENABLED=false
 
 # User to autologin for
 NODM_USER=root
