@@ -303,6 +303,7 @@ void run_session()
 		/* Check if the session was too short */
 		if (end - begin > mst)
 		{
+			syslog (LOG_WARNING, "Session for %s was shorter than %d seconds: possible problems", name, mst);
 			if (retry_times[restart_count+1] != -1)
 				++restart_count;
 		}
@@ -311,6 +312,7 @@ void run_session()
 
 		/* Sleep a bit if the session was too short */
 		sleep(retry_times[restart_count]);
+		syslog (LOG_INFO, "Restarting session for %s", name);
 	}
 }
 

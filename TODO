@@ -1,6 +1,6 @@
  + Write a binary, repacing "su -l" with it’s own pam configuration name
- - configure via preseeding
  + create a hand-crafted array of sleep times instead of using an
    exponential increase.  This is to avoid silly steps like "2, 4, 8"
    and have something more meaningful instead like "0, 0, 30, 30, 60, 60"
- - log when the session is restarted
+ + log when the session is restarted
+ - configure via preseeding
