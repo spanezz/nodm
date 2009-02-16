@@ -285,6 +285,7 @@ static int run_shell (int* status)
 
 void run_session()
 {
+	static int retry_times[] = { 0, 0, 30, 30, 60, 60, -1 };
 	int restart_count = 0;
 	char* s_mst = getenv("NODM_MIN_SESSION_TIME");
 	int mst = s_mst ? atoi(s_mst) : 60;
@@ -302,14 +303,14 @@ void run_session()
 		/* Check if the session was too short */
 		if (end - begin > mst)
 		{
-			if (restart_count < 6)
+			if (retry_times[restart_count+1] != -1)
 				++restart_count;
 		}
 		else
 			restart_count = 0;
 
 		/* Sleep a bit if the session was too short */
-		sleep(1 << restart_count);
+		sleep(retry_times[restart_count]);
 	}
 }
 
