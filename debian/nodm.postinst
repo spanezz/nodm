@@ -20,13 +20,38 @@ if [ "$1" = "configure" ] ; then
     db_get nodm/xsession
     NODM_XSESSION="$RET"
 
-    sed -i -r -e "s,^NODM_ENABLED=.+,NODM_ENABLED=$NODM_ENABLED," \
-              -e "s,^NODM_USER=.+,NODM_USER=$NODM_USER," \
-	      -e "s,^NODM_X_OPTIONS=.+,NODM_X_OPTIONS='$NODM_X_OPTIONS'," \
-	      -e "s,^NODM_MIN_SESSION_TIME=.+,NODM_MIN_SESSION_TIME=$NODM_MIN_SESSION_TIME," \
-	      -e "s,^NODM_XINIT=.+,NODM_XINIT=$NODM_XINIT," \
-	      -e "s,^NODM_XSESSION=.+,NODM_XSESSION=$NODM_XSESSION," \
-	      /etc/default/nodm
+    if [ -s /etc/default/nodm ] ; then
+	    sed -i -r -e "s,^NODM_ENABLED=.*,NODM_ENABLED=$NODM_ENABLED," \
+		      -e "s,^NODM_USER=.*,NODM_USER=$NODM_USER," \
+		      -e "s,^NODM_X_OPTIONS=.*,NODM_X_OPTIONS='$NODM_X_OPTIONS'," \
+		      -e "s,^NODM_MIN_SESSION_TIME=.*,NODM_MIN_SESSION_TIME=$NODM_MIN_SESSION_TIME," \
+		      -e "s,^NODM_XINIT=.*,NODM_XINIT=$NODM_XINIT," \
+		      -e "s,^NODM_XSESSION=.*,NODM_XSESSION=$NODM_XSESSION," \
+		      /etc/default/nodm
+    else
+	    cat <<EOF > /etc/default/nodm
+# nodm configuration
+
+# Set NODM_ENABLED to something different than 'false' to enable nodm
+NODM_ENABLED=$NODM_ENABLED
+
+# User to autologin for
+NODM_USER=$NODM_USER
+
+# xinit program
+NODM_XINIT=$NODM_XINIT
+
+# X session
+NODM_XSESSION=$NODM_XSESSION
+
+# Options for the X server
+NODM_X_OPTIONS='$NODM_X_OPTIONS'
+
+# If an X session will run for less than this time in seconds, nodm will wait an
+# increasing bit of time before restarting the session.
+NODM_MIN_SESSION_TIME=$NODM_MIN_SESSION_TIME
+EOF
+    fi
 fi
 	
 #DEBHELPER#
