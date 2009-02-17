@@ -4,3 +4,13 @@
    and have something more meaningful instead like "0, 0, 30, 30, 60, 60"
  + log when the session is restarted
  - configure via preseeding
+
+Preseed values for testing:
+
+nodm nodm/enabled boolean true
+nodm nodm/user string root
+nodm nodm/xinit string /usr/bin/time
+nodm nodm/xsession string /bin/sleep
+nodm nodm/x_options string 2
+nodm nodm/min_session_time string 1
+
