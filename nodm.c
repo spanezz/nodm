@@ -203,6 +203,7 @@ static int run_shell (int* status)
 {
 	int child;
 	sigset_t ourset;
+	struct sigaction action;
 	char* args[5];
 	char* argv0 = getenv("NODM_XINIT");
 	if (argv0 == NULL)
@@ -242,55 +243,62 @@ static int run_shell (int* status)
 		closelog ();
 		return 1;
 	}
+
 	/* parent only */
+
+	/* Reset caught signal flag */
+	caught = 0;
+
+	/* Block all signals */
 	sigfillset (&ourset);
 	if (sigprocmask (SIG_BLOCK, &ourset, NULL)) {
 		(void) fprintf (stderr, "%s: signal malfunction\n", Prog);
-		caught = 1;
+		goto killed;
 	}
-	if (!caught) {
-		struct sigaction action;
 
-		action.sa_handler = catch_signals;
-		sigemptyset (&action.sa_mask);
-		action.sa_flags = 0;
-		sigemptyset (&ourset);
+	/* Catch SIGTERM and SIGALRM using 'catch_signals' */
+	action.sa_handler = catch_signals;
+	sigemptyset (&action.sa_mask);
+	action.sa_flags = 0;
+	sigemptyset (&ourset);
 
-		if (sigaddset (&ourset, SIGTERM)
-		    || sigaddset (&ourset, SIGALRM)
-		    || sigaction (SIGTERM, &action, NULL)
-		    || sigprocmask (SIG_UNBLOCK, &ourset, NULL)
-		    ) {
-			fprintf (stderr,
-				 "%s: signal masking malfunction\n", Prog);
-			caught = 1;
+	if (sigaddset (&ourset, SIGTERM)
+#ifdef DEBUG_NODM
+	    || sigaddset (&ourset, SIGINT)
+	    || sigaddset (&ourset, SIGQUIT)
+#endif
+	    || sigaddset (&ourset, SIGALRM)
+	    || sigaction (SIGTERM, &action, NULL)
+	    || sigprocmask (SIG_UNBLOCK, &ourset, NULL)
+	    ) {
+		fprintf (stderr, "%s: signal masking malfunction\n", Prog);
+		goto killed;
+	}
+
+	do {
+		int pid;
+
+		pid = waitpid (-1, status, WUNTRACED);
+
+		if (WIFSTOPPED (*status)) {
+			kill (getpid (), SIGSTOP);
+			/* once we get here, we must have resumed */
+			kill (pid, SIGCONT);
 		}
-	}
+	} while (WIFSTOPPED (*status));
 
-	if (!caught) {
-		do {
-			int pid;
-
-			pid = waitpid (-1, status, WUNTRACED);
-
-			if (WIFSTOPPED (*status)) {
-				kill (getpid (), SIGSTOP);
-				/* once we get here, we must have resumed */
-				kill (pid, SIGCONT);
-			}
-		} while (WIFSTOPPED (*status));
-	}
-
-	if (caught) {
-		fprintf (stderr, "\nSession terminated, killing shell...");
-		kill (child, SIGTERM);
-		sleep (2);
-		kill (child, SIGKILL);
-		fprintf (stderr, " ...killed.\n");
-		return -1;
-	}
+	if (caught)
+		goto killed;
 
 	return 0;
+
+killed:
+	fprintf (stderr, "\nSession terminated, killing shell...");
+	kill (child, SIGTERM);
+	sleep (2);
+	kill (child, SIGKILL);
+	fprintf (stderr, " ...killed.\n");
+	return -1;
 }
 
 void run_session()
