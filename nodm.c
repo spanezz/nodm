@@ -100,8 +100,12 @@ static struct pam_conv conv = {
 #define E_CMD_NOEXEC            126     /* can't run command/shell */
 #define E_CMD_NOTFOUND          127     /* can't find command/shell to run */
 
+/* #define DEBUG_NODM */
+
+#ifdef DEBUG_NODM
 /* Turn syslog into fprintf, for debugging */
-/* #define syslog(prio, str, ...) do { fprintf(stderr, str, __VA_ARGS__); fprintf(stderr, "\n"); } while (0) */
+#define syslog(prio, str, ...) do { fprintf(stderr, str, __VA_ARGS__); fprintf(stderr, "\n"); } while (0)
+#endif
 
 /*
  * Assorted #defines to control su's behavior
