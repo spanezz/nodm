@@ -100,6 +100,9 @@ static struct pam_conv conv = {
 #define E_CMD_NOEXEC            126     /* can't run command/shell */
 #define E_CMD_NOTFOUND          127     /* can't find command/shell to run */
 
+/* Turn syslog into fprintf, for debugging */
+/* #define syslog(prio, str, ...) do { fprintf(stderr, str, __VA_ARGS__); fprintf(stderr, "\n"); } while (0) */
+
 /*
  * Assorted #defines to control su's behavior
  */
@@ -196,9 +199,19 @@ static int run_shell (int* status)
 {
 	int child;
 	sigset_t ourset;
+	char* args[5];
 	char* argv0 = getenv("NODM_XINIT");
 	if (argv0 == NULL)
 		argv0 = "/usr/bin/xinit";
+
+	args[0] = argv0;
+	args[1] = getenv("NODM_XSESSION");
+	if (args[1] == NULL) args[1] = "/etc/X11/Xsession";
+	args[2] = "--";
+	args[3] = getenv("NODM_X_OPTIONS");
+	args[4] = NULL;
+
+	syslog (LOG_INFO, "Running %s %s %s '%s'", args[0], args[1], args[2], args[3]);
 
 	child = fork ();
 	if (child == 0) {	/* child shell */
@@ -217,13 +230,6 @@ static int run_shell (int* status)
 		 * memory since we will either call exec or exit.
 		pam_end (pamh, PAM_SUCCESS | PAM_DATA_SILENT);
 		 */
-		char* args[5];
-		args[0] = argv0;
-		args[1] = getenv("NODM_XSESSION");
-		if (args[1] == NULL) args[1] = "/etc/X11/Xsession";
-		args[2] = "--";
-		args[3] = getenv("NODM_X_OPTIONS");
-		args[4] = NULL;
 		(void) execv (args[0], (char **) args);
 		exit (errno == ENOENT ? E_CMD_NOTFOUND : E_CMD_NOEXEC);
 	} else if (child == -1) {
