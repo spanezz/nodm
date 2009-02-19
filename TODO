@@ -3,7 +3,8 @@
    exponential increase.  This is to avoid silly steps like "2, 4, 8"
    and have something more meaningful instead like "0, 0, 30, 30, 60, 60"
  + log when the session is restarted
- - configure via preseeding
+ + configure via preseeding
+ - split X options before passing them to xinit?  Is it needed or xinit does it?
 
 Preseed values for testing:
 
