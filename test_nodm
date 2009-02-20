@@ -1,26 +1,27 @@
 #!/bin/sh
 
-if [ -z "$1" ]
-then
-	echo "Use: $0 username" >&2
-	exit 1
-fi
-
-if [ "$1" != runtest ]
-then
-	export NODM_USER=$1
-	export NODM_COMMAND="`pwd`/$0 runtest -- a b c"
-	export NODM_MIN_SESSION_TIME=60
-	exec ./nodm 
-else
-	test "$2" != "--" && echo "\$2 is '$2' instead of '--'"
-	test "$3" != "a" && echo "\$3 is '$3' instead of 'a'"
-	test "$4" != "b" && echo "\$4 is '$4' instead of 'b'"
-	test "$5" != "c" && echo "\$5 is '$5' instead of 'c'"
-	echo "PATH is: $PATH"
-	echo "USER is: $USER"
-	echo "HOME is: $HOME"
-	echo "pwd: `pwd`"
-	echo "id: `id`"
-	exit 0
-fi
+case "$1" in
+	'')
+#		test "$2" != "a" && echo "\$3 is '$2' instead of 'a'"
+#		test "$3" != "b" && echo "\$4 is '$3' instead of 'b'"
+#		test "$4" != "c" && echo "\$5 is '$4' instead of 'c'"
+		echo "PATH is: $PATH"
+		echo "USER is: $USER"
+		echo "HOME is: $HOME"
+		echo "pwd: `pwd`"
+		echo "id: `id`"
+		exit 0
+		;;
+	*)
+		export NODM_USER=$1
+		export NODM_XINIT=exec
+		export NODM_XSESSION="`pwd`/$0"
+#		export NODM_X_OPTIONS="runtest a b c"
+		export NODM_MIN_SESSION_TIME=60
+		exec ./nodm --session `pwd`/nodm-session
+		;;
+#	'')
+#		echo "Use: $0 username" >&2
+#		exit 1
+#		;;
+esac

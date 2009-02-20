@@ -19,8 +19,10 @@ PIDDIR=/var/run/
 PIDFILE=${PIDDIR}/${NAME}.pid
 
 NODM_ENABLED=no
+NODM_XINIT=/usr/bin/xinit
+NODM_XSESSION=/etc/X11/Xsession
+NODM_X_OPTIONS="vt7 -nolisten tcp"
 NODM_USER=root
-NODM_COMMAND='/usr/bin/xinit /etc/X11/Xsession -- vt7 -nolisten tcp'
 NODM_MIN_SESSION_TIME=60
 
 if [ -f /etc/default/$NAME ]
@@ -28,13 +30,14 @@ then
 	. /etc/default/$NAME
 fi
 
-export NODM_USER NODM_COMMAND NODM_MIN_SESSION_TIME
+export NODM_XINIT NODM_XSESSION NODM_X_OPTIONS NODM_USER NODM_MIN_SESSION_TIME
 
 # If you change the user to a non-root user, make sure you
 # set allowed_users=anybody in /etc/X11/Xwrapper.config
 
 # Gracefully exit if the package or its dependencies have been removed (but not purged).
-[ -x /usr/sbin/nodm ] || exit 0
+[ -x /usr/sbin/nodm -a -x "$NODM_XSESSION" -a -x "$NODM_XINIT" ] || exit 0
+
 
 # Load the VERBOSE setting and other rcS variables
 . /lib/init/vars.sh

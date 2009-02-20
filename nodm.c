@@ -47,6 +47,9 @@
 
 
 #define NAME "nodm"
+#define SESSION_CMD "/usr/sbin/nodm-session"
+/* #define DEBUG_NODM */
+
 
 #include <getopt.h>
 #include <grp.h>
@@ -101,11 +104,9 @@ static struct pam_conv conv = {
 #define E_CMD_NOEXEC            126     /* can't run command/shell */
 #define E_CMD_NOTFOUND          127     /* can't find command/shell to run */
 
-/* #define DEBUG_NODM */
-
 #ifdef DEBUG_NODM
 /* Turn syslog into fprintf, for debugging */
-#define syslog(prio, str, ...) do { fprintf(stderr, str, __VA_ARGS__); fprintf(stderr, "\n"); } while (0)
+#define syslog(prio, ...) do { fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n"); } while (0)
 #endif
 
 /*
@@ -116,9 +117,6 @@ static struct pam_conv conv = {
  */
 /* User we are changing to */
 static char name[BUFSIZ];
-
-/* Command that we are running */
-static char command[BUFSIZ];
 
 static pam_handle_t *pamh = NULL;
 static int caught = 0;
@@ -202,20 +200,11 @@ static void catch_signals (int sig)
  * have been applied.  Some work was needed to get it integrated into
  * su.c from shadow.
  */
-static int run_shell (const char* command, int* status)
+static int run_shell (const char** args, int* status)
 {
 	int child;
 	sigset_t ourset;
 	struct sigaction action;
-	const char* args[5];
-
-	args[0] = "/bin/sh";
-	args[1] = "-l";
-	args[2] = "-c";
-	args[3] = command;
-	args[4] = NULL;
-
-	syslog (LOG_INFO, "Running %s %s %s '%s'", args[0], args[1], args[2], args[3]);
 
 	child = fork ();
 	if (child == 0) {	/* child shell */
@@ -307,20 +296,45 @@ killed:
 	return -1;
 }
 
-void run_session(const char* command)
+/*
+ * Run the X session
+ *
+ * @param xinit
+ *   The path to xinit
+ * @param xsession
+ *   The path to the X session
+ * @param xoptions
+ *   The path to the X options (can be NULL if no options are to be passed)
+ * @param mst
+ *   The minimum time (in seconds) that a session should last to be considered
+ *   successful
+ */
+void run_and_restart(const char* xinit, const char* xsession, const char* xoptions, int mst)
 {
 	static int retry_times[] = { 0, 0, 30, 30, 60, 60, -1 };
 	int restart_count = 0;
-	char* s_mst = getenv("NODM_MIN_SESSION_TIME");
-	int mst = s_mst ? atoi(s_mst) : 60;
+	char command[BUFSIZ];
+	const char* args[4];
+
+	if (xoptions != NULL)
+		snprintf(command, BUFSIZ, "%s %s -- %s", xinit, xsession, xoptions);
+	else
+		snprintf(command, BUFSIZ, "%s %s", xinit, xsession);
+	command[BUFSIZ-1] = 0;
+
+	args[0] = "/bin/sh";
+	args[1] = "-c";
+	args[2] = command;
+	args[3] = 0;
 
 	while (1)
 	{
-		/* Run the shell */
+		/* Run the X server */
 		time_t begin = time(NULL);
 		time_t end;
 		int status;
-		if (run_shell(command, &status))
+		syslog (LOG_INFO, "Running %s %s '%s'", args[0], args[1], args[2]);
+		if (run_shell(args, &status))
 			return;
 		end = time(NULL);
 
@@ -341,45 +355,102 @@ void run_session(const char* command)
 }
 
 /*
- * su - switch user id
+ * Copy from the environment the value of $name into dest.
  *
- *	su changes the user's ids to the values for the specified user.  if
- *	no new user name is specified, "root" is used by default.
+ * If $name is not in the environment, use def.
  *
- *	Any additional arguments are passed to the user's shell. In
- *	particular, the argument "-c" will cause the next argument to be
- *	interpreted as a command by the common shell programs.
+ * @param destination buffer, should be at least BUFSIZ long
+ * @param name name of the environment variable to look up
+ * @param def default value to use if $name is not found
  */
-int main (int argc, char **argv)
+static void string_from_env(char* dest, const char* name, const char* def)
 {
-	char *cp;
-	const char *tty = 0;	/* Name of tty SU is run from        */
-	uid_t my_uid;
-	struct passwd *pw = 0;
-	char **envcp;
-	int ret;
+	char* cp = getenv(name);
+	if (cp != NULL)
+		strncpy(dest, cp, BUFSIZ-1);
+	else
+		strncpy(dest, def, BUFSIZ-1);
+	dest[BUFSIZ-1] = 0;
+}
 
-	/*
-	 * Get the program name. The program name is used as a prefix to
-	 * most error messages.
-	 */
-	Prog = Basename (argv[0]);
+static void monitor_cmdline_help(int argc, char** argv, FILE* out)
+{
+	fprintf(out, "Usage: %s [options]\n\n", argv[0]);
+	fprintf(out, "Options:\n");
+	fprintf(out, " --help         print this help message\n");
+	fprintf(out, " --session=cmd  run cmd instead of %s\n", SESSION_CMD);
+	fprintf(out, "                (use for testing)\n");
+}
 
-	openlog(NAME, LOG_PID, LOG_AUTHPRIV);
-
-	/*
-	 * Process the command line arguments. 
-	 */
-
-	// TODO command line processing
-
-	/* We only run if we are root */
-	my_uid = getuid ();
-	if (my_uid != 0)
+/*
+ * Start the monitor, that will continue to rerun xinit with appropriate delays
+ */
+static int nodm_monitor(int argc, char **argv)
+{
+	static int opt_help = 0;
+	static struct option options[] =
 	{
-		fprintf (stderr, _("%s: can only be run by root\n"), Prog);
-		return E_NOPERM;
+		/* These options set a flag. */
+		{"help",    no_argument,       &opt_help, 1},
+		{"session", required_argument, 0, 's'},
+		{0, 0, 0, 0}
+	};
+	const char* opt_session = SESSION_CMD;
+	char xinit[BUFSIZ];
+	char xoptions[BUFSIZ];
+	char* cp;
+	int mst;
+
+	/* Parse command line options */
+	while (1)
+	{
+		int option_index = 0;
+		int c = getopt_long(argc, argv, "s:", options, &option_index);
+		if (c == -1) break;
+		switch (c)
+		{
+			case 0: break;
+			case 's': opt_session = optarg; break;
+			default:
+				  fprintf(stderr, "Invalid command line option\n");
+				  monitor_cmdline_help(argc, argv, stderr);
+				  return 1;
+		}
 	}
+	if (opt_help)
+	{
+		monitor_cmdline_help(argc, argv, stdout);
+		return 0;
+	}
+
+	syslog(LOG_INFO, "Starting nodm monitor");
+
+	/* Read the configuration from the environment */
+	cp = getenv("NODM_MIN_SESSION_TIME");
+	mst = cp ? atoi(cp) : 60;
+	string_from_env(xinit, "NODM_XINIT", "/usr/bin/xinit");
+	string_from_env(xoptions, "NODM_X_OPTIONS", "");
+
+	run_and_restart(xinit, opt_session, xoptions[0] == 0 ? NULL : xoptions, mst);
+
+	return 0;
+}
+
+/*
+ * Start the session, with proper autologin and pam handling
+ */
+static int nodm_session(int argc, char **argv)
+{
+	int ret;
+	char *cp;
+	char **envcp;
+	const char *tty = 0;	/* Name of tty SU is run from        */
+	struct passwd *pw = 0;
+	int status;
+	char xsession[BUFSIZ];
+	const char* args[5];
+
+	string_from_env(xsession, "NODM_XSESSION", "/etc/X11/Xsession");
 
 	/*
 	 * Get the tty name. Entries will be logged indicating that the user
@@ -399,12 +470,6 @@ int main (int argc, char **argv)
 		strcpy(name, "root");
 	else
 		STRFCPY(name, getenv("NODM_USER"));
-
-	/* Get the command that we should run */
-	if (getenv("NODM_COMMAND") == NULL)
-		strcpy(command, "/usr/bin/xinit /etc/X11/Xsession -- vt7 -nolisten tcp");
-	else
-		STRFCPY(command, getenv("NODM_COMMAND"));
 
 	ret = pam_start (NAME, name, &conv, &pamh);
 	if (ret != PAM_SUCCESS) {
@@ -508,9 +573,23 @@ int main (int argc, char **argv)
 	setenv ("HOME", pwent.pw_dir, 1);
 	setenv ("USER", pwent.pw_name, 1);
 	setenv ("LOGNAME", pwent.pw_name, 1);
+
+	/* Clear the NODM_* environment variables */
+	unsetenv("NODM_USER");
+	unsetenv("NODM_XINIT");
+	unsetenv("NODM_XSESSION");
+	unsetenv("NODM_X_OPTIONS");
+	unsetenv("NODM_MIN_SESSION_TIME");
+
 	chdir (pwent.pw_dir);
 
-	run_session(command);
+	args[0] = "/bin/sh";
+	args[1] = "-l";
+	args[2] = "-c";
+	args[3] = xsession;
+	args[4] = NULL;
+
+	run_shell(args, &status);
 
 	ret = pam_close_session (pamh, 0);
 	if (ret != PAM_SUCCESS) {
@@ -523,6 +602,60 @@ int main (int argc, char **argv)
 
 	ret = pam_end (pamh, PAM_SUCCESS);
 
+	return status;
+}
+
+/* Return true if string ends with substring */
+static int ends_with(const char* string, const char* substring)
+{
+	int len_string = strlen(string);
+	int len_substring = strlen(substring);
+	if (len_string < len_substring)
+		return 0;
+	return strcmp(string + (len_string - len_substring), substring) == 0;
+}
+
+/*
+ * nodm - start X with autologin to a given user
+ *
+ * First, X is started as root, and nodm itself is used as the session.
+ *
+ * When run as the session, nodm performs a proper login to a given user and
+ * starts the X session.
+ */
+int main (int argc, char **argv)
+{
+	int ret;
+
+	/*
+	 * Get the program name. The program name is used as a prefix to
+	 * most error messages.
+	 */
+	Prog = Basename (argv[0]);
+
+	openlog(NAME, LOG_PID, LOG_AUTHPRIV);
+
+	/*
+	 * Process the command line arguments. 
+	 */
+
+	// TODO command line processing
+
+	/* We only run if we are root */
+	if (getuid() != 0)
+	{
+		fprintf (stderr, _("%s: can only be run by root\n"), Prog);
+		return E_NOPERM;
+	}
+
+	if (ends_with(argv[0], "-session"))
+	{
+		syslog(LOG_INFO, "Starting nodm X session");
+		ret = nodm_session(argc, argv);
+	} else {
+		ret = nodm_monitor(argc, argv);
+	}
+
 	closelog ();
-	return 0;
+	return ret;
 }
