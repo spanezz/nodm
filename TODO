@@ -8,4 +8,28 @@
  + split X options before passing them to xinit?  Is it needed or xinit does it?
  + signals are blocked while waiting between retries
  + set up the right environment, and cd to the right place
- - missing: honour login.defs.  Do we need it?
+ - does not start X session if it is run as a user
+   X: user not authorized to run the X server, aborting.
+   (allowed_users=console in /etc/X11/Xwrapper.config)
+ - we currently do not honour login.defs.  Do we need it?
+
+#debian-devel < enrico> so, /etc/X11/Xwrapper.conf disallows a user to run X unless they're on console.  How do display 
+                        managers work around it?
+#debian-devel < jcristau> they're root.
+#debian-devel < enrico> jcristau: but don't they sudo to the requested user before starting X?
+#debian-devel < jcristau> there's no requested user before starting X
+#debian-devel < enrico> jcristau: uhm, no they don't
+#debian-devel < enrico> jcristau: I'm writing a display manager that performs autologin, so I know what user I want 
+                        before starting X
+#debian-devel < enrico> jcristau: I thought that becoming the user and starting X would be enough, but it isn't.  
+                        Apparently, I need to start X passing myself as the session, and then become the user
+#debian-devel < jcristau> so they start an X server, and after you enter your login/pass they fork, setuid() and start 
+                          your session, basically.
+#debian-devel < jcristau> uh. 'start X passing myself as the session'?
+#debian-devel < enrico> jcristau: like, run xinit myself -- options
+#debian-devel < enrico> jcristau: and then myself will take care of setuid() and running Xsession
+#debian-devel < enrico> jcristau: sounds sound?
+#debian-devel < jcristau> possibly
+#debian-devel < enrico> jcristau: thanks!
+#debian-devel < jcristau> (or you could do what xinit does yourself, so you can deal with X exiting if you want)
+#debian-devel < enrico> jcristau: what does xinit exactly do?  I'll get the source code and see
