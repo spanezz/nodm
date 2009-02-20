@@ -282,6 +282,13 @@ static int run_shell (int* status)
 		}
 	} while (WIFSTOPPED (*status));
 
+	/* Unblock signals */
+	sigfillset (&ourset);
+	if (sigprocmask (SIG_UNBLOCK, &ourset, NULL)) {
+		(void) fprintf (stderr, "%s: signal malfunction\n", Prog);
+		goto killed;
+	}
+
 	if (caught)
 		goto killed;
 

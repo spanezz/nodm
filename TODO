@@ -6,7 +6,7 @@
  + configure via preseeding
  + path is not good for root
  + split X options before passing them to xinit?  Is it needed or xinit does it?
- - don't block ^C and ^\ if run interactively
+ + signals are blocked while waiting between retries
  - set up the right environment, and cd to the right place
 
 Preseed values for testing:
