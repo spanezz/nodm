@@ -60,6 +60,7 @@
 #include <sys/wait.h>
 #include <syslog.h>
 #include <time.h>
+#include <unistd.h>
 
 #include <security/pam_appl.h>
 #include <security/pam_misc.h>
@@ -158,7 +159,7 @@ static int setup_groups (const struct passwd *info)
 		closelog ();
 		return -1;
 	}
-#ifdef HAVE_INITGROUPS
+
 	/*
 	 * For systems which support multiple concurrent groups, go get
 	 * the group set from the /etc/group file.
@@ -170,7 +171,6 @@ static int setup_groups (const struct passwd *info)
 		closelog ();
 		return -1;
 	}
-#endif
 	return 0;
 }
 
@@ -207,11 +207,12 @@ static int run_shell (int* status)
 	char* args[5];
 
 	args[0] = "/bin/sh";
-	args[1] = "-c";
-	args[2] = getenv("NODM_COMMAND");
-	args[3] = NULL;
+	args[1] = "-l";
+	args[2] = "-c";
+	args[3] = getenv("NODM_COMMAND");
+	args[4] = NULL;
 
-	syslog (LOG_INFO, "Running %s %s '%s'", args[0], args[1], args[2]);
+	syslog (LOG_INFO, "Running %s %s %s '%s'", args[0], args[1], args[2], args[3]);
 
 	child = fork ();
 	if (child == 0) {	/* child shell */
@@ -416,12 +417,7 @@ int main (int argc, char **argv)
 	}
 
 	/*
-	 * This is the common point for validating a user whose name is
-	 * known. It will be reached either by normal processing, or if the
-	 * user is to be logged into a subsystem root.
-	 *
-	 * The password file entries for the user is gotten and the account
-	 * validated.
+	 * Validate the user using the normal system user database
 	 */
 	if (!(pw = getpwnam (name))) {
 		(void) fprintf (stderr, _("Unknown id: %s\n"), name);
@@ -433,6 +429,11 @@ int main (int argc, char **argv)
 	signal (SIGINT, SIG_IGN);
 	signal (SIGQUIT, SIG_IGN);
 
+	/* FIXME: should we ignore this, or honour it?
+	 * this can fail if the current user's account is invalid. "This
+	 * includes checking for password and account expiration, as well as
+	 * verifying access hour restrictions."
+	 */
 	ret = pam_acct_mgmt (pamh, 0);
 	if (ret != PAM_SUCCESS) {
 		fprintf (stderr, _("%s: %s\n(Ignored)\n"), Prog,
@@ -498,6 +499,7 @@ int main (int argc, char **argv)
 	setenv ("HOME", pwent.pw_dir, 1);
 	setenv ("USER", pwent.pw_name, 1);
 	setenv ("LOGNAME", pwent.pw_name, 1);
+	chdir (pwent.pw_dir);
 
 	run_session();
 

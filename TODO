@@ -7,7 +7,7 @@
  + path is not good for root
  + split X options before passing them to xinit?  Is it needed or xinit does it?
  + signals are blocked while waiting between retries
- - set up the right environment, and cd to the right place
+ + set up the right environment, and cd to the right place
 
 Preseed values for testing:
 
