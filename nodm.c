@@ -117,6 +117,9 @@ static struct pam_conv conv = {
 /* User we are changing to */
 static char name[BUFSIZ];
 
+/* Command that we are running */
+static char command[BUFSIZ];
+
 static pam_handle_t *pamh = NULL;
 static int caught = 0;
 
@@ -199,17 +202,17 @@ static void catch_signals (int sig)
  * have been applied.  Some work was needed to get it integrated into
  * su.c from shadow.
  */
-static int run_shell (int* status)
+static int run_shell (const char* command, int* status)
 {
 	int child;
 	sigset_t ourset;
 	struct sigaction action;
-	char* args[5];
+	const char* args[5];
 
 	args[0] = "/bin/sh";
 	args[1] = "-l";
 	args[2] = "-c";
-	args[3] = getenv("NODM_COMMAND");
+	args[3] = command;
 	args[4] = NULL;
 
 	syslog (LOG_INFO, "Running %s %s %s '%s'", args[0], args[1], args[2], args[3]);
@@ -304,7 +307,7 @@ killed:
 	return -1;
 }
 
-void run_session()
+void run_session(const char* command)
 {
 	static int retry_times[] = { 0, 0, 30, 30, 60, 60, -1 };
 	int restart_count = 0;
@@ -317,7 +320,7 @@ void run_session()
 		time_t begin = time(NULL);
 		time_t end;
 		int status;
-		if (run_shell(&status))
+		if (run_shell(command, &status))
 			return;
 		end = time(NULL);
 
@@ -396,6 +399,12 @@ int main (int argc, char **argv)
 		strcpy(name, "root");
 	else
 		STRFCPY(name, getenv("NODM_USER"));
+
+	/* Get the command that we should run */
+	if (getenv("NODM_COMMAND") == NULL)
+		strcpy(command, "/usr/bin/xinit /etc/X11/Xsession -- vt7 -nolisten tcp");
+	else
+		STRFCPY(command, getenv("NODM_COMMAND"));
 
 	ret = pam_start (NAME, name, &conv, &pamh);
 	if (ret != PAM_SUCCESS) {
@@ -501,7 +510,7 @@ int main (int argc, char **argv)
 	setenv ("LOGNAME", pwent.pw_name, 1);
 	chdir (pwent.pw_dir);
 
-	run_session();
+	run_session(command);
 
 	ret = pam_close_session (pamh, 0);
 	if (ret != PAM_SUCCESS) {
