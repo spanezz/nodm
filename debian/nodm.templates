@@ -15,11 +15,14 @@ _Description: User to start a session for:
  nodm starts an X session for a user without asking for authentication.  What
  user should be used for the session?
 
-Template: nodm/x_options
+Template: nodm/command
 Type: string
-Default: vt7 -nolisten tcp
-_Description: Options for the X server:
- Options to pass to the X server when starting the session.
+Default: /usr/bin/xinit /etc/X11/Xsession -- vt7 -nolisten tcp
+_Description: Command to use to run the X session
+ This command is passed to the shell to start the X session.
+ .
+ Please do not use single quotes, as they are used as delimiters in
+ /etc/default/nodm
 
 Template: nodm/min_session_time
 Type: string
@@ -28,22 +31,3 @@ _Description: Minimum time (in seconds) for a session to be considered ok
  If an X session will run for less than this time in seconds, nodm will wait an
  amount of time before restarting the session.  The waiting time will grow
  until a session lasts longer than this amount.
-
-Template: nodm/xinit
-Type: string
-Default: /usr/bin/xinit
-_Description: xinit program to use
- You can change this to use a different xinit program.
- .
- nodm will start the X session with the command:
- $NODM_XINIT $NODM_XSESSION -- $NODM_X_OPTIONS
-
-Template: nodm/xsession
-Type: string
-Default: /etc/X11/Xsession
-_Description: X session to use
- You can change this to use a different X session script.
- .
- nodm will start the X session with the command:
- $NODM_XINIT $NODM_XSESSION -- $NODM_X_OPTIONS
-

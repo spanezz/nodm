@@ -205,18 +205,13 @@ static int run_shell (int* status)
 	sigset_t ourset;
 	struct sigaction action;
 	char* args[5];
-	char* argv0 = getenv("NODM_XINIT");
-	if (argv0 == NULL)
-		argv0 = "/usr/bin/xinit";
 
-	args[0] = argv0;
-	args[1] = getenv("NODM_XSESSION");
-	if (args[1] == NULL) args[1] = "/etc/X11/Xsession";
-	args[2] = "--";
-	args[3] = getenv("NODM_X_OPTIONS");
-	args[4] = NULL;
+	args[0] = "/bin/sh";
+	args[1] = "-c";
+	args[2] = getenv("NODM_COMMAND");
+	args[3] = NULL;
 
-	syslog (LOG_INFO, "Running %s %s %s '%s'", args[0], args[1], args[2], args[3]);
+	syslog (LOG_INFO, "Running %s %s '%s'", args[0], args[1], args[2]);
 
 	child = fork ();
 	if (child == 0) {	/* child shell */
@@ -239,7 +234,7 @@ static int run_shell (int* status)
 		exit (errno == ENOENT ? E_CMD_NOTFOUND : E_CMD_NOEXEC);
 	} else if (child == -1) {
 		(void) fprintf (stderr, "%s: Cannot fork user shell\n", Prog);
-		syslog (LOG_WARNING, "Cannot execute %s", argv0);
+		syslog (LOG_WARNING, "Cannot execute %s", args[0]);
 		closelog ();
 		return 1;
 	}

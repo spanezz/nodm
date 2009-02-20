@@ -11,22 +11,16 @@ if [ "$1" = "configure" ] ; then
     NODM_ENABLED="$RET"
     db_get nodm/user
     NODM_USER="$RET"
-    db_get nodm/x_options
-    NODM_X_OPTIONS="$RET"
+    db_get nodm/command
+    NODM_COMMAND="$RET"
     db_get nodm/min_session_time
     NODM_MIN_SESSION_TIME="$RET"
-    db_get nodm/xinit
-    NODM_XINIT="$RET"
-    db_get nodm/xsession
-    NODM_XSESSION="$RET"
 
     if [ -s /etc/default/nodm ] ; then
 	    sed -i -r -e "s,^NODM_ENABLED=.*,NODM_ENABLED=$NODM_ENABLED," \
 		      -e "s,^NODM_USER=.*,NODM_USER=$NODM_USER," \
-		      -e "s,^NODM_X_OPTIONS=.*,NODM_X_OPTIONS='$NODM_X_OPTIONS'," \
+		      -e "s,^NODM_COMMAND=.*,NODM_COMMAND='$NODM_COMMAND'," \
 		      -e "s,^NODM_MIN_SESSION_TIME=.*,NODM_MIN_SESSION_TIME=$NODM_MIN_SESSION_TIME," \
-		      -e "s,^NODM_XINIT=.*,NODM_XINIT=$NODM_XINIT," \
-		      -e "s,^NODM_XSESSION=.*,NODM_XSESSION=$NODM_XSESSION," \
 		      /etc/default/nodm
     else
 	    cat <<EOF > /etc/default/nodm
@@ -39,13 +33,7 @@ NODM_ENABLED=$NODM_ENABLED
 NODM_USER=$NODM_USER
 
 # xinit program
-NODM_XINIT=$NODM_XINIT
-
-# X session
-NODM_XSESSION=$NODM_XSESSION
-
-# Options for the X server
-NODM_X_OPTIONS='$NODM_X_OPTIONS'
+NODM_COMMAND='$NODM_COMMAND'
 
 # If an X session will run for less than this time in seconds, nodm will wait an
 # increasing bit of time before restarting the session.
