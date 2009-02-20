@@ -4,6 +4,7 @@
    and have something more meaningful instead like "0, 0, 30, 30, 60, 60"
  + log when the session is restarted
  + configure via preseeding
+ + path is not good for root
  - split X options before passing them to xinit?  Is it needed or xinit does it?
 
 Preseed values for testing:

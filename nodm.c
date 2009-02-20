@@ -440,8 +440,6 @@ int main (int argc, char **argv)
 	signal (SIGINT, SIG_DFL);
 	signal (SIGQUIT, SIG_DFL);
 
-	setenv ("PATH", "/bin:/usr/bin", 1);
-
 	/* save SU information */
 	syslog (LOG_INFO, "Successful su for %s by %s", name, "root");
 
