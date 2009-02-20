@@ -34,7 +34,7 @@ export NODM_USER NODM_COMMAND NODM_MIN_SESSION_TIME
 # set allowed_users=anybody in /etc/X11/Xwrapper.config
 
 # Gracefully exit if the package or its dependencies have been removed (but not purged).
-[ -x /usr/bin/nodm ] || exit 0
+[ -x /usr/sbin/nodm ] || exit 0
 
 # Load the VERBOSE setting and other rcS variables
 . /lib/init/vars.sh
