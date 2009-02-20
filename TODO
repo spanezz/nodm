@@ -33,3 +33,15 @@
 #debian-devel < enrico> jcristau: thanks!
 #debian-devel < jcristau> (or you could do what xinit does yourself, so you can deal with X exiting if you want)
 #debian-devel < enrico> jcristau: what does xinit exactly do?  I'll get the source code and see
+#debian-devel < enrico> jcristau: uhm, xinit actually does quite a bit of things
+#debian-devel < enrico> jcristau: nontrivial signal handling, start X server, wait for it to accept connections, 
+                        workarounds for several insane bits
+#debian-devel < jcristau> enrico: hmm. set up a SIGUSR1 handler in the parent to know when you can start the clients, and 
+                          signal(SIGUSR1, SIG_IGN) in the child. not that horrible. no idea about the other insane bits :)
+#debian-devel < enrico> jcristau: xinit also polls with XOpen to see if it came up, sets a sigalarm for a 15 seconds 
+                        timeout for it to come up, has more signal mojo that I didn't stop to grok
+#debian-devel < enrico> jcristau: then it has to juggle two processes.  In the end, if I reimplement that I risk 
+                        introducing more bugs than it's worth, and I can just reuse xinit and give it a session that does 
+                        the setuid
+#debian-devel < jcristau> enrico: ok :)
+
