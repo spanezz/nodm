@@ -1,0 +1,19 @@
+ * Configuration via preseeding
+
+You can configure nodm via debconf preseeding, so that the package will install
+without asking any question, and doing what you want.
+
+To do so, before installing the package you can create a file similar to the
+output of debconf-get-selections, and run debconf-set-selections with it.
+
+For example, in order to have nodm start as the user 'kiosk', you can save this
+file as nodm.preseed:
+
+  # Activate nodm
+  nodm nodm/enabled boolean true
+  
+  # Login the session as user 'kiosk'
+  nodm nodm/user string kiosk
+
+And then run 'debconf-set-selections nodm.preseed' before installing the
+package.

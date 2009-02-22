@@ -1,5 +1,9 @@
-This debian-specific package is
+This package is
+
  * Copyright © 2008 Joachim Breitner <nomeata@debian.org>
+ * Copyright © 2009 Enrico Zini <enrico@debian.org>
+
+The rewrite in C was sponsored by Truelite srl (http://www.truelite.it/).
 
 and licensed under the following license:
 

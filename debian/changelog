@@ -1,3 +1,13 @@
+nodm (0.2) pkg-fso; urgency=low
+
+  * Reimplemented to be more of a display manager, with respawn if X dies,
+    logging and 'nodm' PAM session
+  * Configuration via preseeding
+  * Added myself to Uploaders
+  * Acknowledged Truelite srl in debian/copyright
+
+ -- Enrico Zini <enrico@debian.org>  Sun, 22 Feb 2009 13:42:11 +0000
+
 nodm (0.1) pkg-fso; urgency=low
 
   * Rename to nodm
