@@ -10,11 +10,12 @@ case "$1" in
 		echo "HOME is: $HOME"
 		echo "pwd: `pwd`"
 		echo "id: `id`"
+		pstree `pgrep nodm|head -1`
 		exit 0
 		;;
 	*)
 		export NODM_USER=$1
-		export NODM_XINIT=exec
+		export NODM_XINIT="time"
 		export NODM_XSESSION="`pwd`/$0"
 #		export NODM_X_OPTIONS="runtest a b c"
 		export NODM_MIN_SESSION_TIME=60
