@@ -317,9 +317,9 @@ void run_and_restart(const char* xinit, const char* xsession, const char* xoptio
 	const char* args[4];
 
 	if (xoptions != NULL)
-		snprintf(command, BUFSIZ, "%s %s -- %s", xinit, xsession, xoptions);
+		snprintf(command, BUFSIZ, "exec %s %s -- %s", xinit, xsession, xoptions);
 	else
-		snprintf(command, BUFSIZ, "%s %s", xinit, xsession);
+		snprintf(command, BUFSIZ, "exec %s %s", xinit, xsession);
 	command[BUFSIZ-1] = 0;
 
 	args[0] = "/bin/sh";
