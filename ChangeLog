@@ -1,0 +1,5 @@
+2009-02-23  enrico@enricozini.org
+
+	* Autotoolized
+	* Run self as the session, using $NODM_RUN_SESSION to signal that it
+	  should behave differently
