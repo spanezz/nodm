@@ -6,6 +6,14 @@ set -e
 . /usr/share/debconf/confmodule
 
 if [ "$1" = "configure" ] ; then
+    if [ -n "$2" ] && dpkg --compare-versions "$2" lt "0.2"; then
+	# Before version 0.2, nodm was only used on the OpenMoko.  To
+	# guarantee a smooth upgrade, we can safely override debconf here
+	# using the openmoko parameters.
+	db_set nodm/enabled true
+	db_set nodm/x_options "vt3 -nolisten tcp"
+    fi
+
     # Update /etc/default/nodm
     db_get nodm/enabled
     NODM_ENABLED="$RET"
