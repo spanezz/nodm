@@ -1,0 +1,60 @@
+ * README for nodm
+
+nodm is a minimal display manager that simply logs in as a given user and
+starts an X session, without asking for username or password.
+
+On a normal computer, using nodm is a big security issue because it would give
+anyone access to the computer.
+
+However, there are cases where automatic login is needed: for example in an
+embedded system such as a mobile phone, or in a kiosk setup, or in a control
+panel for industrial machinery.  For those cases, nodm is simple to setup,
+lightweight, and it should do exactly the right thing.
+
+
+ * Features
+
+nodm is as small as it could be, and tries to provide the minimum amount of
+features needed to do a good job, following as much as possible the principle
+of least surprise.  This is what is offered:
+
+ - Automatic login with a fixed user, doing all that needs to be done like
+   setting up the session via PAM, updating lastlog, logging to syslog.
+ - X is started via /usr/bin/xinit and a standard X session script (by default,
+   /etc/X11/Xsession).
+ - The session is restarted when it exits.
+ - If a session exits too soon, nodm will wait a bit before restarting.  The
+   waiting time go as follow:
+    - The first time the session exits too soon, restart immediately
+    - The second and third time, wait 30 seconds
+    - All remaining times, wait 1 minute.
+   Once a session lasts long enough, the waiting time goes back to zero.
+
+nodm does NOT currently fork and run in the background like a proper daemon:
+most distributions have tools that do that, and nodm plays just fine with them.
+This is not a particular design choice: quite simply, so far no one has felt
+the need to implement it.
+
+
+ * Configuration
+
+Configuration is made via 5 environment variables:
+
+NODM_USER
+  Controls the user that is used to automatically log in.
+
+NODM_X_OPTIONS
+  Options to pass to the X server (for example: "vt7 -nolisten tcp")
+
+NODM_MIN_SESSION_TIME
+  Minimum time (in seconds) that a session should last in order for nodm to
+  decide that it has not quit too soon.  If an X session will run for less than
+  this time, nodm will wait an increasing bit of time before restarting it
+  (default: 60).
+
+NODM_XINIT
+  Path to the xinit program (default: /usr/bin/xinit)
+
+NODM_XSESSION
+  Path to the X session script (default: /etc/X11/Xsession)
+
