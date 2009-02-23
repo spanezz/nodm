@@ -8,10 +8,11 @@
  + split X options before passing them to xinit?  Is it needed or xinit does it?
  + signals are blocked while waiting between retries
  + set up the right environment, and cd to the right place
- - does not start X session if it is run as a user
+ + does not start X session if it is run as a user
    X: user not authorized to run the X server, aborting.
    (allowed_users=console in /etc/X11/Xwrapper.config)
- - we currently do not honour login.defs.  Do we need it?
+
+Notes on another way to implement display managers:
 
 #debian-devel < enrico> so, /etc/X11/Xwrapper.conf disallows a user to run X unless they're on console.  How do display 
                         managers work around it?
@@ -43,5 +44,6 @@
 #debian-devel < enrico> jcristau: then it has to juggle two processes.  In the end, if I reimplement that I risk 
                         introducing more bugs than it's worth, and I can just reuse xinit and give it a session that does 
                         the setuid
-#debian-devel < jcristau> enrico: ok :)
+
+ - we currently do not honour login.defs.  Do we need it?  no
 
