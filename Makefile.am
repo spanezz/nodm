@@ -10,4 +10,8 @@ nodm.8: nodm
 	help2man --section=8 --name="X display manager for automatic logins" \
 		 --no-info --include=nodm-man-extras ./$< > $@
 
+man_MANS = nodm.8
+
 EXTRA_DIST = test_nodm TODO nodm-man-extras
+
+CLEANFILES = nodm.8

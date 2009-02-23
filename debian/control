@@ -3,7 +3,7 @@ Section: misc
 Priority: extra
 Maintainer: Joachim Breitner <nomeata@debian.org>
 Uploaders: Enrico Zini <enrico@debian.org>
-Build-Depends: debhelper (>= 7), po-debconf, libpam0g-dev
+Build-Depends: debhelper (>= 7), po-debconf, libpam0g-dev, help2man
 Standards-Version: 3.8.0
 Vcs-Git: http://git.debian.org/git/pkg-fso/nodm.git
 Vcs-Browser: http://git.debian.org/?p=pkg-fso/nodm.git;a=summary
