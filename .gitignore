@@ -1,0 +1,16 @@
+Makefile.in
+Makefile
+config
+config.h
+config.h.in
+config.log
+config.status
+configure
+aclocal.m4
+debian/nodm.debhelper.log
+debian/nodm.postinst.debhelper
+debian/nodm.postrm.debhelper
+debian/nodm.prerm.debhelper
+debian/nodm.substvars
+debian/nodm/
+nodm
