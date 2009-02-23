@@ -1,4 +1,4 @@
-nodm (0.2) pkg-fso; urgency=low
+nodm (0.2) unstable; urgency=low
 
   * Reimplemented to be more of a display manager, with respawn if X dies,
     logging and 'nodm' PAM session
@@ -6,8 +6,9 @@ nodm (0.2) pkg-fso; urgency=low
   * Added myself to Uploaders
   * Acknowledged Truelite srl in debian/copyright
   * Added PAM configuration
+  * Upload to unstable
 
- -- Enrico Zini <enrico@debian.org>  Mon, 23 Feb 2009 17:30:59 +0000
+ -- Enrico Zini <enrico@debian.org>  Mon, 23 Feb 2009 20:51:26 +0000
 
 nodm (0.1) pkg-fso; urgency=low
 
