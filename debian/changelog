@@ -5,8 +5,9 @@ nodm (0.2) pkg-fso; urgency=low
   * Configuration via preseeding
   * Added myself to Uploaders
   * Acknowledged Truelite srl in debian/copyright
+  * Added PAM configuration
 
- -- Enrico Zini <enrico@debian.org>  Sun, 22 Feb 2009 13:42:11 +0000
+ -- Enrico Zini <enrico@debian.org>  Mon, 23 Feb 2009 17:30:59 +0000
 
 nodm (0.1) pkg-fso; urgency=low
 

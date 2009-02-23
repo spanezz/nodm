@@ -1,0 +1,24 @@
+#
+# /etc/pam.d/nodm - specify the PAM behaviour of nodm
+#
+
+# No authentication, as nodm skips by design
+
+# This module parses environment configuration file(s)
+# and also allows you to use an extended config
+# file /etc/security/pam_env.conf.
+#
+# parsing /etc/environment needs "readenv=1"
+session       required   pam_env.so readenv=1
+# locale variables are also kept into /etc/default/locale in etch
+# reading this file *in addition to /etc/environment* does not hurt
+session       required   pam_env.so readenv=1 envfile=/etc/default/locale
+
+# Sets up user limits according to /etc/security/limits.conf
+# # (Replaces the use of /etc/limits in old login)
+session    required   pam_limits.so
+
+# Standard Un*x account and session
+@include common-account
+@include common-password
+@include common-session
