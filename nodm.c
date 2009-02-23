@@ -47,7 +47,9 @@
 
 
 #define NAME "nodm"
-#define SESSION_CMD "/usr/sbin/nodm-session"
+#ifndef NODM_SESSION
+#define NODM_SESSION "/usr/sbin/nodm"
+#endif
 /* #define DEBUG_NODM */
 
 
@@ -378,7 +380,7 @@ static void monitor_cmdline_help(int argc, char** argv, FILE* out)
 	fprintf(out, "Usage: %s [options]\n\n", argv[0]);
 	fprintf(out, "Options:\n");
 	fprintf(out, " --help         print this help message\n");
-	fprintf(out, " --session=cmd  run cmd instead of %s\n", SESSION_CMD);
+	fprintf(out, " --session=cmd  run cmd instead of %s\n", NODM_SESSION);
 	fprintf(out, "                (use for testing)\n");
 }
 
@@ -395,7 +397,7 @@ static int nodm_monitor(int argc, char **argv)
 		{"session", required_argument, 0, 's'},
 		{0, 0, 0, 0}
 	};
-	const char* opt_session = SESSION_CMD;
+	const char* opt_session = NODM_SESSION;
 	char xinit[BUFSIZ];
 	char xoptions[BUFSIZ];
 	char* cp;
@@ -431,6 +433,7 @@ static int nodm_monitor(int argc, char **argv)
 	string_from_env(xinit, "NODM_XINIT", "/usr/bin/xinit");
 	string_from_env(xoptions, "NODM_X_OPTIONS", "");
 
+	setenv("NODM_RUN_SESSION", "1", 1);
 	run_and_restart(xinit, opt_session, xoptions[0] == 0 ? NULL : xoptions, mst);
 
 	return 0;
@@ -580,6 +583,7 @@ static int nodm_session(int argc, char **argv)
 	unsetenv("NODM_XSESSION");
 	unsetenv("NODM_X_OPTIONS");
 	unsetenv("NODM_MIN_SESSION_TIME");
+	unsetenv("NODM_RUN_SESSION");
 
 	chdir (pwent.pw_dir);
 
@@ -648,7 +652,7 @@ int main (int argc, char **argv)
 		return E_NOPERM;
 	}
 
-	if (ends_with(argv[0], "-session"))
+	if (getenv("NODM_RUN_SESSION") != NULL)
 	{
 		syslog(LOG_INFO, "Starting nodm X session");
 		ret = nodm_session(argc, argv);
