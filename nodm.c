@@ -434,6 +434,13 @@ static int nodm_monitor(int argc, char **argv)
 		return 0;
 	}
 
+	/* We only run if we are root */
+	if (getuid() != 0)
+	{
+		fprintf (stderr, _("%s: can only be run by root\n"), Prog);
+		return E_NOPERM;
+	}
+
 	syslog(LOG_INFO, "Starting nodm monitor");
 
 	/* Read the configuration from the environment */
@@ -461,6 +468,13 @@ static int nodm_session(int argc, char **argv)
 	int status;
 	char xsession[BUFSIZ];
 	const char* args[5];
+
+	/* We only run if we are root */
+	if (getuid() != 0)
+	{
+		fprintf (stderr, _("%s: can only be run by root\n"), Prog);
+		return E_NOPERM;
+	}
 
 	string_from_env(xsession, "NODM_XSESSION", "/etc/X11/Xsession");
 
@@ -653,13 +667,6 @@ int main (int argc, char **argv)
 	 */
 
 	// TODO command line processing
-
-	/* We only run if we are root */
-	if (getuid() != 0)
-	{
-		fprintf (stderr, _("%s: can only be run by root\n"), Prog);
-		return E_NOPERM;
-	}
 
 	if (getenv("NODM_RUN_SESSION") != NULL)
 	{
