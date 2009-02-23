@@ -6,4 +6,8 @@ nodm_SOURCES = nodm.c
 nodm_LDFLAGS = $(PAM_LIBS)
 nodm_CFLAGS = -DNODM_SESSION='"$(sbindir)/nodm"'
 
-EXTRA_DIST = test_nodm TODO
+nodm.8: nodm
+	help2man --section=8 --name="X display manager for automatic logins" \
+		 --no-info --include=nodm-man-extras ./$< > $@
+
+EXTRA_DIST = test_nodm TODO nodm-man-extras

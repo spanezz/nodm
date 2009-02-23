@@ -53,6 +53,7 @@
 /* #define DEBUG_NODM */
 
 
+#include "config.h"
 #include <getopt.h>
 #include <grp.h>
 #include <pwd.h>
@@ -380,6 +381,7 @@ static void monitor_cmdline_help(int argc, char** argv, FILE* out)
 	fprintf(out, "Usage: %s [options]\n\n", argv[0]);
 	fprintf(out, "Options:\n");
 	fprintf(out, " --help         print this help message\n");
+	fprintf(out, " --version      print %s's version number\n", NAME);
 	fprintf(out, " --session=cmd  run cmd instead of %s\n", NODM_SESSION);
 	fprintf(out, "                (use for testing)\n");
 }
@@ -390,10 +392,12 @@ static void monitor_cmdline_help(int argc, char** argv, FILE* out)
 static int nodm_monitor(int argc, char **argv)
 {
 	static int opt_help = 0;
+	static int opt_version = 0;
 	static struct option options[] =
 	{
 		/* These options set a flag. */
 		{"help",    no_argument,       &opt_help, 1},
+		{"version", no_argument,       &opt_version, 1},
 		{"session", required_argument, 0, 's'},
 		{0, 0, 0, 0}
 	};
@@ -422,6 +426,11 @@ static int nodm_monitor(int argc, char **argv)
 	if (opt_help)
 	{
 		monitor_cmdline_help(argc, argv, stdout);
+		return 0;
+	}
+	if (opt_version)
+	{
+		printf("%s version %s\n", NAME, VERSION);
 		return 0;
 	}
 
