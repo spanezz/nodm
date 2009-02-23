@@ -58,3 +58,27 @@ NODM_XINIT
 NODM_XSESSION
   Path to the X session script (default: /etc/X11/Xsession)
 
+
+ * Implementation details
+
+You probably do not need to read this section, unless you have found a problem
+and want to know what nodm is doing in order to debug it.
+
+First thing, the X server must be started by root, or otherwise most X setups
+will refuse a normal user to run an X server without being logged in.  This
+means that nodm cannot perform the log in before starting the X server, and
+must do it at the beginning of the X session.
+
+Because of this, nodm passes itself to xinit as the X session script.  It will
+then set the NODM_RUN_SESSION environment variable so that when xinit will run
+nodm again, it will know that it has to set up the session.
+
+This means that there are two instances of nodm running: one is the monitor
+process, that starts xinit and restarts it when it exits, and the other is the
+session process, that performs the session set up at the beginning of the
+session and tear down at the end.
+
+To set up the session, nodm does all that is required: logging, PAM, changing
+user ID, setting up groups and so on.  In the end, all the known NODM_*
+variables are cleared from the environment and Xsession is run.
+
