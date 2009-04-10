@@ -4,6 +4,7 @@ nodm (0.3) UNRELEASED; urgency=low
     Justin B Rye for the patch (Closes: #523004)
   * Include Swedish strings for nodm debconf, thanks to Martin Bagge for the
     translation. (Closes: #522976)
+  * Bump standards version, no change
 
  -- Joachim Breitner <nomeata@debian.org>  Fri, 10 Apr 2009 20:30:59 +0200
 
