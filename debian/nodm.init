@@ -49,7 +49,7 @@ export NODM_XINIT NODM_XSESSION NODM_X_OPTIONS NODM_USER NODM_MIN_SESSION_TIME
 case "$1" in
     start)
         [ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
-    	if [ "$NODM_ENABLED" == "no" ] || [ "$NODM_ENABLED" == "false" ]
+    	if [ "$NODM_ENABLED" = "no" ] || [ "$NODM_ENABLED" = "false" ]
 	then
 		log_warning_msg "Not starting $NAME because NODM_ENABLED is '$NODM_ENABLED' in /etc/default/$NAME"
 	else
