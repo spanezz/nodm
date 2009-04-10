@@ -2,6 +2,8 @@ nodm (0.3) UNRELEASED; urgency=low
 
   * Fix "initscript ignores NODM_ENABLED=false" by removing bashism, thanks to
     Justin B Rye for the patch (Closes: #523004)
+  * Include Swedish strings for nodm debconf, thanks to Martin Bagge for the
+    translation. (Closes: #522976)
 
  -- Joachim Breitner <nomeata@debian.org>  Fri, 10 Apr 2009 20:30:59 +0200
 
