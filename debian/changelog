@@ -1,3 +1,11 @@
+nodm (0.3-1) unstable; urgency=low
+
+  * Make a non-native packge and create a .orig.tar.gz with make dist before
+    building the package, fixes "executable /usr/sbin/nodm disappeared"
+    (Closes: #523977)
+
+ -- Joachim Breitner <nomeata@debian.org>  Tue, 14 Apr 2009 10:25:30 +0200
+
 nodm (0.3) unstable; urgency=low
 
   * Fix "initscript ignores NODM_ENABLED=false" by removing bashism, thanks to
