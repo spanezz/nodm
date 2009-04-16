@@ -1,3 +1,9 @@
+nodm (0.3-2) unstable; urgency=low
+
+  * Set the maintainer to be the pkg-fso list
+
+ -- Enrico Zini <enrico@debian.org>  Thu, 16 Apr 2009 14:17:29 +0100
+
 nodm (0.3-1) unstable; urgency=low
 
   * Make a non-native packge and create a .orig.tar.gz with make dist before
