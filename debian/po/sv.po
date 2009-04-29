@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nodm\n"
 "Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
-"POT-Creation-Date: 2009-02-23 20:57+0000\n"
-"PO-Revision-Date: 2009-04-07 18:57+0100\n"
+"POT-Creation-Date: 2009-04-26 14:13+0200\n"
+"PO-Revision-Date: 2009-04-26 18:01+0100\n"
 "Last-Translator: Martin Bagge <brother@bsnet.se>\n"
 "Language-Team: swedish <debian-l10n-swedish@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
@@ -18,67 +18,82 @@ msgstr ""
 
 #. Type: boolean
 #. Description
-#: ../nodm.templates:1001
+#: ../nodm.templates:2001
 msgid "Start nodm on boot?"
 msgstr "Ska nodm startas under systemets uppstart?"
 
 #. Type: boolean
 #. Description
-#: ../nodm.templates:1001
+#: ../nodm.templates:2001
 msgid ""
-"nodm starts an X session for a user without asking for authentication.  "
-"While this is welcome for embedded or kiosks systems, it is a security "
-"problem in most other machines, so by default nodm is configured not to "
-"start."
+"Designed for embedded or kiosk systems, nodm starts an X session for a user "
+"without asking for authentication. On regular machines, this has security "
+"implications and is therefore disabled by default."
 msgstr ""
-"nodm startar en X-session för en användare utan att först kräva "
-"autentisering. Detta är ofta fallet för kiosk- eller inbäddade system men "
-"måste betraktas som ett säkerthetsproblem i de flesta normala system, därför "
-"är standardinställningen att inte starta nodm."
+"Nodm är designat för att användas på inbäddade system eller kioskdatorer, "
+"nodm startar en X-session utan att först frågan användaren om användarnamn "
+"och lösenord. På vanliga maskiner är detta en klar säkerhetsfara och är "
+"därför avaktiverat som standard."
 
 #. Type: boolean
 #. Description
-#: ../nodm.templates:1001
-msgid "If you need autologin on this machine, enable nodm."
+#: ../nodm.templates:2001
+#| msgid "If you need autologin on this machine, enable nodm."
+msgid "You should enable nodm only if you need autologin on this machine."
 msgstr ""
-"Om du behöver autoinloggning för den här maskinen ska du aktivera nodm."
+"Nodm ska endast aktiveras om du behöver automatisk inloggning på denna "
+"maskin."
 
 #. Type: string
 #. Description
-#: ../nodm.templates:2001
+#: ../nodm.templates:3001
 msgid "User to start a session for:"
 msgstr "Användare som sessionen ska startas för:"
 
 #. Type: string
 #. Description
-#: ../nodm.templates:2001
-msgid "Name of the user that will automatically be logged into X by nodm."
-msgstr "Namn på användaren som ska loggas in automatiskt i X av nodm."
+#: ../nodm.templates:3001
+#| msgid "Name of the user that will automatically be logged into X by nodm."
+msgid ""
+"Please enter the login name of the user that will automatically be logged "
+"into X by nodm."
+msgstr "Ange namnet på användaren som ska loggas in automatiskt i X av nodm."
 
 #. Type: string
 #. Description
-#: ../nodm.templates:3001
+#: ../nodm.templates:4001
 msgid "Options for the X server:"
 msgstr "Alternativ för X-servern:"
 
 #. Type: string
 #. Description
-#: ../nodm.templates:3001
-msgid "Options to pass to the X server when starting the session."
-msgstr "Alternativ som ska skickas till X-servern när en session startar."
-
-#. Type: string
-#. Description
-#: ../nodm.templates:4001
-msgid "Minimum time (in seconds) for a session to be considered ok:"
-msgstr "Minsta tid (i sekunder) för att en session ska anses fungera korrekt."
-
-#. Type: string
-#. Description
 #: ../nodm.templates:4001
 msgid ""
+"Please enter the options to pass to the X server when starting the session. "
+"These options will be used in the NODM_X_OPTIONS variable in the command "
+"line used by nodm to start the X session:"
+msgstr ""
+"Ange vilka alternativ som ska skickas till X-servern när sessionen startar. "
+"Dessa alternativ kommer att användas i variablen NODM_X_OPTIONS på "
+"kommandoraden som används för att starta X-sessionen."
+
+#. Type: string
+#. Description
+#: ../nodm.templates:5001
+#| msgid "Minimum time (in seconds) for a session to be considered ok:"
+msgid "Minimum time (in seconds) for a session to be considered OK:"
+msgstr "Minsta tid (i sekunder) för att en session ska anses fungera korrekt:"
+
+#. Type: string
+#. Description
+#: ../nodm.templates:5001
+#| msgid ""
+#| "If an X session will run for less than this time in seconds, nodm will "
+#| "wait an amount of time before restarting the session.  The waiting time "
+#| "will grow until a session lasts longer than this amount."
+msgid ""
 "If an X session will run for less than this time in seconds, nodm will wait "
-"an amount of time before restarting the session.  The waiting time will grow "
+"an amount of time before restarting the session. The waiting time will grow "
 "until a session lasts longer than this amount."
 msgstr ""
 "Om en X-session kör kortare tid än detta (räknat i sekunder) kommer nodm att "
@@ -87,36 +102,64 @@ msgstr ""
 
 #. Type: string
 #. Description
-#: ../nodm.templates:5001
+#: ../nodm.templates:6001
 msgid "xinit program to use:"
 msgstr "xinit-program som ska användas:"
 
 #. Type: string
 #. Description
-#: ../nodm.templates:5001
-msgid "You can change this to use a different xinit program."
-msgstr "Du kan ändra detta alternativ för att använda ett annat xinit-program."
-
-#. Type: string
-#. Description
-#. Type: string
-#. Description
-#: ../nodm.templates:5001 ../nodm.templates:6001
-msgid ""
-"nodm will start the X session with the command: $NODM_XINIT $NODM_XSESSION "
-"-- $NODM_X_OPTIONS"
-msgstr ""
-"nodm kommer att starta X-sessionen med kommandot: $NODM_XINIT $NODM_XSESSION "
-"-- $NODM_X_OPTIONS"
-
-#. Type: string
-#. Description
 #: ../nodm.templates:6001
+msgid ""
+"Please choose the name of the \"xinit\" program to use with nodm. This name "
+"will be stored in the NODM_XINIT variable in the command line used by nodm "
+"to start the X session:"
+msgstr ""
+"Ange namnet på \"xinit\"-programmet som ska användas tillsammans med nodm. "
+"Namnet kommer att sparas i variabeln NODM_XINIT på kommandoraden som används "
+"av nodm för att starta X-sessionen."
+
+#. Type: string
+#. Description
+#: ../nodm.templates:7001
 msgid "X session to use:"
 msgstr "X-session som ska användas:"
 
 #. Type: string
 #. Description
-#: ../nodm.templates:6001
-msgid "You can change this to use a different X session script."
-msgstr "Du kan ändra detta för att använda skript för en annan X-session."
+#: ../nodm.templates:7001
+msgid ""
+"Please choose the name of the X session script to use with nodm. This name "
+"will be stored in the NODM_XSESSION variable in the command line used by "
+"nodm to start the X session:"
+msgstr ""
+"Ange namnet på sessionsskriptet för X som ska användas med nodm. Detta namn "
+"kommer att sparas i variablen NODM_XSESSION på kommandoraden som används av "
+"nodm för att starta X-sessionen."
+
+#~ msgid ""
+#~ "nodm starts an X session for a user without asking for authentication.  "
+#~ "While this is welcome for embedded or kiosks systems, it is a security "
+#~ "problem in most other machines, so by default nodm is configured not to "
+#~ "start."
+#~ msgstr ""
+#~ "nodm startar en X-session för en användare utan att först kräva "
+#~ "autentisering. Detta är ofta fallet för kiosk- eller inbäddade system men "
+#~ "måste betraktas som ett säkerthetsproblem i de flesta normala system, "
+#~ "därför är standardinställningen att inte starta nodm."
+
+#~ msgid "Options to pass to the X server when starting the session."
+#~ msgstr "Alternativ som ska skickas till X-servern när en session startar."
+
+#~ msgid "You can change this to use a different xinit program."
+#~ msgstr ""
+#~ "Du kan ändra detta alternativ för att använda ett annat xinit-program."
+
+#~ msgid ""
+#~ "nodm will start the X session with the command: $NODM_XINIT "
+#~ "$NODM_XSESSION -- $NODM_X_OPTIONS"
+#~ msgstr ""
+#~ "nodm kommer att starta X-sessionen med kommandot: $NODM_XINIT "
+#~ "$NODM_XSESSION -- $NODM_X_OPTIONS"
+
+#~ msgid "You can change this to use a different X session script."
+#~ msgstr "Du kan ändra detta för att använda skript för en annan X-session."
