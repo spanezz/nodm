@@ -1,48 +1,67 @@
+# These templates have been reviewed by the debian-l10n-english
+# team
+#
+# If modifications/additions/rewording are needed, please ask
+# debian-l10n-english@lists.debian.org for advice.
+#
+# Even minor modifications require translation updates and such
+# changes should be coordinated with translators and reviewers.
+
 Template: nodm/enabled
 Type: boolean
 Default: false
 _Description: Start nodm on boot?
- nodm starts an X session for a user without asking for authentication.  While
- this is welcome for embedded or kiosks systems, it is a security problem in
- most other machines, so by default nodm is configured not to start.
+ Designed for embedded or kiosk systems, nodm starts an X session
+ for a user without asking for authentication. On regular
+ machines, this has security implications and is therefore disabled
+ by default.
  .
- If you need autologin on this machine, enable nodm.
+ You should enable nodm only if you need autologin on this machine.
 
 Template: nodm/user
 Type: string
 Default: root
 _Description: User to start a session for:
- Name of the user that will automatically be logged into X by nodm.
+ Please enter the login name of the user that will automatically be logged into X by nodm.
 
 Template: nodm/x_options
 Type: string
 Default: vt7 -nolisten tcp
+#flag:translate!:3
 _Description: Options for the X server:
- Options to pass to the X server when starting the session.
+ Please enter the options to pass to the X server when starting the session.
+ These options will be used in the NODM_X_OPTIONS variable in the command line used
+ by nodm to start the X session:
+ .
+ $NODM_XINIT $NODM_XSESSION -- $NODM_X_OPTIONS
 
 Template: nodm/min_session_time
 Type: string
 Default: 60
-_Description: Minimum time (in seconds) for a session to be considered ok:
+_Description: Minimum time (in seconds) for a session to be considered OK:
  If an X session will run for less than this time in seconds, nodm will wait an
- amount of time before restarting the session.  The waiting time will grow
+ amount of time before restarting the session. The waiting time will grow
  until a session lasts longer than this amount.
 
 Template: nodm/xinit
 Type: string
 Default: /usr/bin/xinit
+#flag:translate!:3
 _Description: xinit program to use:
- You can change this to use a different xinit program.
+ Please choose the name of the "xinit" program to use with nodm. This
+ name will be stored in the NODM_XINIT variable in the command line used
+ by nodm to start the X session:
  .
- nodm will start the X session with the command:
  $NODM_XINIT $NODM_XSESSION -- $NODM_X_OPTIONS
 
 Template: nodm/xsession
 Type: string
 Default: /etc/X11/Xsession
+#flag:translate!:3
 _Description: X session to use:
- You can change this to use a different X session script.
+ Please choose the name of the X session script to use with nodm. This
+ name will be stored in the NODM_XSESSION variable in the command line used
+ by nodm to start the X session:
  .
- nodm will start the X session with the command:
  $NODM_XINIT $NODM_XSESSION -- $NODM_X_OPTIONS
 

@@ -12,11 +12,7 @@ Package: nodm
 Architecture: any
 Depends: xinit, x11-common, xterm | x-terminal-emulator, ${shlibs:Depends}, ${misc:Depends}
 Conflicts: gdm, xdm, kdm, x-display-manager, zhone-session
-Description: Automatic Display Manager
- This packages prepares the system to automatically start an X session at
- system boot. It is targeted for devices like smartphones, but can be used
+Description: automatic display manager
+ This package prepares the system to automatically start an X session at
+ system boot. It is meant for devices like smartphones, but can be used on
  a regular computer as well, if the security implications are acceptable.
- .
- It should not be installed on a regular Debian system, as it would interfere
- with an installed display manager.
-

@@ -1,3 +1,9 @@
+nodm (0.3-3) UNRELEASED; urgency=low
+
+  * Reviewed Debconf templates and debian/control (Closes: #525149)
+
+ -- Joachim Breitner <nomeata@debian.org>  Wed, 29 Apr 2009 21:54:45 +0200
+
 nodm (0.3-2) unstable; urgency=low
 
   * Set the maintainer to be the pkg-fso list
