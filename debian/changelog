@@ -1,6 +1,8 @@
 nodm (0.3-3) UNRELEASED; urgency=low
 
   * Reviewed Debconf templates and debian/control (Closes: #525149)
+  * Updated Portuguese translation for debconf messages, thanks to Américo
+    Monteiro (Closes: #525697)
 
  -- Joachim Breitner <nomeata@debian.org>  Wed, 29 Apr 2009 21:54:45 +0200
 
