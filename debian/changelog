@@ -1,4 +1,4 @@
-nodm (0.4-1) UNRELEASED; urgency=low
+nodm (0.4-1) unstable; urgency=low
 
   [ Christian Perrier ]
   * Debconf templates and debian/control reviewed by the debian-l10n-
@@ -21,7 +21,7 @@ nodm (0.4-1) UNRELEASED; urgency=low
      - Set USERNAME, PWD and SHELL in the environment. Closes: #525908.
   * Remove /etc/default/nodm on purge. Closes: #527379.
 
- -- Enrico Zini <enrico@debian.org>  Thu, 14 May 2009 13:40:00 +0100
+ -- Enrico Zini <enrico@debian.org>  Thu, 14 May 2009 14:40:50 +0100
 
 nodm (0.3-2) unstable; urgency=low
 
