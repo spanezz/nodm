@@ -598,7 +598,42 @@ static int nodm_session(int argc, char **argv)
 
 	setenv ("HOME", pwent.pw_dir, 1);
 	setenv ("USER", pwent.pw_name, 1);
+	setenv ("USERNAME", pwent.pw_name, 1);
 	setenv ("LOGNAME", pwent.pw_name, 1);
+	setenv ("PWD", pwent.pw_dir, 1);
+	setenv ("SHELL", pwent.pw_shell, 1);
+
+	// Variables that gdm sets but we do not:
+	//
+	// This is something that we should see how to handle.
+	// What I know so far is:
+	//  - It should point to ~/.Xauthority, which should exist.
+	//  - 'xauth generate' should be able to create it if missing, but I
+	//    have not tested it yet.
+	// g_setenv ("XAUTHORITY", d->userauth, TRUE);
+	//
+	// This is 'gnome', 'kde' and so on, and should probably be set by the
+	// X session script:
+	// g_setenv ("DESKTOP_SESSION", session, TRUE);
+	//
+	// This looks gdm specific:
+	// g_setenv ("GDMSESSION", session, TRUE);
+
+	// Variables that gdm sets but we delegate other tools to set:
+	//
+	// These are set by xinit
+	// g_setenv ("DISPLAY", d->name, TRUE);
+	// g_setenv ("WINDOWPATH", d->windowpath, TRUE);
+	//
+	// This is set by the pam_getenvlist loop above
+	// g_setenv ("XDG_SESSION_COOKIE", ck_session_cookie, TRUE);
+	//
+	// This is set by "sh -l" from /etc/profile
+	// if (pwent->pw_uid == 0)
+	//   g_setenv ("PATH", gdm_daemon_config_get_value_string (GDM_KEY_ROOT_PATH), TRUE);
+	// else
+	//   g_setenv ("PATH", gdm_daemon_config_get_value_string (GDM_KEY_PATH), TRUE);
+	//
 
 	/* Clear the NODM_* environment variables */
 	unsetenv("NODM_USER");

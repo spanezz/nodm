@@ -1,5 +1,6 @@
 nodm (0.3) UNRELEASED; urgency=low
 
+  [ Christian Perrier ]
   * Debconf templates and debian/control reviewed by the debian-l10n-
     english team as part of the Smith review project. Closes: #525149
   * [Debconf translation updates]
@@ -15,7 +16,11 @@ nodm (0.3) UNRELEASED; urgency=low
     - Czech. Closes: #528209
     - Spanish. Closes: #528246
 
- -- Christian Perrier <bubulle@debian.org>  Wed, 22 Apr 2009 16:48:41 +0200
+  [ Enrico Zini ]
+  * New upstream version
+     - Set USERNAME, PWD and SHELL in the environment. Closes: #525908.
+
+ -- Enrico Zini <enrico@debian.org>  Thu, 14 May 2009 13:18:28 +0100
 
 nodm (0.3-2) unstable; urgency=low
 
