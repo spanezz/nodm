@@ -11,6 +11,7 @@ case "$1" in
 		echo "pwd: `pwd`"
 		echo "id: `id`"
 		pstree `pgrep nodm|head -1`
+#		set > test_nodm.env.tmp
 		exit 0
 		;;
 	*)
@@ -19,7 +20,7 @@ case "$1" in
 		export NODM_XSESSION="`pwd`/$0"
 #		export NODM_X_OPTIONS="runtest a b c"
 		export NODM_MIN_SESSION_TIME=60
-		exec ./nodm --session `pwd`/nodm-session
+		exec ./nodm --session `pwd`/nodm
 		;;
 #	'')
 #		echo "Use: $0 username" >&2
