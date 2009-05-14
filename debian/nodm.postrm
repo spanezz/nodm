@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+if [ "$1" = "purge" ]; then
+	echo "Removing /etc/default/nodm..."
+	rm -f /etc/default/nodm
+fi
+
+#DEBHELPER#
