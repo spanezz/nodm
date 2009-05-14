@@ -12,6 +12,6 @@ nodm.8: nodm
 
 man_MANS = nodm.8
 
-EXTRA_DIST = test_nodm TODO nodm-man-extras
+EXTRA_DIST = test_nodm TODO nodm-man-extras autogen.sh
 
 CLEANFILES = nodm.8
