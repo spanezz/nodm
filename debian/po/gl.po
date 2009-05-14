@@ -1,26 +1,26 @@
-# translation of nodm debconf to Portuguese
-# Copyright (C) 2009 the nodm's copyright holder
+# Copyright (C) 2009 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the nodm package.
 #
-# Américo Monteiro <a_monteiro@netcabo.pt>, 2009.
+# marce villarino <mvillarino@users.sourceforge.net>, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: nodm 0.3\n"
 "Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
 "POT-Creation-Date: 2009-04-26 14:13+0200\n"
-"PO-Revision-Date: 2009-04-26 15:17+0100\n"
-"Last-Translator: Américo Monteiro <a_monteiro@netcabo.pt>\n"
-"Language-Team: Portuguese <traduz@debianpt.org>\n"
+"PO-Revision-Date: 2009-05-06 23:13+0200\n"
+"Last-Translator: marce villarino <mvillarino@users.sourceforge.net>\n"
+"Language-Team: Galician <proxecto@trasno.ent>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.4\n"
+"X-Generator: Lokalize 0.2\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #. Type: boolean
 #. Description
 #: ../nodm.templates:2001
 msgid "Start nodm on boot?"
-msgstr "Iniciar o nodm no arranque da máquina?"
+msgstr "Desexa iniciar nodm ao arrincar?"
 
 #. Type: boolean
 #. Description
@@ -30,23 +30,22 @@ msgid ""
 "without asking for authentication. On regular machines, this has security "
 "implications and is therefore disabled by default."
 msgstr ""
-"Designado para sistemas embebidos ou kiosk, o nodm arranca uma sessão X para "
-"um utilizador sem perguntar por autenticação. Em máquinas regulares isto tem "
-"implicações de segurança e devido a isso vem desactivado por predefinição."
+"Nodm inicia unha sexión X para un usuario sen pedir autenticación. Foi "
+"deseñado para sistemas incorporados e kiosk, en máquinas normais iso ten "
+"problemas de seguridade polo que por omisión está desactivado."
 
 #. Type: boolean
 #. Description
 #: ../nodm.templates:2001
 msgid "You should enable nodm only if you need autologin on this machine."
 msgstr ""
-"Você deve activar o nodm apenas se necessita de autenticação automática "
-"nesta máquina."
+"Só debería activar nodm se precisa facer un acceso automático nesta máquina."
 
 #. Type: string
 #. Description
 #: ../nodm.templates:3001
 msgid "User to start a session for:"
-msgstr "Utilizador pelo qual se inicia uma sessão:"
+msgstr "Usuario co que iniciar unha sesión:"
 
 #. Type: string
 #. Description
@@ -55,14 +54,13 @@ msgid ""
 "Please enter the login name of the user that will automatically be logged "
 "into X by nodm."
 msgstr ""
-"Por favor indique o nome de login do utilizador que irá ser automaticamente "
-"autenticado no X pelo nodm."
+"Indique o nome de usuario co que acceder automaticamente ás X con nodm."
 
 #. Type: string
 #. Description
 #: ../nodm.templates:4001
 msgid "Options for the X server:"
-msgstr "Opções para o servidor X:"
+msgstr "Opcións para o servidor X:"
 
 #. Type: string
 #. Description
@@ -72,15 +70,15 @@ msgid ""
 "These options will be used in the NODM_X_OPTIONS variable in the command "
 "line used by nodm to start the X session:"
 msgstr ""
-"Por favor indique as opções a passar ao servidor X quando arranca a sessão. "
-"Estas opções serão usadas na variável NODM_X_OPTIONS da linha de comandos "
-"usada pelo nodm para arrancar a sessão X:"
+"Indique as opcións a pasar ao servidor X cando se inicia a sesión. Estas "
+"opcións empregaranse na variábel NODM_X_OPTIONS na liña de ordes empregada "
+"por nodm para iniciar a sesión X:"
 
 #. Type: string
 #. Description
 #: ../nodm.templates:5001
 msgid "Minimum time (in seconds) for a session to be considered OK:"
-msgstr "Tempo mínimo (em segundos) para uma sessão ser considerada OK:"
+msgstr "Tempo mínimo (en segundos) para que unha sesión se considere OK:"
 
 #. Type: string
 #. Description
@@ -90,15 +88,15 @@ msgid ""
 "an amount of time before restarting the session. The waiting time will grow "
 "until a session lasts longer than this amount."
 msgstr ""
-"Se uma sessão X corre durante menos que este tempo em segundos, o nodm irá "
-"esperar um certo tempo antes de reiniciar a sessão. O tempo de espera irá "
-"aumentar até que uma sessão dure mais que esta quantidade de tempo."
+"Se unha sesión X se vai executar durante menos que este tempo en segundos, "
+"nodm agardará un tempo antes de reiniciar a sesión. O tempo de agarda "
+"aumentará até que unha sesión dure máis que  esta cantidade."
 
 #. Type: string
 #. Description
 #: ../nodm.templates:6001
 msgid "xinit program to use:"
-msgstr "Programa xinit a usar:"
+msgstr "programa xinit a empregar:"
 
 #. Type: string
 #. Description
@@ -108,15 +106,15 @@ msgid ""
 "will be stored in the NODM_XINIT variable in the command line used by nodm "
 "to start the X session:"
 msgstr ""
-"Por favor escolha o nome do programa \"xinit\" para usar com o nodm. Este "
-"nome será guardado na variável NODM_XINIT da linha de comandos usada pelo "
-"nodm para arrancar uma sessão:"
+"Escolla o nome do programa «xinit» a empregar con nodm. Este nome gardarase "
+"na variábel NODM_XINIT na liña de ordes empregada por nodm para iniciar a "
+"sesión X:"
 
 #. Type: string
 #. Description
 #: ../nodm.templates:7001
 msgid "X session to use:"
-msgstr "Sessão X a usar:"
+msgstr "Sesión X a empregar:"
 
 #. Type: string
 #. Description
@@ -126,6 +124,6 @@ msgid ""
 "will be stored in the NODM_XSESSION variable in the command line used by "
 "nodm to start the X session:"
 msgstr ""
-"Por favor escolha o nome do script da  sessão X a usar com o nodm. Este nome "
-"será guardado na variável NODM_XSESSION da linha de comandos usada pelo nodm "
-"para arrancar uma sessão:"
+"Escolla o nome do script de sesión das X a empregar con nodm. Este nome "
+"gardarase na variábel NODM_XSESSION na liña de ordes empregada por nodm para "
+"iniciar a sesión X:"

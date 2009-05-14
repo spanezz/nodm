@@ -1,0 +1,160 @@
+# nodm po-debconf translation to Spanish.
+# Copyright (C) 2009 Software in the Public Interest.
+# This file is distributed under the same license as the nodm package.
+#
+#  Changes:
+# - Initial translation
+#       Fernando González de Requena <fgrequena@gmail.com>, 2009.
+#
+#
+#  Traductores, si no conoce el formato PO, merece la pena leer la
+#  documentación de gettext, especialmente las secciones dedicadas a este
+#  formato, por ejemplo ejecutando:
+#         info -n '(gettext)PO Files'
+#         info -n '(gettext)Header Entry'
+#
+# Equipo de traducción al español, por favor lean antes de traducir
+# los siguientes documentos:
+#
+# - El proyecto de traducción de Debian al español
+#   http://www.debian.org/intl/spanish/
+#   especialmente las notas y normas de traducción en
+#   http://www.debian.org/intl/spanish/notas
+#
+# - La guía de traducción de po's de debconf:
+#   /usr/share/doc/po-debconf/README-trans
+#   o http://www.debian.org/intl/l10n/po-debconf/README-trans
+#
+# Si tiene dudas o consultas sobre esta traducción consulte con el último
+# traductor (campo Last-Translator) y ponga en copia a la lista de
+# traducción de Debian al español (<debian-l10n-spanish@lists.debian.org>)
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: nodm \n"
+"Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
+"POT-Creation-Date: 2009-04-26 14:13+0200\n"
+"PO-Revision-Date: 2009-04-27 17:39+0200\n"
+"Last-Translator: Fernando González de Requena <fgrequena@gmail.com>\n"
+"Language-Team: Spanish <debian-l10n-spanish@lists.debian.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#. Type: boolean
+#. Description
+#: ../nodm.templates:2001
+msgid "Start nodm on boot?"
+msgstr "¿Desea iniciar nodm en el arranque?"
+
+#. Type: boolean
+#. Description
+#: ../nodm.templates:2001
+msgid ""
+"Designed for embedded or kiosk systems, nodm starts an X session for a user "
+"without asking for authentication. On regular machines, this has security "
+"implications and is therefore disabled by default."
+msgstr ""
+"Diseñado para sistemas integrados o en modo kiosco, nodm inicia una sesión "
+"de X para un usuario sin pedir autenticación. Esto tiene implicaciones de "
+"seguridad en máquinas normales, por lo que está deshabilitado de manera "
+"predeterminada."
+
+#. Type: boolean
+#. Description
+#: ../nodm.templates:2001
+msgid "You should enable nodm only if you need autologin on this machine."
+msgstr ""
+"Sólo debe activar nodm si necesita acceso automático («autologin») en esta "
+"máquina."
+
+#. Type: string
+#. Description
+#: ../nodm.templates:3001
+msgid "User to start a session for:"
+msgstr "Usuario con el que iniciar una sesión:"
+
+#. Type: string
+#. Description
+#: ../nodm.templates:3001
+msgid ""
+"Please enter the login name of the user that will automatically be logged "
+"into X by nodm."
+msgstr ""
+"Por favor, introduzca el nombre de acceso del usuario con el que se iniciará "
+"automáticamente la sesión de X por nodm."
+
+#. Type: string
+#. Description
+#: ../nodm.templates:4001
+msgid "Options for the X server:"
+msgstr "Opciones para el servidor de X:"
+
+#. Type: string
+#. Description
+#: ../nodm.templates:4001
+msgid ""
+"Please enter the options to pass to the X server when starting the session. "
+"These options will be used in the NODM_X_OPTIONS variable in the command "
+"line used by nodm to start the X session:"
+msgstr ""
+"Por favor, introduzca las opciones que se han de pasar al servidor de X al "
+"inicio de la sesión. Estas opciones se almacenarán en la variable "
+"NODM_X_OPTIONS de la línea de órdenes utilizada por nodm para iniciar la "
+"sesión de X:"
+
+#. Type: string
+#. Description
+#: ../nodm.templates:5001
+msgid "Minimum time (in seconds) for a session to be considered OK:"
+msgstr "Tiempo mínimo (en segundos) para que la sesión se considere correcta:"
+
+#. Type: string
+#. Description
+#: ../nodm.templates:5001
+msgid ""
+"If an X session will run for less than this time in seconds, nodm will wait "
+"an amount of time before restarting the session. The waiting time will grow "
+"until a session lasts longer than this amount."
+msgstr ""
+"Si una sesión de X se ejecuta durante menos tiempo que éste, nodm esperará "
+"una cantidad de tiempo antes de reiniciar la sesión. El tiempo de espera "
+"aumentará hasta que una sesión dure más tiempo que esta cantidad."
+
+#. Type: string
+#. Description
+#: ../nodm.templates:6001
+msgid "xinit program to use:"
+msgstr "Programa xinit a usar:"
+
+#. Type: string
+#. Description
+#: ../nodm.templates:6001
+msgid ""
+"Please choose the name of the \"xinit\" program to use with nodm. This name "
+"will be stored in the NODM_XINIT variable in the command line used by nodm "
+"to start the X session:"
+msgstr ""
+"Por favor, elija el nombre del programa «xinit» que se va a usar con nodm. "
+"Este nombre se almacenará en la variable NODM_XINIT de la línea de órdenes "
+"utilizada por nodm para iniciar la sesión de X:"
+
+#. Type: string
+#. Description
+#: ../nodm.templates:7001
+msgid "X session to use:"
+msgstr "Sesión de X a usar:"
+
+#. Type: string
+#. Description
+#: ../nodm.templates:7001
+msgid ""
+"Please choose the name of the X session script to use with nodm. This name "
+"will be stored in the NODM_XSESSION variable in the command line used by "
+"nodm to start the X session:"
+msgstr ""
+"Por favor, elija el nombre del archivo de órdenes («script») para la sesión "
+"de X que se va a utilizar con nodm. Este nombre se almacenará en la variable "
+"NODM_XSESSION de la línea de órdenes utilizada por nodm para iniciar la "
+"sesión de X:"

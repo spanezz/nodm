@@ -1,3 +1,22 @@
+nodm (0.3) UNRELEASED; urgency=low
+
+  * Debconf templates and debian/control reviewed by the debian-l10n-
+    english team as part of the Smith review project. Closes: #525149
+  * [Debconf translation updates]
+    - Swedish. Closes: #525693
+    - Portuguese. Closes: #525697
+    - Finnish. Closes: #526366
+    - French. Closes: #526388
+    - Italian. Closes: #526602
+    - Galician. Closes: #527332
+    - Russian. Closes: #527998
+    - German. Closes: #528014
+    - Russian. Closes: #527998
+    - Czech. Closes: #528209
+    - Spanish. Closes: #528246
+
+ -- Christian Perrier <bubulle@debian.org>  Wed, 22 Apr 2009 16:48:41 +0200
+
 nodm (0.3-2) unstable; urgency=low
 
   [Joachim Breitner]

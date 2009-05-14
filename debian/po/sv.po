@@ -38,7 +38,6 @@ msgstr ""
 #. Type: boolean
 #. Description
 #: ../nodm.templates:2001
-#| msgid "If you need autologin on this machine, enable nodm."
 msgid "You should enable nodm only if you need autologin on this machine."
 msgstr ""
 "Nodm ska endast aktiveras om du behöver automatisk inloggning på denna "
@@ -53,7 +52,6 @@ msgstr "Användare som sessionen ska startas för:"
 #. Type: string
 #. Description
 #: ../nodm.templates:3001
-#| msgid "Name of the user that will automatically be logged into X by nodm."
 msgid ""
 "Please enter the login name of the user that will automatically be logged "
 "into X by nodm."
@@ -80,17 +78,12 @@ msgstr ""
 #. Type: string
 #. Description
 #: ../nodm.templates:5001
-#| msgid "Minimum time (in seconds) for a session to be considered ok:"
 msgid "Minimum time (in seconds) for a session to be considered OK:"
 msgstr "Minsta tid (i sekunder) för att en session ska anses fungera korrekt:"
 
 #. Type: string
 #. Description
 #: ../nodm.templates:5001
-#| msgid ""
-#| "If an X session will run for less than this time in seconds, nodm will "
-#| "wait an amount of time before restarting the session.  The waiting time "
-#| "will grow until a session lasts longer than this amount."
 msgid ""
 "If an X session will run for less than this time in seconds, nodm will wait "
 "an amount of time before restarting the session. The waiting time will grow "
