@@ -1,3 +1,10 @@
+nodm (0.5-1) UNRELEASED; urgency=low
+
+  * New upstream version
+     - truncate ~/.xsession-errors on startup. Closes: #531194.
+
+ -- Enrico Zini <enrico@debian.org>  Mon, 06 Jul 2009 19:52:36 +0100
+
 nodm (0.4-1) unstable; urgency=low
 
   [ Christian Perrier ]
