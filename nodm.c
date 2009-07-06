@@ -216,7 +216,7 @@ int cleanup_xse(off_t maxsize, const char* curdirname)
 	int xse_fd = -1;
 	struct stat xse_st;
 
-	xse_fd = open(".xsession-errors", O_WRONLY | O_CREAT, 0666);
+	xse_fd = open(".xsession-errors", O_WRONLY | O_CREAT, 0600);
 	if (xse_fd < 0)
 	{
 		perror ("open ~/.xsession-errors");
