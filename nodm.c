@@ -63,10 +63,12 @@
 #include <string.h>
 #include <errno.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <sys/wait.h>
 #include <syslog.h>
 #include <time.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 #include <security/pam_appl.h>
 #include <security/pam_misc.h>
@@ -191,6 +193,59 @@ int change_uid (const struct passwd *info)
 		return -1;
 	}
 	return 0;
+}
+
+/*
+ * Cleanup ~/.xsession-errors.
+ *
+ * The function looks for .xsession-errors in the current directory, so when it
+ * is called the current directory must be the user's homedir.
+ *
+ * The function also assumes that we are running as the user. As a consequence
+ * it does not worry about symlink attacks, because they would only be possible
+ * if the user's home directory is group or world writable.
+ *
+ * curdirname is the name of the current directory, and it is only used when
+ * logging error messages.
+ *
+ * The function returns true on success, false on failure.
+ */
+int cleanup_xse(off_t maxsize, const char* curdirname)
+{
+	int ret = 0;
+	int xse_fd = -1;
+	struct stat xse_st;
+
+	xse_fd = open(".xsession-errors", O_WRONLY | O_CREAT, 0666);
+	if (xse_fd < 0)
+	{
+		perror ("open ~/.xsession-errors");
+		syslog (LOG_ERR, "cannot open `%s/%s': %m\n", curdirname, ".xsession-errors");
+		goto cleanup;
+	}
+	if (fstat(xse_fd, &xse_st) < 0)
+	{
+		perror ("stat ~/.xsession-errors");
+		syslog (LOG_ERR, "cannot stat `%s/%s': %m\n", curdirname, ".xsession-errors");
+		goto cleanup;
+	}
+	if (xse_st.st_size > maxsize)
+	{
+		if (ftruncate(xse_fd, 0) < 0)
+		{
+			perror ("truncating ~/.xsession-errors");
+			syslog (LOG_ERR, "cannot truncate `%s/%s': %m\n", curdirname, ".xsession-errors");
+			goto cleanup;
+		}
+	}
+
+	/* If we made it so far, we succeeded */
+	ret = 1;
+
+cleanup:
+	if (xse_fd >= 0)
+		close(xse_fd);
+	return ret;
 }
 
 /* Signal handler for parent process later */
@@ -643,7 +698,9 @@ static int nodm_session(int argc, char **argv)
 	unsetenv("NODM_MIN_SESSION_TIME");
 	unsetenv("NODM_RUN_SESSION");
 
-	chdir (pwent.pw_dir);
+	if (chdir (pwent.pw_dir) == 0)
+		/* Truncate ~/.xsession-errors */
+		cleanup_xse(0, pwent.pw_dir);
 
 	args[0] = "/bin/sh";
 	args[1] = "-l";
