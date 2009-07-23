@@ -550,7 +550,7 @@ static int nodm_monitor(int argc, char **argv)
 	{
 		char startvt[BUFSIZ];
 		string_from_env(startvt, "NODM_FIRST_VT", "7");
-		vt_num = strtoul(startvt, NULL, 10, NULL);
+		vt_num = strtoul(startvt, NULL, 10);
 	}
 	if ((vt_fd = open_vt(&vt_num)) == -1)
 	{
