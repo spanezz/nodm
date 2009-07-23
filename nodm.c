@@ -505,6 +505,7 @@ static int nodm_monitor(int argc, char **argv)
 	const char* opt_session = NODM_SESSION;
 	char xinit[BUFSIZ];
 	char xoptions[BUFSIZ];
+	char xoptions1[BUFSIZ];
 	char* cp;
 	int mst;
 	int vt_fd = -1;
@@ -558,9 +559,9 @@ static int nodm_monitor(int argc, char **argv)
 	string_from_env(xinit, "NODM_XINIT", "/usr/bin/xinit");
 	string_from_env(xoptions, "NODM_X_OPTIONS", "");
 	if (xoptions[0] == 0)
-		snprintf(xoptions, BUFSIZ, "vt%d", vt_num);
+		snprintf(xoptions1, BUFSIZ, "vt%d", vt_num);
 	else
-		snprintf(xoptions, BUFSIZ, "vt%d %s", vt_num, xoptions);
+		snprintf(xoptions1, BUFSIZ, "vt%d %s", vt_num, xoptions);
 
 	setenv("NODM_RUN_SESSION", "1", 1);
 	run_and_restart(xinit, opt_session, xoptions[0] == 0 ? NULL : xoptions, mst);
