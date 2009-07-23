@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nodm 0.3\n"
 "Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
-"POT-Creation-Date: 2009-04-26 14:13+0200\n"
+"POT-Creation-Date: 2009-07-24 01:51+0200\n"
 "PO-Revision-Date: 2009-05-06 23:13+0200\n"
 "Last-Translator: marce villarino <mvillarino@users.sourceforge.net>\n"
 "Language-Team: Galician <proxecto@trasno.ent>\n"
@@ -59,12 +59,41 @@ msgstr ""
 #. Type: string
 #. Description
 #: ../nodm.templates:4001
+msgid "Lowest numbered vt on which X may start:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../nodm.templates:4001
+msgid ""
+"nodm needs to find a free virtual terminal on which to start the X server."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../nodm.templates:4001
+msgid ""
+"Since X and getty get to conflict, this parameter will specify the lowest "
+"numbered virtual terminal on which to start the search."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../nodm.templates:4001
+msgid ""
+"This value should be set to one higher than the highest numbered virtual "
+"terminal on which a getty may start."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../nodm.templates:5001
 msgid "Options for the X server:"
 msgstr "Opcións para o servidor X:"
 
 #. Type: string
 #. Description
-#: ../nodm.templates:4001
+#: ../nodm.templates:5001
 msgid ""
 "Please enter the options to pass to the X server when starting the session. "
 "These options will be used in the NODM_X_OPTIONS variable in the command "
@@ -76,13 +105,13 @@ msgstr ""
 
 #. Type: string
 #. Description
-#: ../nodm.templates:5001
+#: ../nodm.templates:6001
 msgid "Minimum time (in seconds) for a session to be considered OK:"
 msgstr "Tempo mínimo (en segundos) para que unha sesión se considere OK:"
 
 #. Type: string
 #. Description
-#: ../nodm.templates:5001
+#: ../nodm.templates:6001
 msgid ""
 "If an X session will run for less than this time in seconds, nodm will wait "
 "an amount of time before restarting the session. The waiting time will grow "
@@ -94,13 +123,13 @@ msgstr ""
 
 #. Type: string
 #. Description
-#: ../nodm.templates:6001
+#: ../nodm.templates:7001
 msgid "xinit program to use:"
 msgstr "programa xinit a empregar:"
 
 #. Type: string
 #. Description
-#: ../nodm.templates:6001
+#: ../nodm.templates:7001
 msgid ""
 "Please choose the name of the \"xinit\" program to use with nodm. This name "
 "will be stored in the NODM_XINIT variable in the command line used by nodm "
@@ -112,13 +141,13 @@ msgstr ""
 
 #. Type: string
 #. Description
-#: ../nodm.templates:7001
+#: ../nodm.templates:8001
 msgid "X session to use:"
 msgstr "Sesión X a empregar:"
 
 #. Type: string
 #. Description
-#: ../nodm.templates:7001
+#: ../nodm.templates:8001
 msgid ""
 "Please choose the name of the X session script to use with nodm. This name "
 "will be stored in the NODM_XSESSION variable in the command line used by "
