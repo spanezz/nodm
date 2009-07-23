@@ -14,6 +14,17 @@ if [ "$1" = "configure" ] ; then
 	db_set nodm/first_vt "3"
 	db_set nodm/x_options "-nolisten tcp"
     fi
+    if [ -n "$2" ] && dpkg --compare-versions "$2" lt "0.5"; then
+	# Add the NODM_FIRST_VT entry to the config file if it is missing
+	if [ -s /etc/default/nodm ] && ! grep -q NODM_FIRST_VT /etc/default/nodm
+	then
+		cat <<EOF >> /etc/default/nodm
+
+# First vt to try when looking for free VTs
+NODM_FIRST_VT=7
+EOF
+	fi
+    fi
 
     # Update /etc/default/nodm
     db_get nodm/enabled
