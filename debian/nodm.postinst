@@ -11,7 +11,7 @@ if [ "$1" = "configure" ] ; then
 	# guarantee a smooth upgrade, we can safely override debconf here
 	# using the openmoko parameters.
 	db_set nodm/enabled true
-	db_set nodm/x_options "vt3 -nolisten tcp"
+	db_set nodm/x_options "-nolisten tcp"
     fi
 
     # Update /etc/default/nodm

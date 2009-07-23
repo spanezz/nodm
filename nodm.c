@@ -69,6 +69,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/vt.h>
 
 #include <security/pam_appl.h>
 #include <security/pam_misc.h>
@@ -246,6 +247,51 @@ cleanup:
 	if (xse_fd >= 0)
 		close(xse_fd);
 	return ret;
+}
+
+/*
+ * Allocate a new vt, open it and return the file descriptor and the vt number.
+ *
+ * Searching the vt starts at the initial value of vtnum.
+ */
+int open_vt(int *vtnum)
+{
+	char vtname[15];
+	int res = -1;
+	struct vt_stat vtstat;
+	unsigned short vtmask;
+	int fd = open("/dev/console", O_WRONLY | O_NOCTTY, 0);
+	if (fd < 0)
+	{
+		fprintf (stderr, _("%s: cannot open /dev/console: %m\n"), Prog);
+		goto cleanup;
+	}
+
+	if (ioctl (fd, VT_GETSTATE, &vtstat) < 0)
+	{
+		fprintf (stderr, _("%s: VT_GETSTATE failed on /dev/console: %m\n"), Prog);
+		goto cleanup;
+	}
+
+	for (vtmask = 1 << *vtnum; vtstat.v_state & vtmask; ++*vtnum, vtmask <<= 1)
+		;
+	if (!vtmask) {
+		fprintf (stderr, _("%s: all VTs seem to be busy\n"), Prog);
+		goto cleanup;
+	}
+
+	snprintf(vtname, 15, "/dev/tty%d", *vtnum);
+
+	res = open(vtname, O_RDWR | O_NOCTTY, 0);
+	if (res < 0) {
+		fprintf (stderr, _("%s: cannot open %s: %m\n"), Prog, vtname);
+		goto cleanup;
+	}
+
+cleanup:
+	if (fd >= 0)
+		close(fd);
+	return res;
 }
 
 /* Signal handler for parent process later */
@@ -461,6 +507,8 @@ static int nodm_monitor(int argc, char **argv)
 	char xoptions[BUFSIZ];
 	char* cp;
 	int mst;
+	int vt_fd = -1;
+	int vt_num = 3;
 
 	/* Parse command line options */
 	while (1)
@@ -498,14 +546,26 @@ static int nodm_monitor(int argc, char **argv)
 
 	syslog(LOG_INFO, "Starting nodm monitor");
 
+	if ((vt_fd = open_vt(&vt_num)) == -1)
+	{
+		fprintf (stderr, _("%s: cannot allocate a virtual terminal\n"), Prog);
+		return 1;
+	}
+
 	/* Read the configuration from the environment */
 	cp = getenv("NODM_MIN_SESSION_TIME");
 	mst = cp ? atoi(cp) : 60;
 	string_from_env(xinit, "NODM_XINIT", "/usr/bin/xinit");
 	string_from_env(xoptions, "NODM_X_OPTIONS", "");
+	if (xoptions[0] == 0)
+		snprintf(xoptions, BUFSIZ, "vt%d", vt_num);
+	else
+		snprintf(xoptions, BUFSIZ, "vt%d %s", vt_num, xoptions);
 
 	setenv("NODM_RUN_SESSION", "1", 1);
 	run_and_restart(xinit, opt_session, xoptions[0] == 0 ? NULL : xoptions, mst);
+
+	close(vt_fd);
 
 	return 0;
 }
