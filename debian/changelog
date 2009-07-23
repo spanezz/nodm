@@ -1,4 +1,4 @@
-nodm (0.5-1) UNRELEASED; urgency=low
+nodm (0.5-1) unstable; urgency=low
 
   * New upstream version
      - truncate ~/.xsession-errors on startup. Closes: #531194.
