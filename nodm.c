@@ -564,7 +564,7 @@ static int nodm_monitor(int argc, char **argv)
 		snprintf(xoptions1, BUFSIZ, "vt%d %s", vt_num, xoptions);
 
 	setenv("NODM_RUN_SESSION", "1", 1);
-	run_and_restart(xinit, opt_session, xoptions[0] == 0 ? NULL : xoptions, mst);
+	run_and_restart(xinit, opt_session, xoptions1, mst);
 
 	close(vt_fd);
 
