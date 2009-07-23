@@ -31,7 +31,7 @@ then
 	. /etc/default/$NAME
 fi
 
-export NODM_XINIT NODM_XSESSION NODM_X_OPTIONS NODM_USER NODM_MIN_SESSION_TIME
+export NODM_XINIT NODM_XSESSION NODM_X_OPTIONS NODM_USER NODM_MIN_SESSION_TIME NODM_FIRST_VT
 
 # If you change the user to a non-root user, make sure you
 # set allowed_users=anybody in /etc/X11/Xwrapper.config
