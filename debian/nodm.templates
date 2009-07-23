@@ -24,6 +24,18 @@ Default: root
 _Description: User to start a session for:
  Please enter the login name of the user that will automatically be logged into X by nodm.
 
+Template: nodm/first_vt
+Type: string
+Default: 7
+_Description: Lowest numbered vt on which X may start:
+ nodm needs to find a free virtual terminal on which to start the X server.
+ .
+ Since X and getty get to conflict, this parameter will specify the lowest
+ numbered virtual terminal on which to start the search.
+ .
+ This value should be set to one higher than the highest numbered virtual
+ terminal on which a getty may start.
+
 Template: nodm/x_options
 Type: string
 Default: vt7 -nolisten tcp

@@ -509,7 +509,7 @@ static int nodm_monitor(int argc, char **argv)
 	char* cp;
 	int mst;
 	int vt_fd = -1;
-	int vt_num = 3;
+	int vt_num;
 
 	/* Parse command line options */
 	while (1)
@@ -547,6 +547,11 @@ static int nodm_monitor(int argc, char **argv)
 
 	syslog(LOG_INFO, "Starting nodm monitor");
 
+	{
+		char startvt[BUFSIZ];
+		string_from_env(startvt, "NODM_FIRST_VT", "7");
+		vt_num = strtoul(startvt, NULL, 10, NULL);
+	}
 	if ((vt_fd = open_vt(&vt_num)) == -1)
 	{
 		fprintf (stderr, _("%s: cannot allocate a virtual terminal\n"), Prog);
@@ -558,6 +563,7 @@ static int nodm_monitor(int argc, char **argv)
 	mst = cp ? atoi(cp) : 60;
 	string_from_env(xinit, "NODM_XINIT", "/usr/bin/xinit");
 	string_from_env(xoptions, "NODM_X_OPTIONS", "");
+
 	if (xoptions[0] == 0)
 		snprintf(xoptions1, BUFSIZ, "vt%d", vt_num);
 	else

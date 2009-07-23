@@ -19,6 +19,8 @@ if [ "$1" = "configure" ] ; then
     NODM_ENABLED="$RET"
     db_get nodm/user
     NODM_USER="$RET"
+    db_get nodm/first_vt
+    NODM_FIRST_VT="$RET"
     db_get nodm/x_options
     NODM_X_OPTIONS="$RET"
     db_get nodm/min_session_time
@@ -31,6 +33,7 @@ if [ "$1" = "configure" ] ; then
     if [ -s /etc/default/nodm ] ; then
 	    sed -i -r -e "s,^NODM_ENABLED=.*,NODM_ENABLED=$NODM_ENABLED," \
 		      -e "s,^NODM_USER=.*,NODM_USER=$NODM_USER," \
+		      -e "s,^NODM_FIRST_VT=.*,NODM_FIRST_VT='$NODM_FIRST_VT'," \
 		      -e "s,^NODM_X_OPTIONS=.*,NODM_X_OPTIONS='$NODM_X_OPTIONS'," \
 		      -e "s,^NODM_MIN_SESSION_TIME=.*,NODM_MIN_SESSION_TIME=$NODM_MIN_SESSION_TIME," \
 		      -e "s,^NODM_XINIT=.*,NODM_XINIT=$NODM_XINIT," \
@@ -48,6 +51,9 @@ NODM_USER=$NODM_USER
 
 # xinit program
 NODM_XINIT=$NODM_XINIT
+
+# First vt to try when looking for free VTs
+NODM_FIRST_VT=$NODM_FIRST_VT
 
 # X session
 NODM_XSESSION=$NODM_XSESSION

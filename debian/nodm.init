@@ -20,8 +20,9 @@ PIDFILE=${PIDDIR}/${NAME}.pid
 
 NODM_ENABLED=no
 NODM_XINIT=/usr/bin/xinit
+NODM_FIRST_VT=7
 NODM_XSESSION=/etc/X11/Xsession
-NODM_X_OPTIONS="vt7 -nolisten tcp"
+NODM_X_OPTIONS="-nolisten tcp"
 NODM_USER=root
 NODM_MIN_SESSION_TIME=60
 
