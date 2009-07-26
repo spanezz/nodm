@@ -249,6 +249,29 @@ cleanup:
 	return ret;
 }
 
+static int try_vtstate(const char* dev, struct vt_stat* vtstat)
+{
+	int res = 0;
+	int fd = open(dev, O_WRONLY | O_NOCTTY, 0);
+	if (fd < 0)
+		goto cleanup;
+	if (ioctl (fd, VT_GETSTATE, vtstat) < 0)
+		goto cleanup;
+	res = 1;
+
+cleanup:
+	if (fd >= 0) close(fd);
+	return res;
+}
+
+static int get_vtstate(struct vt_stat* vtstat)
+{
+	if (try_vtstate("/dev/tty", vtstat)) return 1;
+	if (try_vtstate("/dev/tty0", vtstat)) return 1;
+	if (try_vtstate("/dev/console", vtstat)) return 1;
+	return 0;
+}
+
 /*
  * Allocate a new vt, open it and return the file descriptor and the vt number.
  *
@@ -260,16 +283,10 @@ int open_vt(int *vtnum)
 	int res = -1;
 	struct vt_stat vtstat;
 	unsigned short vtmask;
-	int fd = open("/dev/console", O_WRONLY | O_NOCTTY, 0);
-	if (fd < 0)
-	{
-		fprintf (stderr, _("%s: cannot open /dev/console: %m\n"), Prog);
-		goto cleanup;
-	}
 
-	if (ioctl (fd, VT_GETSTATE, &vtstat) < 0)
+	if (!get_vtstate(&vtstat))
 	{
-		fprintf (stderr, _("%s: VT_GETSTATE failed on /dev/console: %m\n"), Prog);
+		fprintf (stderr, _("%s: cannot find or open the console\n"), Prog);
 		goto cleanup;
 	}
 
@@ -289,8 +306,6 @@ int open_vt(int *vtnum)
 	}
 
 cleanup:
-	if (fd >= 0)
-		close(fd);
 	return res;
 }
 
