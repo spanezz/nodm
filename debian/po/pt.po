@@ -5,10 +5,10 @@
 # Américo Monteiro <a_monteiro@netcabo.pt>, 2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: nodm 0.3\n"
+"Project-Id-Version: nodm 0.5-1\n"
 "Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
 "POT-Creation-Date: 2009-07-24 01:51+0200\n"
-"PO-Revision-Date: 2009-04-26 15:17+0100\n"
+"PO-Revision-Date: 2009-07-25 17:48+0100\n"
 "Last-Translator: Américo Monteiro <a_monteiro@netcabo.pt>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
 "MIME-Version: 1.0\n"
@@ -62,14 +62,15 @@ msgstr ""
 #. Description
 #: ../nodm.templates:4001
 msgid "Lowest numbered vt on which X may start:"
-msgstr ""
+msgstr "O vt com o número mais baixo onde o X pode arrancar:"
 
 #. Type: string
 #. Description
 #: ../nodm.templates:4001
-msgid ""
-"nodm needs to find a free virtual terminal on which to start the X server."
+msgid "nodm needs to find a free virtual terminal on which to start the X server."
 msgstr ""
+"O nodm precisa de encontrar um terminal virtual livre onde arrancar o servidor "
+"X."
 
 #. Type: string
 #. Description
@@ -78,6 +79,8 @@ msgid ""
 "Since X and getty get to conflict, this parameter will specify the lowest "
 "numbered virtual terminal on which to start the search."
 msgstr ""
+"Como o X e o getty entram em conflito, este parâmetro irá especificar o "
+"número mais baixo de terminal virtual onde iniciar a busca."
 
 #. Type: string
 #. Description
@@ -86,6 +89,8 @@ msgid ""
 "This value should be set to one higher than the highest numbered virtual "
 "terminal on which a getty may start."
 msgstr ""
+"Este valor deve ser regulado para um número acima do terminal virtual com a "
+"numeração mais alta no qual o getty pode arrancar."
 
 #. Type: string
 #. Description
@@ -158,3 +163,4 @@ msgstr ""
 "Por favor escolha o nome do script da  sessão X a usar com o nodm. Este nome "
 "será guardado na variável NODM_XSESSION da linha de comandos usada pelo nodm "
 "para arrancar uma sessão:"
+

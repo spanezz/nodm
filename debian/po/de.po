@@ -1,13 +1,15 @@
+# translation of nodm_0.6-1_de.po to Deutsch
 # Translation of nodm debconf templates to German
 # Copyright (C) Thomas Mueller <thomas.mueller@tmit.eu>, 2009.
 # This file is distributed under the same license as the nodm package.
 #
+# Thomas Mueller <thomas.mueller@tmit.eu>, 2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: nodm 0.3\n"
+"Project-Id-Version: nodm_0.6-1_de\n"
 "Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
 "POT-Creation-Date: 2009-07-24 01:51+0200\n"
-"PO-Revision-Date: 2009-05-04 22:41+0200\n"
+"PO-Revision-Date: 2009-08-27 22:00+0200\n"
 "Last-Translator: Thomas Mueller <thomas.mueller@tmit.eu>\n"
 "Language-Team: de <debian-l10n-german@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +32,7 @@ msgid ""
 "without asking for authentication. On regular machines, this has security "
 "implications and is therefore disabled by default."
 msgstr ""
-"Nodm startet ein X-Sitzung ohne  Authentisierung für den Benutzer, da es für "
+"Nodm startet ein X-Sitzung ohne Authentisierung für den Benutzer, da es für "
 "Embedded- bzw. Kiosk-Systeme entwickelt wurde. Auf normalen Systemen hat das "
 "Auswirkungen auf die Sicherheit und ist deshalb standardmäßig deaktiviert."
 
@@ -62,14 +64,15 @@ msgstr ""
 #. Description
 #: ../nodm.templates:4001
 msgid "Lowest numbered vt on which X may start:"
-msgstr ""
+msgstr "Virtuelles Terminal mit der niedrigsten Nummer in dem X starten könnte:"
 
 #. Type: string
 #. Description
 #: ../nodm.templates:4001
-msgid ""
-"nodm needs to find a free virtual terminal on which to start the X server."
+msgid "nodm needs to find a free virtual terminal on which to start the X server."
 msgstr ""
+"Nodm muss ein freies, virtuelles Terminal (vt) finden, auf dem der X-Server "
+"gestartet werden kann."
 
 #. Type: string
 #. Description
@@ -78,6 +81,8 @@ msgid ""
 "Since X and getty get to conflict, this parameter will specify the lowest "
 "numbered virtual terminal on which to start the search."
 msgstr ""
+"Wegen des Konflikts zwischen X und getty gibt dieser Parameter die niedrigste "
+"Nummer des virtuellen Terminals an, ab dem mit der Suche begonnen wird."
 
 #. Type: string
 #. Description
@@ -86,6 +91,8 @@ msgid ""
 "This value should be set to one higher than the highest numbered virtual "
 "terminal on which a getty may start."
 msgstr ""
+"Dieser Wert sollte um eins höher sein als die höchste Nummer des virtuellen "
+"Terminals, in dem getty starten darf."
 
 #. Type: string
 #. Description
@@ -102,7 +109,7 @@ msgid ""
 "line used by nodm to start the X session:"
 msgstr ""
 "Bitte geben Sie die Optionen an, die an den X-Server zum Starten der Sitzung "
-"übergeben werden sollen. Diese Optionen werden in der Variable "
+"übergeben werden sollen. Diese Optionen werden in der Variablen "
 "NODM_X_OPTIONS in der Befehlszeile von Nodm verwendet, um die X-Sitzung zu "
 "starten."
 
@@ -110,8 +117,7 @@ msgstr ""
 #. Description
 #: ../nodm.templates:6001
 msgid "Minimum time (in seconds) for a session to be considered OK:"
-msgstr ""
-"Mindestzeit (in Sekunden) für eine Sitzung, um als »In Ordnung« zu gelten:"
+msgstr "Mindestzeit (in Sekunden) für eine Sitzung, um als »In Ordnung« zu gelten:"
 
 #. Type: string
 #. Description
@@ -121,8 +127,8 @@ msgid ""
 "an amount of time before restarting the session. The waiting time will grow "
 "until a session lasts longer than this amount."
 msgstr ""
-"Falls eine X-Sitzung kürzer als diese Zeit in Sekunden existiert, wird Nodm "
-"eine gewisse Zeit warten bevor die Sitzung erneut gestartet wird. Die "
+"Falls eine X-Sitzung kürzer als diese Zeit in Sekunden existiert wird Nodm "
+"eine gewisse Zeit warten, bevor die Sitzung erneut gestartet wird. Die "
 "Wartezeit verlängert sich bis eine Sitzung länger als dieser Wert existiert."
 
 #. Type: string
@@ -139,15 +145,15 @@ msgid ""
 "will be stored in the NODM_XINIT variable in the command line used by nodm "
 "to start the X session:"
 msgstr ""
-"Bitte wählen Sie den Namen des »xinit« Programms, welches Nodm nutzen soll. "
-"Dieser Name wird in der Variable NODM_XINIT in der Befehlszeile gespeichert, "
-"welche Nodm nutzt, um die X-Sitzung zu starten."
+"Bitte wählen Sie den Namen des »xinit«-Programms, welches Nodm nutzen soll. "
+"Dieser Name wird in der Variablen NODM_XINIT in der Befehlszeile gespeichert, "
+"welche Nodm nutzt, um die X-Sitzung zu starten:"
 
 #. Type: string
 #. Description
 #: ../nodm.templates:8001
 msgid "X session to use:"
-msgstr "Zu benutzendes X-Sitzung:"
+msgstr "Zu benutzende X-Sitzung:"
 
 #. Type: string
 #. Description
@@ -158,5 +164,6 @@ msgid ""
 "nodm to start the X session:"
 msgstr ""
 "Bitte wählen Sie den Namen des X-Sitzung-Skripts, welches Nodm nutzen soll. "
-"Dieser Name wird in der Variable NODM_XSESSION in der Befehlszeile "
+"Dieser Name wird in der Variablen NODM_XSESSION in der Befehlszeile "
 "gespeichert, welche Nodm nutzt, um die X-Sitzung zu starten."
+
