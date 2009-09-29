@@ -1,7 +1,7 @@
 #!/bin/sh
 ### BEGIN INIT INFO
 # Provides:       nodm
-# Should-Start:   console-screen kbd
+# Should-Start:   console-screen kbd hal bluetooth
 # Required-Start: $remote_fs
 # Required-Stop:
 # Default-Start:  2 3 4 5

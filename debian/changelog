@@ -2,8 +2,9 @@ nodm (0.6-2) unstable; urgency=low
 
   * Added kdb to initscript Should-Start:. Closes: #548104.
     Thanks to Michael Schutte.
+  * Added hal and bluetooth to initscript Should-Start. Closes: #548776.
 
- -- Enrico Zini <enrico@debian.org>  Tue, 29 Sep 2009 11:14:32 +0100
+ -- Enrico Zini <enrico@debian.org>  Tue, 29 Sep 2009 11:18:56 +0100
 
 nodm (0.6-1) unstable; urgency=low
 
