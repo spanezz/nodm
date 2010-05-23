@@ -7,8 +7,10 @@ nodm (0.7-1) unstable; urgency=low
   * Added dependency on x11-xserver-utils. Closes: #559173.
   * Added /etc/insserv.conf.d/nodm. Closes: #554840.
   * Do not depend on a terminal emulator. Closes: #561409.
+  * Updated Swedish translation; thanks to Arne Anka and Martin Bagge.
+    Closes: #539075
 
- -- Enrico Zini <enrico@debian.org>  Sun, 23 May 2010 15:13:15 +0100
+ -- Enrico Zini <enrico@debian.org>  Sun, 23 May 2010 15:16:24 +0100
 
 nodm (0.6-2) unstable; urgency=low
 
