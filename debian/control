@@ -10,7 +10,7 @@ Vcs-Browser: http://git.debian.org/?p=pkg-fso/nodm.git;a=summary
 
 Package: nodm
 Architecture: linux-any
-Depends: xinit, x11-common, x11-xserver-utils, xterm | x-terminal-emulator, ${shlibs:Depends}, ${misc:Depends}
+Depends: xinit, x11-common, x11-xserver-utils, ${shlibs:Depends}, ${misc:Depends}
 Conflicts: zhone-session
 Description: automatic display manager
  This package prepares the system to automatically start an X session at
