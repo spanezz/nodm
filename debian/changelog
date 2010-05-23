@@ -5,14 +5,9 @@ nodm (0.7-1) unstable; urgency=low
        Dziallas.
   * Do not build on freebsd until someone comes up with a patch (see #575265).
   * Added dependency on x11-xserver-utils. Closes: #559173.
-
- -- Enrico Zini <enrico@debian.org>  Sun, 23 May 2010 15:08:38 +0100
-
-nodm (0.6-3) unstable; urgency=low
-
   * Added /etc/insserv.conf.d/nodm. Closes: #554840.
 
- -- Enrico Zini <enrico@debian.org>  Tue, 10 Nov 2009 23:47:40 +0000
+ -- Enrico Zini <enrico@debian.org>  Sun, 23 May 2010 15:08:38 +0100
 
 nodm (0.6-2) unstable; urgency=low
 
