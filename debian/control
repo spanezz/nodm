@@ -9,7 +9,7 @@ Vcs-Git: http://git.debian.org/git/pkg-fso/nodm.git
 Vcs-Browser: http://git.debian.org/?p=pkg-fso/nodm.git;a=summary
 
 Package: nodm
-Architecture: any
+Architecture: linux-any
 Depends: xinit, x11-common, xterm | x-terminal-emulator, ${shlibs:Depends}, ${misc:Depends}
 Conflicts: zhone-session
 Description: automatic display manager
