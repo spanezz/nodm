@@ -4,8 +4,9 @@ nodm (0.7-1) unstable; urgency=low
      - Fix configure.ac PAM bits. Thanks to Mathieu Bridon and Sebastian
        Dziallas.
   * Do not build on freebsd until someone comes up with a patch (see #575265).
+  * Added dependency on x11-xserver-utils. Closes: #559173.
 
- -- Enrico Zini <enrico@debian.org>  Sun, 23 May 2010 15:07:06 +0100
+ -- Enrico Zini <enrico@debian.org>  Sun, 23 May 2010 15:08:38 +0100
 
 nodm (0.6-3) unstable; urgency=low
 
