@@ -1,3 +1,11 @@
+nodm (0.7-1) unstable; urgency=low
+
+  * New upstream version
+     - Fix configure.ac PAM bits. Thanks to Mathieu Bridon and Sebastian
+       Dziallas.
+
+ -- Enrico Zini <enrico@debian.org>  Sun, 23 May 2010 15:00:46 +0100
+
 nodm (0.6-3) unstable; urgency=low
 
   * Added /etc/insserv.conf.d/nodm. Closes: #554840.

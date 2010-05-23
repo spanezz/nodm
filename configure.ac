@@ -23,7 +23,7 @@ AC_CHECK_LIB(pam, pam_start,
 )
 
 AC_CHECK_LIB(pam_misc, main,
-	[ PAM_LIBS="$LIBPAM -lpam_misc" ],
+	[ PAM_LIBS="$PAM_LIBS -lpam_misc" ],
 	AC_MSG_ERROR(libpam_misc is missing)
 )
 AC_SUBST(PAM_LIBS)
