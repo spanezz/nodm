@@ -1,0 +1,65 @@
+# nodm - nodm Display Manager
+#
+
+description     "Automatic Display Manager"
+
+start on (filesystem
+          and started dbus
+          and (drm-device-added card0 PRIMARY_DEVICE_FOR_DISPLAY=1
+               or stopped udevtrigger))
+stop on runlevel [016]
+
+emits starting-dm
+
+script
+    NODM_ENABLED=no
+    NODM_XINIT=/usr/bin/xinit
+    NODM_FIRST_VT=7
+    NODM_XSESSION=/etc/X11/Xsession
+    NODM_X_OPTIONS="-nolisten tcp"
+    NODM_USER=root
+    NODM_MIN_SESSION_TIME=60
+
+    # If you change the user to a non-root user, make sure you
+    # set allowed_users=anybody in /etc/X11/Xwrapper.config
+
+    if [ -f /etc/default/nodm ]
+    then
+            . /etc/default/nodm
+    fi
+
+    export NODM_XINIT NODM_XSESSION NODM_X_OPTIONS NODM_USER NODM_MIN_SESSION_TIME NODM_FIRST_VT
+
+    if [ -n "$UPSTART_EVENTS" ] ; then
+        # Gracefully exit if the package or its dependencies have been removed (but not purged).
+        [ -x /usr/sbin/nodm -a -x "$NODM_XSESSION" -a -x "$NODM_XINIT" ] || { stop; exit 0; }
+
+        if [ "$NODM_ENABLED" = "no" ] || [ "$NODM_ENABLED" = "false" ] ; then
+                stop; exit 0;
+        fi
+
+        # Check kernel command-line for inhibitors
+        for ARG in $(cat /proc/cmdline)
+        do
+            case "${ARG}" in
+                text|-s|s|S|single)
+                    plymouth quit || :  # We have the ball here
+                    exit 0
+                    ;;
+            esac
+        done
+    fi
+
+    initctl emit starting-dm
+
+    plymouth deactivate || true
+    plymouth quit --wait --retain-splash || true
+
+    exec /usr/sbin/nodm
+end script
+
+pre-stop script
+    #clear >/dev/tty7 || true
+end script
+
+

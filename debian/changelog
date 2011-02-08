@@ -1,3 +1,10 @@
+nodm (0.7-2) UNRELEASED; urgency=low
+
+  * Included upstart job (Closes: #602511). Thanks to Luigi Capriotti for
+    providing it.
+
+ -- Joachim Breitner <nomeata@debian.org>  Tue, 08 Feb 2011 23:17:30 +0530
+
 nodm (0.7-1) unstable; urgency=low
 
   * New upstream version
