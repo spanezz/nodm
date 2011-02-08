@@ -6,6 +6,8 @@
 # - Initial translation
 #       Fernando González de Requena <fgrequena@gmail.com>, 2009.
 #
+# - Updates
+#       Omar Campagne <ocampagne@gmail.com>, 2010
 #
 #  Traductores, si no conoce el formato PO, merece la pena leer la
 #  documentación de gettext, especialmente las secciones dedicadas a este
@@ -34,9 +36,10 @@ msgstr ""
 "Project-Id-Version: nodm \n"
 "Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
 "POT-Creation-Date: 2009-07-24 01:51+0200\n"
-"PO-Revision-Date: 2009-04-27 17:39+0200\n"
-"Last-Translator: Fernando González de Requena <fgrequena@gmail.com>\n"
+"PO-Revision-Date: 2010-07-25 19:40+0200\n"
+"Last-Translator: Omar Campagne <ocampagne@gmail.com>\n"
 "Language-Team: Spanish <debian-l10n-spanish@lists.debian.org>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -58,7 +61,7 @@ msgid ""
 msgstr ""
 "Diseñado para sistemas integrados o en modo kiosco, nodm inicia una sesión "
 "de X para un usuario sin pedir autenticación. Esto tiene implicaciones de "
-"seguridad en máquinas normales, por lo que está deshabilitado de manera "
+"seguridad en máquinas normales, por lo que está deshabilitado de forma "
 "predeterminada."
 
 #. Type: boolean
@@ -82,14 +85,14 @@ msgid ""
 "Please enter the login name of the user that will automatically be logged "
 "into X by nodm."
 msgstr ""
-"Por favor, introduzca el nombre de acceso del usuario con el que se iniciará "
+"Introduzca el nombre de acceso del usuario con el que se iniciará "
 "automáticamente la sesión de X por nodm."
 
 #. Type: string
 #. Description
 #: ../nodm.templates:4001
 msgid "Lowest numbered vt on which X may start:"
-msgstr ""
+msgstr "Terminal virtual con el número más bajo en el que se puede iniciar X:"
 
 #. Type: string
 #. Description
@@ -97,6 +100,8 @@ msgstr ""
 msgid ""
 "nodm needs to find a free virtual terminal on which to start the X server."
 msgstr ""
+"nodm necesita encontrar una terminal virtual libre en la que iniciar el "
+"servidor de X."
 
 #. Type: string
 #. Description
@@ -105,6 +110,8 @@ msgid ""
 "Since X and getty get to conflict, this parameter will specify the lowest "
 "numbered virtual terminal on which to start the search."
 msgstr ""
+"Debido a que X y getty entran en conflicto, este parámetro definirá la "
+"terminal virtual de menor número a partir del cual iniciar la búsqueda."
 
 #. Type: string
 #. Description
@@ -113,6 +120,8 @@ msgid ""
 "This value should be set to one higher than the highest numbered virtual "
 "terminal on which a getty may start."
 msgstr ""
+"Este valor se debería definir con el número a continuación de la terminal "
+"virtual de mayor número en el cual puede que se inicie getty."
 
 #. Type: string
 #. Description
@@ -128,10 +137,9 @@ msgid ""
 "These options will be used in the NODM_X_OPTIONS variable in the command "
 "line used by nodm to start the X session:"
 msgstr ""
-"Por favor, introduzca las opciones que se han de pasar al servidor de X al "
-"inicio de la sesión. Estas opciones se almacenarán en la variable "
-"NODM_X_OPTIONS de la línea de órdenes utilizada por nodm para iniciar la "
-"sesión de X:"
+"Introduzca las opciones que introducirán al servidor de X al iniciar la "
+"sesión. Estas opciones se almacenarán en la variable NODM_X_OPTIONS de la "
+"línea de órdenes utilizada por nodm para iniciar la sesión de X:"
 
 #. Type: string
 #. Description
@@ -148,8 +156,8 @@ msgid ""
 "until a session lasts longer than this amount."
 msgstr ""
 "Si una sesión de X se ejecuta durante menos tiempo que éste, nodm esperará "
-"una cantidad de tiempo antes de reiniciar la sesión. El tiempo de espera "
-"aumentará hasta que una sesión dure más tiempo que esta cantidad."
+"un lapso de tiempo antes de reiniciar la sesión. El tiempo de espera "
+"aumentará hasta que una sesión dure más tiempo que este lapso."
 
 #. Type: string
 #. Description
@@ -165,8 +173,8 @@ msgid ""
 "will be stored in the NODM_XINIT variable in the command line used by nodm "
 "to start the X session:"
 msgstr ""
-"Por favor, elija el nombre del programa «xinit» que se va a usar con nodm. "
-"Este nombre se almacenará en la variable NODM_XINIT de la línea de órdenes "
+"Seleccione el nombre del programa «xinit» que se va a usar con nodm. Este "
+"nombre se almacenará en la variable NODM_XINIT de la línea de órdenes "
 "utilizada por nodm para iniciar la sesión de X:"
 
 #. Type: string
@@ -183,7 +191,7 @@ msgid ""
 "will be stored in the NODM_XSESSION variable in the command line used by "
 "nodm to start the X session:"
 msgstr ""
-"Por favor, elija el nombre del archivo de órdenes («script») para la sesión "
-"de X que se va a utilizar con nodm. Este nombre se almacenará en la variable "
+"Seleccione el nombre del archivo de órdenes («script») para la sesión de X "
+"que se va a utilizar con nodm. Este nombre se almacenará en la variable "
 "NODM_XSESSION de la línea de órdenes utilizada por nodm para iniciar la "
 "sesión de X:"

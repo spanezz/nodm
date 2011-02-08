@@ -11,11 +11,13 @@ msgstr ""
 "PO-Revision-Date: 2009-07-25 12:41+0400\n"
 "Last-Translator: Yuri Kozlov <yuray@komyakino.ru>\n"
 "Language-Team: Russian <debian-l10n-russian@lists.debian.org>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
-"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. Type: boolean
 #. Description
@@ -68,8 +70,10 @@ msgstr "Начальный номер vt, на котором можно зап�
 #. Type: string
 #. Description
 #: ../nodm.templates:4001
-msgid "nodm needs to find a free virtual terminal on which to start the X server."
-msgstr "nodm требуется найти свободный виртуальный терминал для запуска X-сервера."
+msgid ""
+"nodm needs to find a free virtual terminal on which to start the X server."
+msgstr ""
+"nodm требуется найти свободный виртуальный терминал для запуска X-сервера."
 
 #. Type: string
 #. Description
@@ -78,8 +82,8 @@ msgid ""
 "Since X and getty get to conflict, this parameter will specify the lowest "
 "numbered virtual terminal on which to start the search."
 msgstr ""
-"Так как X и getty конфликтуют, этим параметром задаётся первый "
-"номер виртуального терминала, с которого надо начинать поиск."
+"Так как X и getty конфликтуют, этим параметром задаётся первый номер "
+"виртуального терминала, с которого надо начинать поиск."
 
 #. Type: string
 #. Description
@@ -113,7 +117,8 @@ msgstr ""
 #. Description
 #: ../nodm.templates:6001
 msgid "Minimum time (in seconds) for a session to be considered OK:"
-msgstr "Минимальная длительность (в секундах) сеанса, которая считается нормальной:"
+msgstr ""
+"Минимальная длительность (в секундах) сеанса, которая считается нормальной:"
 
 #. Type: string
 #. Description
@@ -162,4 +167,3 @@ msgstr ""
 "Укажите имя сценария X-сеанса для использования с nodm. Это имя будет "
 "сохранено в переменной NODM_XSESSION в командной строке, используемой nodm "
 "для запуска X-сеанса:"
-

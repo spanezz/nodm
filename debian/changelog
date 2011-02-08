@@ -5,6 +5,17 @@ nodm (0.7-2) UNRELEASED; urgency=low
 
  -- Joachim Breitner <nomeata@debian.org>  Tue, 08 Feb 2011 23:17:30 +0530
 
+nodm (0.7-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix pending l10n issues. Debconf translations:
+    - Czech (Martin Sin).  Closes: #589290
+    - Spanish (Omar Campagne).  Closes: #591611
+    - Italian (Vincenzo Campanella).  Closes: #597311
+    - Finnish (Esko Arajärvi).  Closes: #600636
+
+ -- Christian Perrier <bubulle@debian.org>  Tue, 19 Oct 2010 07:27:00 +0200
+
 nodm (0.7-1) unstable; urgency=low
 
   * New upstream version
