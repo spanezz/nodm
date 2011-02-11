@@ -3,5 +3,12 @@
 %:
 	dh $@
 
+configure:
+	./autogen.sh
+
+override-dh_auto_configure: configure
+	dh_auto_configure
+
+
 override-dh_installinit:
-	 dh_installinit -r -u "defaults 30 01"
+	dh_installinit -r -u "defaults 30 01"
