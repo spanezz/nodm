@@ -6,53 +6,53 @@ set -e
 . /usr/share/debconf/confmodule
 
 if [ "$1" = "configure" ] ; then
-    if [ -n "$2" ] && dpkg --compare-versions "$2" lt "0.2"; then
-	# Before version 0.2, nodm was only used on the OpenMoko.  To
-	# guarantee a smooth upgrade, we can safely override debconf here
-	# using the openmoko parameters.
-	db_set nodm/enabled true
-	db_set nodm/first_vt "3"
-	db_set nodm/x_options "-nolisten tcp"
-    fi
-    if [ -n "$2" ] && dpkg --compare-versions "$2" lt "0.5"; then
-	# Add the NODM_FIRST_VT entry to the config file if it is missing
-	if [ -s /etc/default/nodm ] && ! grep -q NODM_FIRST_VT /etc/default/nodm
-	then
-		cat <<EOF >> /etc/default/nodm
+	if [ -n "$2" ] && dpkg --compare-versions "$2" lt "0.2"; then
+		# Before version 0.2, nodm was only used on the OpenMoko.  To
+		# guarantee a smooth upgrade, we can safely override debconf here
+		# using the openmoko parameters.
+		db_set nodm/enabled true
+		db_set nodm/first_vt "3"
+		db_set nodm/x_options "-nolisten tcp"
+	fi
+	if [ -n "$2" ] && dpkg --compare-versions "$2" lt "0.5"; then
+		# Add the NODM_FIRST_VT entry to the config file if it is missing
+		if [ -s /etc/default/nodm ] && ! grep -q NODM_FIRST_VT /etc/default/nodm
+		then
+			cat <<EOF >> /etc/default/nodm
 
 # First vt to try when looking for free VTs
 NODM_FIRST_VT=7
 EOF
+		fi
 	fi
-    fi
 
-    # Update /etc/default/nodm
-    db_get nodm/enabled
-    NODM_ENABLED="$RET"
-    db_get nodm/user
-    NODM_USER="$RET"
-    db_get nodm/first_vt
-    NODM_FIRST_VT="$RET"
-    db_get nodm/x_options
-    NODM_X_OPTIONS="$RET"
-    db_get nodm/min_session_time
-    NODM_MIN_SESSION_TIME="$RET"
-    db_get nodm/xinit
-    NODM_XINIT="$RET"
-    db_get nodm/xsession
-    NODM_XSESSION="$RET"
+	# Update /etc/default/nodm
+	db_get nodm/enabled
+	NODM_ENABLED="$RET"
+	db_get nodm/user
+	NODM_USER="$RET"
+	db_get nodm/first_vt
+	NODM_FIRST_VT="$RET"
+	db_get nodm/x_options
+	NODM_X_OPTIONS="$RET"
+	db_get nodm/min_session_time
+	NODM_MIN_SESSION_TIME="$RET"
+	db_get nodm/xinit
+	NODM_XINIT="$RET"
+	db_get nodm/xsession
+	NODM_XSESSION="$RET"
 
-    if [ -s /etc/default/nodm ] ; then
-	    sed -i -r -e "s,^NODM_ENABLED=.*,NODM_ENABLED=$NODM_ENABLED," \
-		      -e "s,^NODM_USER=.*,NODM_USER=$NODM_USER," \
-		      -e "s,^NODM_FIRST_VT=.*,NODM_FIRST_VT='$NODM_FIRST_VT'," \
-		      -e "s,^NODM_X_OPTIONS=.*,NODM_X_OPTIONS='$NODM_X_OPTIONS'," \
-		      -e "s,^NODM_MIN_SESSION_TIME=.*,NODM_MIN_SESSION_TIME=$NODM_MIN_SESSION_TIME," \
-		      -e "s,^NODM_XINIT=.*,NODM_XINIT=$NODM_XINIT," \
-		      -e "s,^NODM_XSESSION=.*,NODM_XSESSION=$NODM_XSESSION," \
-		      /etc/default/nodm
-    else
-	    cat <<EOF > /etc/default/nodm
+	if [ -s /etc/default/nodm ] ; then
+		sed -i -r -e "s,^NODM_ENABLED=.*,NODM_ENABLED=$NODM_ENABLED," \
+			-e "s,^NODM_USER=.*,NODM_USER=$NODM_USER," \
+			-e "s,^NODM_FIRST_VT=.*,NODM_FIRST_VT='$NODM_FIRST_VT'," \
+			-e "s,^NODM_X_OPTIONS=.*,NODM_X_OPTIONS='$NODM_X_OPTIONS'," \
+			-e "s,^NODM_MIN_SESSION_TIME=.*,NODM_MIN_SESSION_TIME=$NODM_MIN_SESSION_TIME," \
+			-e "s,^NODM_XINIT=.*,NODM_XINIT=$NODM_XINIT," \
+			-e "s,^NODM_XSESSION=.*,NODM_XSESSION=$NODM_XSESSION," \
+			/etc/default/nodm
+	else
+		cat <<EOF > /etc/default/nodm
 # nodm configuration
 
 # Set NODM_ENABLED to something different than 'false' to enable nodm
@@ -77,9 +77,9 @@ NODM_X_OPTIONS='$NODM_X_OPTIONS'
 # increasing bit of time before restarting the session.
 NODM_MIN_SESSION_TIME=$NODM_MIN_SESSION_TIME
 EOF
-    fi
+	fi
 fi
-	
+
 #DEBHELPER#
 
 # tell debconf we are done. otherwise, it hangs waiting for the daemon.

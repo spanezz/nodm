@@ -48,30 +48,30 @@ export NODM_XINIT NODM_XSESSION NODM_X_OPTIONS NODM_USER NODM_MIN_SESSION_TIME N
 
 
 case "$1" in
-    start)
-        [ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
-    	if [ "$NODM_ENABLED" = "no" ] || [ "$NODM_ENABLED" = "false" ]
-	then
-		log_warning_msg "Not starting $NAME because NODM_ENABLED is '$NODM_ENABLED' in /etc/default/$NAME"
-	else
-		start-stop-daemon --start --oknodo --pidfile ${PIDFILE} --make-pidfile --background --exec /usr/sbin/nodm
-	fi
-        [ "$VERBOSE" != no ] && log_end_msg $?
-        ;;
-    stop)
-        [ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
-        start-stop-daemon --stop --pidfile ${PIDFILE} --oknodo
-	rm -f ${PIDFILE}
-        [ "$VERBOSE" != no ] && log_end_msg $?
-        ;;
-    restart|force-reload)
-        $0 stop
-        $0 start
-        ;;
-    *)
-        log_success_msg "Usage: $0 {start|stop|restart|force-reload}" >&2
-        exit 1
-        ;;
+	start)
+		[ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
+		if [ "$NODM_ENABLED" = "no" ] || [ "$NODM_ENABLED" = "false" ]
+		then
+			log_warning_msg "Not starting $NAME because NODM_ENABLED is '$NODM_ENABLED' in /etc/default/$NAME"
+		else
+			start-stop-daemon --start --oknodo --pidfile ${PIDFILE} --make-pidfile --background --exec /usr/sbin/nodm
+		fi
+		[ "$VERBOSE" != no ] && log_end_msg $?
+		;;
+	stop)
+		[ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
+		start-stop-daemon --stop --pidfile ${PIDFILE} --oknodo
+		rm -f ${PIDFILE}
+		[ "$VERBOSE" != no ] && log_end_msg $?
+		;;
+	restart|force-reload)
+		$0 stop
+		$0 start
+		;;
+	*)
+		log_success_msg "Usage: $0 {start|stop|restart|force-reload}" >&2
+		exit 1
+		;;
 esac
 
 
