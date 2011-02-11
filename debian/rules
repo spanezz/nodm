@@ -1,24 +1,7 @@
 #!/usr/bin/make -f
 
-build: build-stamp
-build-stamp:
-	dh build
-	touch build-stamp
+%:
+	dh $@
 
-clean:
-	dh clean
-
-install: build install-stamp
-install-stamp:
-	dh install --before dh_installinit
-	dh_installinit -r -u "defaults 30 01"
-	dh install --after dh_installinit
-	touch install-stamp
-
-binary-arch: install
-	dh binary-arch
-
-binary-indep: install
-	dh binary-indep
-
-binary: binary-arch binary-indep
+override-dh_installinit:
+	 dh_installinit -r -u "defaults 30 01"
