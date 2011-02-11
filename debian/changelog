@@ -6,6 +6,7 @@ nodm (0.7-2) UNRELEASED; urgency=low
 
   [ Marco Amadori ]
   * Update Standards-Version to 3.9.1 (no changes required).
+  * Check if plymouth is available before using it.
 
  -- Marco Amadori <marco.amadori@vdavda.com>  Fri, 11 Feb 2011 15:36:30 +0100
 
