@@ -1,11 +1,15 @@
 ## Process this file with automake to produce Makefile.in
 
+ACLOCAL_AMFLAGS = -I m4
+
 sbin_PROGRAMS = nodm
 
 dist_noinst_HEADERS = log.h
 
+INCLUDES = $(X11_CFLAGS)
+LDFLAGS = $(PAM_LIBS) $(X11_LIBS)
+
 nodm_SOURCES = nodm.c
-nodm_LDFLAGS = $(PAM_LIBS)
 nodm_CFLAGS = -DNODM_SESSION='"$(sbindir)/nodm"'
 
 nodm.8: nodm

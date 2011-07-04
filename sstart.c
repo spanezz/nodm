@@ -35,7 +35,15 @@ static bool server_started = false;
 static void on_sigusr1(int sig) { server_started = true; }
 static void on_sigchld(int sig) {}
 
-int start_server(struct server* srv, unsigned timeout_sec)
+void server_init(struct server* srv)
+{
+    srv->argv = 0;
+    srv->name = 0;
+    srv->pid = -1;
+    srv->dpy = NULL;
+}
+
+int server_start(struct server* srv, unsigned timeout_sec)
 {
     // Function return code
     int return_code = SSTART_SUCCESS;
@@ -145,9 +153,17 @@ int start_server(struct server* srv, unsigned timeout_sec)
         }
     }
 
+    // Set the DISPLAY env var
+    if (setenv("DISPLAY", srv->name, 1) == -1)
+    {
+        log_err("setenv DISPLAY=%s failed: %m", srv->name);
+        return_code = SSTART_ERROR_SYSTEM;
+        goto cleanup;
+    }
+
 cleanup:
     // Kill the X server if an error happened
-    if (child > 0 && !server_started)
+    if (child > 0 && return_code != SSTART_SUCCESS)
         kill(child, SIGTERM);
     else
         srv->pid = child;
@@ -155,4 +171,29 @@ cleanup:
     sigaction(SIGCHLD, NULL, &sa_sigchld_old);
     sigaction(SIGUSR1, NULL, &sa_usr1_old);
     return return_code;
+}
+
+static int xopendisplay_error_handler(Display* dpy)
+{
+    log_err("I/O error in XOpenDisplay");
+    log_end();
+    exit(E_X_ERROR);
+}
+
+int server_connect(struct server* srv)
+{
+    XSetIOErrorHandler(xopendisplay_error_handler);
+    srv->dpy = XOpenDisplay(srv->name);
+    XSetIOErrorHandler((int (*)(Display *))0);
+
+    // Remove close-on-exec and register to close at the next fork, why? We'll find
+    // RegisterCloseOnFork (ConnectionNumber (d->dpy));
+    // fcntl (ConnectionNumber (d->dpy), F_SETFD, 0);
+    return srv->dpy == NULL ? SSTART_ERROR_CONNECT : SSTART_SUCCESS;
+}
+
+int server_disconnect(struct server* srv)
+{
+    XCloseDisplay(srv->dpy);
+    return SSTART_SUCCESS;
 }

@@ -33,10 +33,32 @@ int main(int argc, char* argv[])
     log_start(&cfg);
 
     struct server srv;
+    server_init(&srv);
+
     const char* server_argv[] = { "/usr/bin/Xnest", ":1", NULL };
     srv.argv = server_argv;
-    int res = start_server(&srv, 5);
-    printf("Sstart return code: %d \n", res);
+    srv.name = ":1";
+
+    int res = server_start(&srv, 5);
+    if (res != SSTART_SUCCESS)
+    {
+        fprintf(stderr, "server_start return code: %d\n", res);
+        return 1;
+    }
+
+    res = server_connect(&srv);
+    if (res != SSTART_SUCCESS)
+    {
+        fprintf(stderr, "server_connect return code: %d\n", res);
+        return 2;
+    }
+
+    res = server_disconnect(&srv);
+    if (res != SSTART_SUCCESS)
+    {
+        fprintf(stderr, "server_disconnect return code: %d\n", res);
+        return 3;
+    }
 
     log_end();
     return 0;

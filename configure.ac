@@ -4,6 +4,7 @@ AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_AUX_DIR([config])
 AM_INIT_AUTOMAKE([-Wall std-options foreign])
 AM_CONFIG_HEADER(config.h)
+AC_CONFIG_MACRO_DIR([m4])
 
 dnl AC_GNU_SOURCE
 dnl AM_MAINTAINER_MODE
@@ -19,6 +20,7 @@ dnl Checks for header files.
 AC_HEADER_STDC
 
 dnl Checks for libraries.
+PKG_CHECK_MODULES(X11, x11)
 
 AC_CHECK_LIB(pam, pam_start,
 	[ PAM_LIBS="-lpam" ],

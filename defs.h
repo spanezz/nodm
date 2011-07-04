@@ -35,4 +35,7 @@
 #define E_CMD_NOEXEC            126     /* can't run command/shell */
 #define E_CMD_NOTFOUND          127     /* can't find command/shell to run */
 
+// X-related exit codes
+#define E_X_ERROR               200     /* something wrong talking with X */
+
 #endif

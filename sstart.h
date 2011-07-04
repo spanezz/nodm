@@ -22,20 +22,52 @@
 #define NODM_SSTART_H
 
 #include <sys/types.h>
+#include <X11/Xlib.h>
 
 #define SSTART_SUCCESS 0            ///< Server is ready for connections
 #define SSTART_ERROR_PROGRAMMING 2  ///< Programming error
 #define SSTART_ERROR_SYSTEM 3       ///< Unexpected OS error
 #define SSTART_ERROR_SERVER_DIED 4  ///< Server died
 #define SSTART_ERROR_TIMEOUT 5      ///< Server not ready before timeout
+#define SSTART_ERROR_CONNECT 6      ///< Could not connect to X server
 
 
 struct server
 {
+    /// X server command line
     const char **argv;
+    /// X display name
+    const char *name;
+    /// X server pid
     pid_t pid;
+    /// xlib Display connected to the server
+    Display *dpy;
 };
 
-int start_server(struct server* srv, unsigned timeout_sec);
+/**
+ * Initialise a struct server with NULL values
+ */
+void server_init(struct server* srv);
+
+/**
+ * Start the X server and wait until it's ready to accept connections
+ *
+ * @param srv
+ *   The struct server with X server information. argv and name are expected to
+ *   be filled, pid is filled.
+ * @param timeout_sec
+ *   Timeout in seconds after which if the X server is not ready, we give up
+ *   and return an error.
+ * @return
+ *   Exit status as described by the SSTART_* constants
+ */
+int server_start(struct server* srv, unsigned timeout_sec);
+
+/**
+ * Connect to the X server
+ */
+int server_connect(struct server* srv);
+
+int server_disconnect(struct server* srv);
 
 #endif
