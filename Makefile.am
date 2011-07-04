@@ -4,12 +4,14 @@ ACLOCAL_AMFLAGS = -I m4
 
 sbin_PROGRAMS = nodm
 
-dist_noinst_HEADERS = log.h
+dist_noinst_HEADERS = defs.h log.h server.h session.h
+
+libsources = log.c server.c session.c
 
 INCLUDES = $(X11_CFLAGS)
 LDFLAGS = $(PAM_LIBS) $(X11_LIBS)
 
-nodm_SOURCES = nodm.c
+nodm_SOURCES = $(libsources) nodm.c
 nodm_CFLAGS = -DNODM_SESSION='"$(sbindir)/nodm"'
 
 nodm.8: nodm
@@ -20,7 +22,7 @@ man_MANS = nodm.8
 
 TESTS = test-xstart
 check_PROGRAMS = test-xstart
-test_xstart_SOURCES = log.c sstart.c test-xstart.c
+test_xstart_SOURCES = $(libsources) test-xstart.c
 
 EXTRA_DIST = test_nodm TODO nodm-man-extras autogen.sh
 

@@ -19,7 +19,7 @@
  */
 
 #include "log.h"
-#include "sstart.h"
+#include "server.h"
 #include <stdio.h>
 
 int main(int argc, char* argv[])
@@ -40,21 +40,21 @@ int main(int argc, char* argv[])
     srv.name = ":1";
 
     int res = server_start(&srv, 5);
-    if (res != SSTART_SUCCESS)
+    if (res != NODM_SERVER_SUCCESS)
     {
         fprintf(stderr, "server_start return code: %d\n", res);
         return 1;
     }
 
     res = server_connect(&srv);
-    if (res != SSTART_SUCCESS)
+    if (res != NODM_SERVER_SUCCESS)
     {
         fprintf(stderr, "server_connect return code: %d\n", res);
         return 2;
     }
 
     res = server_disconnect(&srv);
-    if (res != SSTART_SUCCESS)
+    if (res != NODM_SERVER_SUCCESS)
     {
         fprintf(stderr, "server_disconnect return code: %d\n", res);
         return 3;

@@ -1,5 +1,5 @@
 /*
- * sstart - X server startup functions
+ * server - X server startup functions
  *
  * Copyright 2011  Enrico Zini <enrico@enricozini.org>
  *
@@ -18,18 +18,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef NODM_SSTART_H
-#define NODM_SSTART_H
+#ifndef NODM_SERVER_H
+#define NODM_SERVER_H
 
 #include <sys/types.h>
 #include <X11/Xlib.h>
 
-#define SSTART_SUCCESS 0            ///< Server is ready for connections
-#define SSTART_ERROR_PROGRAMMING 2  ///< Programming error
-#define SSTART_ERROR_SYSTEM 3       ///< Unexpected OS error
-#define SSTART_ERROR_SERVER_DIED 4  ///< Server died
-#define SSTART_ERROR_TIMEOUT 5      ///< Server not ready before timeout
-#define SSTART_ERROR_CONNECT 6      ///< Could not connect to X server
+#define NODM_SERVER_SUCCESS 0            ///< Server is ready for connections
+#define NODM_SERVER_ERROR_PROGRAMMING 2  ///< Programming error
+#define NODM_SERVER_ERROR_SYSTEM 3       ///< Unexpected OS error
+#define NODM_SERVER_ERROR_SERVER_DIED 4  ///< Server died
+#define NODM_SERVER_ERROR_TIMEOUT 5      ///< Server not ready before timeout
+#define NODM_SERVER_ERROR_CONNECT 6      ///< Could not connect to X server
 
 
 struct server
@@ -59,7 +59,7 @@ void server_init(struct server* srv);
  *   Timeout in seconds after which if the X server is not ready, we give up
  *   and return an error.
  * @return
- *   Exit status as described by the SSTART_* constants
+ *   Exit status as described by the NODM_SERVER_* constants
  */
 int server_start(struct server* srv, unsigned timeout_sec);
 

@@ -1,5 +1,5 @@
 /*
- * sstart - X server startup functions
+ * server - X server startup functions
  *
  * Copyright 2011  Enrico Zini <enrico@enricozini.org>
  *
@@ -18,7 +18,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "sstart.h"
+#include "server.h"
 #include "defs.h"
 #include "log.h"
 #include <signal.h>
@@ -46,7 +46,7 @@ void server_init(struct server* srv)
 int server_start(struct server* srv, unsigned timeout_sec)
 {
     // Function return code
-    int return_code = SSTART_SUCCESS;
+    int return_code = NODM_SERVER_SUCCESS;
 
     // Initialise common signal handling machinery
     struct sigaction sa;
@@ -54,7 +54,7 @@ int server_start(struct server* srv, unsigned timeout_sec)
     if (sigemptyset(&sa.sa_mask) < 0)
     {
         log_err("sigemptyset failed: %m");
-        return SSTART_ERROR_PROGRAMMING;
+        return NODM_SERVER_ERROR_PROGRAMMING;
     }
 
     // Take note of the old SIGCHLD handler
@@ -62,7 +62,7 @@ int server_start(struct server* srv, unsigned timeout_sec)
     if (sigaction(SIGCHLD, NULL, &sa_sigchld_old) == -1)
     {
         log_err("sigaction failed: %m");
-        return SSTART_ERROR_PROGRAMMING;
+        return NODM_SERVER_ERROR_PROGRAMMING;
     }
 
     // Catch server ready notifications via SIGUSR1
@@ -72,7 +72,7 @@ int server_start(struct server* srv, unsigned timeout_sec)
     if (sigaction(SIGUSR1, &sa, &sa_usr1_old) == -1)
     {
         log_err("sigaction failed: %m");
-        return SSTART_ERROR_PROGRAMMING;
+        return NODM_SERVER_ERROR_PROGRAMMING;
     }
     // From now on we need to perform cleanup before returning
 
@@ -91,7 +91,7 @@ int server_start(struct server* srv, unsigned timeout_sec)
         exit(errno == ENOENT ? E_CMD_NOTFOUND : E_CMD_NOEXEC);
     } else if (child == -1) {
         log_err("cannot fork to run %s: %m", srv->argv[0]);
-        return_code = SSTART_ERROR_SYSTEM;
+        return_code = NODM_SERVER_ERROR_SYSTEM;
         goto cleanup;
     }
 
@@ -102,7 +102,7 @@ int server_start(struct server* srv, unsigned timeout_sec)
     if (sigaction(SIGCHLD, &sa, NULL) == -1)
     {
         log_err("sigaction failed: %m");
-        return_code = SSTART_ERROR_PROGRAMMING;
+        return_code = NODM_SERVER_ERROR_PROGRAMMING;
         goto cleanup;
     }
 
@@ -117,7 +117,7 @@ int server_start(struct server* srv, unsigned timeout_sec)
         {
             if (errno == EINTR) continue;
             log_err("waitpid on %s failed: %m", srv->argv[0]);
-            return_code = SSTART_ERROR_SYSTEM;
+            return_code = NODM_SERVER_ERROR_SYSTEM;
             goto cleanup;
         }
         if (res == child)
@@ -130,7 +130,7 @@ int server_start(struct server* srv, unsigned timeout_sec)
                 // This should never happen, but it's better to have a message
                 // than to fail silently through an open code path
                 log_err("X server quit, waitpid gave unrecognised status=%d", status);
-            return_code = SSTART_ERROR_SERVER_DIED;
+            return_code = NODM_SERVER_ERROR_SERVER_DIED;
             goto cleanup;
         }
 
@@ -144,11 +144,11 @@ int server_start(struct server* srv, unsigned timeout_sec)
                 continue;
             }
             log_err("nanosleep failed: %m");
-            return_code = SSTART_ERROR_SYSTEM;
+            return_code = NODM_SERVER_ERROR_SYSTEM;
             goto cleanup;
         } else {
             log_err("X server did not respond after %u seconds", timeout_sec);
-            return_code = SSTART_ERROR_TIMEOUT;
+            return_code = NODM_SERVER_ERROR_TIMEOUT;
             goto cleanup;
         }
     }
@@ -157,13 +157,13 @@ int server_start(struct server* srv, unsigned timeout_sec)
     if (setenv("DISPLAY", srv->name, 1) == -1)
     {
         log_err("setenv DISPLAY=%s failed: %m", srv->name);
-        return_code = SSTART_ERROR_SYSTEM;
+        return_code = NODM_SERVER_ERROR_SYSTEM;
         goto cleanup;
     }
 
 cleanup:
     // Kill the X server if an error happened
-    if (child > 0 && return_code != SSTART_SUCCESS)
+    if (child > 0 && return_code != NODM_SERVER_SUCCESS)
         kill(child, SIGTERM);
     else
         srv->pid = child;
@@ -189,11 +189,11 @@ int server_connect(struct server* srv)
     // Remove close-on-exec and register to close at the next fork, why? We'll find
     // RegisterCloseOnFork (ConnectionNumber (d->dpy));
     // fcntl (ConnectionNumber (d->dpy), F_SETFD, 0);
-    return srv->dpy == NULL ? SSTART_ERROR_CONNECT : SSTART_SUCCESS;
+    return srv->dpy == NULL ? NODM_SERVER_ERROR_CONNECT : NODM_SERVER_SUCCESS;
 }
 
 int server_disconnect(struct server* srv)
 {
     XCloseDisplay(srv->dpy);
-    return SSTART_SUCCESS;
+    return NODM_SERVER_SUCCESS;
 }
