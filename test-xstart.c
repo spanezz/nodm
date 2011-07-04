@@ -53,11 +53,18 @@ int main(int argc, char* argv[])
         return 2;
     }
 
+    res = server_read_window_path(&srv);
+    if (res != NODM_SERVER_SUCCESS)
+    {
+        fprintf(stderr, "read_window_path return code: %d\n", res);
+        return 3;
+    }
+
     res = server_disconnect(&srv);
     if (res != NODM_SERVER_SUCCESS)
     {
         fprintf(stderr, "server_disconnect return code: %d\n", res);
-        return 3;
+        return 4;
     }
 
     log_end();

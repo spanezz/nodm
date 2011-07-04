@@ -18,8 +18,37 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+/*
+ * server_read_window_path is taken from xdm's dm.c which is:
+ *
+ * Copyright 1988, 1998  The Open Group
+ *
+ * Permission to use, copy, modify, distribute, and sell this software and its
+ * documentation for any purpose is hereby granted without fee, provided that
+ * the above copyright notice appear in all copies and that both that
+ * copyright notice and this permission notice appear in supporting
+ * documentation.
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE OPEN GROUP BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of The Open Group shall
+ * not be used in advertising or otherwise to promote the sale, use or
+ * other dealings in this Software without prior written authorization
+ * from The Open Group.
+ */
+
+
 #include "server.h"
-#include "defs.h"
+#include "common.h"
 #include "log.h"
 #include <signal.h>
 #include <time.h>
@@ -28,6 +57,9 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <X11/Xfuncproto.h>
+#include <X11/Xatom.h>
+#include <stdint.h>
 
 
 // Signal handlers
@@ -41,6 +73,7 @@ void server_init(struct server* srv)
     srv->name = 0;
     srv->pid = -1;
     srv->dpy = NULL;
+    srv->windowpath = NULL;
 }
 
 int server_start(struct server* srv, unsigned timeout_sec)
@@ -195,5 +228,79 @@ int server_connect(struct server* srv)
 int server_disconnect(struct server* srv)
 {
     XCloseDisplay(srv->dpy);
+    return NODM_SERVER_SUCCESS;
+}
+
+int server_read_window_path(struct server* srv)
+{
+    /* setting WINDOWPATH for clients */
+    Atom prop;
+    Atom actualtype;
+    int actualformat;
+    unsigned long nitems;
+    unsigned long bytes_after;
+    unsigned char *buf;
+    const char *windowpath;
+    char *newwindowpath;
+    unsigned long num;
+
+    prop = XInternAtom(srv->dpy, "XFree86_VT", False);
+    if (prop == None)
+    {
+        log_err("no XFree86_VT atom");
+        return NODM_SERVER_ERROR_XLIB;
+    }
+    if (XGetWindowProperty(srv->dpy, DefaultRootWindow(srv->dpy), prop, 0, 1,
+                False, AnyPropertyType, &actualtype, &actualformat,
+                &nitems, &bytes_after, &buf))
+    {
+        log_err("no XFree86 VT property");
+        return NODM_SERVER_ERROR_XLIB;
+    }
+    if (nitems == 0)
+        num = DefaultRootWindow(srv->dpy);
+    else
+    {
+        if (nitems != 1)
+        {
+            log_err("%lu!=1 items in XFree86_VT property", nitems);
+            XFree(buf);
+            return NODM_SERVER_ERROR_XLIB;
+        }
+        switch (actualtype) {
+            case XA_CARDINAL:
+            case XA_INTEGER:
+            case XA_WINDOW:
+                switch (actualformat) {
+                case  8:
+                    num = (*(uint8_t  *)(void *)buf);
+                    break;
+                case 16:
+                    num = (*(uint16_t *)(void *)buf);
+                    break;
+                case 32:
+                    num = (*(uint32_t *)(void *)buf);
+                    break;
+                default:
+                    log_err("unsupported format %d in XFree86_VT property", actualformat);
+                    XFree(buf);
+                    return NODM_SERVER_ERROR_XLIB;
+                }
+                break;
+            default:
+                log_err("unsupported type %lx in XFree86_VT property", actualtype);
+                XFree(buf);
+                return NODM_SERVER_ERROR_XLIB;
+        }
+    }
+    XFree(buf);
+    windowpath = getenv("WINDOWPATH");
+    if (!windowpath)
+        asprintf(&newwindowpath, "%lu", num);
+    else
+        asprintf(&newwindowpath, "%s:%lu", windowpath, num);
+    if (srv->windowpath) free(srv->windowpath);
+    srv->windowpath = newwindowpath;
+
     return NODM_SERVER_SUCCESS;
 }

@@ -30,6 +30,7 @@
 #define NODM_SERVER_ERROR_SERVER_DIED 4  ///< Server died
 #define NODM_SERVER_ERROR_TIMEOUT 5      ///< Server not ready before timeout
 #define NODM_SERVER_ERROR_CONNECT 6      ///< Could not connect to X server
+#define NODM_SERVER_ERROR_XLIB 7         ///< Xlib error
 
 
 struct server
@@ -38,6 +39,8 @@ struct server
     const char **argv;
     /// X display name
     const char *name;
+    /// X window path (dynamically allocated and owned by this structure)
+    char *windowpath;
     /// X server pid
     pid_t pid;
     /// xlib Display connected to the server
@@ -50,7 +53,7 @@ struct server
 void server_init(struct server* srv);
 
 /**
- * Start the X server and wait until it's ready to accept connections
+ * Start the X server and wait until it's ready to accept connections.
  *
  * @param srv
  *   The struct server with X server information. argv and name are expected to
@@ -69,5 +72,7 @@ int server_start(struct server* srv, unsigned timeout_sec);
 int server_connect(struct server* srv);
 
 int server_disconnect(struct server* srv);
+
+int server_read_window_path(struct server* srv);
 
 #endif

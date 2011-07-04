@@ -1,5 +1,5 @@
 /*
- * defs - common nodm definitions
+ * common - common nodm definitions and utility functions
  *
  * Copyright 2011  Enrico Zini <enrico@enricozini.org>
  *
@@ -37,5 +37,10 @@
 
 // X-related exit codes
 #define E_X_ERROR               200     /* something wrong talking with X */
+
+/**
+ * Like getenv, but if the variable is not defined it returns \a def
+ */
+const char* getenv_with_default(const char* envname, const char* def);
 
 #endif

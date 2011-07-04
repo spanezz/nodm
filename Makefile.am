@@ -4,12 +4,12 @@ ACLOCAL_AMFLAGS = -I m4
 
 sbin_PROGRAMS = nodm
 
-dist_noinst_HEADERS = defs.h log.h server.h session.h
+dist_noinst_HEADERS = common.h log.h server.h session.h
 
-libsources = log.c server.c session.c
+libsources = common.c log.c server.c session.c
 
-INCLUDES = $(X11_CFLAGS)
-LDFLAGS = $(PAM_LIBS) $(X11_LIBS)
+AM_CPPFLAGS = $(X11_CFLAGS)
+AM_LDFLAGS = $(PAM_LIBS) $(X11_LIBS)
 
 nodm_SOURCES = $(libsources) nodm.c
 nodm_CFLAGS = -DNODM_SESSION='"$(sbindir)/nodm"'
