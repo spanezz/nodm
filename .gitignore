@@ -14,3 +14,4 @@ debian/nodm.prerm.debhelper
 debian/nodm.substvars
 debian/nodm/
 /nodm
+*.o

@@ -8,6 +8,9 @@ AM_CONFIG_HEADER(config.h)
 dnl AC_GNU_SOURCE
 dnl AM_MAINTAINER_MODE
 
+dnl We use C99
+AC_PROG_CC_C99
+
 dnl Checks for programs.
 AC_PROG_CC
 AC_ISC_POSIX
