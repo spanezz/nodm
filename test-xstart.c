@@ -67,6 +67,13 @@ int main(int argc, char* argv[])
         return 4;
     }
 
+    res = server_stop(&srv);
+    if (res != NODM_SERVER_SUCCESS)
+    {
+        fprintf(stderr, "server_stop return code: %d\n", res);
+        return 4;
+    }
+
     log_end();
     return 0;
 }

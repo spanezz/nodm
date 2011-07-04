@@ -66,6 +66,9 @@ void server_init(struct server* srv);
  */
 int server_start(struct server* srv, unsigned timeout_sec);
 
+/// Kill the X server
+int server_stop(struct server* srv);
+
 /**
  * Connect to the X server
  */

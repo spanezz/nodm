@@ -206,6 +206,13 @@ cleanup:
     return return_code;
 }
 
+int server_stop(struct server* srv)
+{
+    kill(srv->pid, SIGTERM);
+    kill(srv->pid, SIGCONT);
+    return NODM_SERVER_SUCCESS;
+}
+
 static int xopendisplay_error_handler(Display* dpy)
 {
     log_err("I/O error in XOpenDisplay");
