@@ -16,7 +16,7 @@ man_MANS = nodm.8
 
 TESTS = test-xstart
 check_PROGRAMS = test-xstart
-test_xstart_SOURCES = log.c test-xstart.c
+test_xstart_SOURCES = log.c sstart.c test-xstart.c
 
 EXTRA_DIST = test_nodm TODO nodm-man-extras autogen.sh
 

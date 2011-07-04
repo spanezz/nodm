@@ -57,6 +57,7 @@ void log_info(const char* fmt, ...)
         va_start(ap, fmt);
         vfprintf(stderr, fmt, ap);
         va_end(ap);
+        fputc('\n', stderr);
     }
 
     if (config->log_to_syslog)
@@ -77,6 +78,7 @@ void log_warn(const char* fmt, ...)
         va_start(ap, fmt);
         vfprintf(stderr, fmt, ap);
         va_end(ap);
+        fputc('\n', stderr);
     }
 
     if (config->log_to_syslog)
@@ -97,6 +99,7 @@ void log_err(const char* fmt, ...)
         va_start(ap, fmt);
         vfprintf(stderr, fmt, ap);
         va_end(ap);
+        fputc('\n', stderr);
     }
 
     if (config->log_to_syslog)

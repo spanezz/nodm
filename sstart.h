@@ -1,5 +1,5 @@
 /*
- * test-xstart - test that we are able to start X
+ * sstart - X server startup functions
  *
  * Copyright 2011  Enrico Zini <enrico@enricozini.org>
  *
@@ -18,24 +18,15 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "log.h"
-#include "sstart.h"
-#include <stdio.h>
+#ifndef NODM_SSTART_H
+#define NODM_SSTART_H
 
-int main(int argc, char* argv[])
-{
-    struct log_config cfg = {
-        .program_name = "test-xstart",
-        .log_to_syslog = false,
-        .log_to_stderr = true,
-        .info_to_stderr = true,
-    };
-    log_start(&cfg);
+#define SSTART_SUCCESS 0            ///< Server is ready for connections
+#define SSTART_ERROR_PROGRAMMING 2  ///< Programming error
+#define SSTART_ERROR_SYSTEM 3       ///< Unexpected OS error
+#define SSTART_ERROR_SERVER_DIED 4  ///< Server died
+#define SSTART_ERROR_TIMEOUT 5      ///< Server not ready before timeout
 
-    char* server_argv[] = { "/usr/bin/Xnest", ":1", NULL };
-    int res = start_server(server_argv, 5);
-    printf("Sstart return code: %d \n", res);
+int start_server(char **argv, unsigned timeout_sec);
 
-    log_end();
-    return 0;
-}
+#endif
