@@ -35,7 +35,7 @@ static bool server_started = false;
 static void on_sigusr1(int sig) { server_started = true; }
 static void on_sigchld(int sig) {}
 
-int start_server(char **argv, unsigned timeout_sec)
+int start_server(struct server* srv, unsigned timeout_sec)
 {
     // Function return code
     int return_code = SSTART_SUCCESS;
@@ -78,11 +78,11 @@ int start_server(char **argv, unsigned timeout_sec)
         // when ready
         signal(SIGUSR1, SIG_IGN);
 
-        execv(argv[0], argv);
-        log_err("cannot start %s: %m", argv[0]);
+        execv(srv->argv[0], srv->argv);
+        log_err("cannot start %s: %m", srv->argv[0]);
         exit(errno == ENOENT ? E_CMD_NOTFOUND : E_CMD_NOEXEC);
     } else if (child == -1) {
-        log_err("cannot fork to run %s: %m", argv[0]);
+        log_err("cannot fork to run %s: %m", srv->argv[0]);
         return_code = SSTART_ERROR_SYSTEM;
         goto cleanup;
     }
@@ -108,7 +108,7 @@ int start_server(char **argv, unsigned timeout_sec)
         if (res == -1)
         {
             if (errno == EINTR) continue;
-            log_err("waitpid on %s failed: %m", argv[0]);
+            log_err("waitpid on %s failed: %m", srv->argv[0]);
             return_code = SSTART_ERROR_SYSTEM;
             goto cleanup;
         }
@@ -149,6 +149,8 @@ cleanup:
     // Kill the X server if an error happened
     if (child > 0 && !server_started)
         kill(child, SIGTERM);
+    else
+        srv->pid = child;
     // Restore signal handlers
     sigaction(SIGCHLD, NULL, &sa_sigchld_old);
     sigaction(SIGUSR1, NULL, &sa_usr1_old);

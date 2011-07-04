@@ -32,8 +32,10 @@ int main(int argc, char* argv[])
     };
     log_start(&cfg);
 
-    char* server_argv[] = { "/usr/bin/Xnest", ":1", NULL };
-    int res = start_server(server_argv, 5);
+    struct server srv;
+    const char* server_argv[] = { "/usr/bin/Xnest", ":1", NULL };
+    srv.argv = server_argv;
+    int res = start_server(&srv, 5);
     printf("Sstart return code: %d \n", res);
 
     log_end();

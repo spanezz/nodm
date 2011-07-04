@@ -21,12 +21,21 @@
 #ifndef NODM_SSTART_H
 #define NODM_SSTART_H
 
+#include <sys/types.h>
+
 #define SSTART_SUCCESS 0            ///< Server is ready for connections
 #define SSTART_ERROR_PROGRAMMING 2  ///< Programming error
 #define SSTART_ERROR_SYSTEM 3       ///< Unexpected OS error
 #define SSTART_ERROR_SERVER_DIED 4  ///< Server died
 #define SSTART_ERROR_TIMEOUT 5      ///< Server not ready before timeout
 
-int start_server(char **argv, unsigned timeout_sec);
+
+struct server
+{
+    const char **argv;
+    pid_t pid;
+};
+
+int start_server(struct server* srv, unsigned timeout_sec);
 
 #endif
