@@ -21,4 +21,33 @@
 #ifndef NODM_SESSION_H
 #define NODM_SESSION_H
 
+#include "server.h"
+
+/**
+ * nodm X session
+ *
+ * Perform PAM bookkeeping, init the session environment and start the X
+ * session requested by the user
+ */
+int nodm_session(struct server* srv);
+
+/**
+ * Start the X server using the given command line, change user to $NODM_USER
+ * and run $NODM_XSESSION
+ */
+int nodm_x_with_session_argv(const char* argv[]);
+
+/**
+ * Split xcmdline using wordexp shell-like expansion and run
+ * nodm_x_with_session_argv().
+ *
+ * If the first token starts with '/' or '.', it is used as the X server, else
+ * "X" is used as the server.
+ *
+ * If the second token (or the first if the first was not recognised as a path
+ * to the X server) looks like ":<NUMBER>", it is used as the display name,
+ * else ":0" is used.
+ */
+int nodm_x_with_session_cmdline(const char* xcmdline);
+
 #endif
