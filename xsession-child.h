@@ -21,11 +21,20 @@
 #ifndef NODM_XSESSION_CHILD_H
 #define NODM_XSESSION_CHILD_H
 
+#include <stdbool.h>
 #include <pwd.h>
 #include <security/pam_appl.h>
 
+struct nodm_xserver;
+
 struct nodm_xsession_child
 {
+    /// X server we connect to
+    struct nodm_xserver* srv;
+
+    /// If set to true, perform ~/.xsession-errors cleanup
+    bool conf_cleanup_xse;
+
     /// Information about the user we run the session for
     struct passwd pwent;
 
@@ -41,6 +50,9 @@ struct nodm_xsession_child
     /// Child exit status
     int exit_status;
 };
+
+/// Setup common environment bits in the child process
+int nodm_xsession_child_common_env(struct nodm_xsession_child* s);
 
 /// Just exec the session
 int nodm_xsession_child(struct nodm_xsession_child* s);

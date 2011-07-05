@@ -19,12 +19,15 @@
  */
 
 #include "xsession-child.h"
+#include "xserver.h"
 #include "common.h"
 #include "log.h"
 #include <security/pam_appl.h>
 #include <security/pam_misc.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <sys/wait.h>
+#include <fcntl.h>
 #include <grp.h>
 #include <signal.h>
 #include <errno.h>
@@ -36,6 +39,56 @@
 #ifndef PAM_DELETE_CRED
 #define PAM_DELETE_CRED PAM_CRED_DELETE
 #endif
+
+/*
+ * Truncate ~/.xsession-errors if it is longer than \a maxsize.
+ *
+ * The function looks for .xsession-errors in the current directory, so when it
+ * is called the current directory must be the user's homedir.
+ *
+ * The function also assumes that we are running as the user. As a consequence
+ * it does not worry about symlink attacks, because they would only be possible
+ * if the user's home directory is group or world writable.
+ *
+ * curdirname is the name of the current directory, and it is only used when
+ * logging error messages.
+ *
+ * The function returns true on success, false on failure.
+ */
+static int cleanup_xse(off_t maxsize, const char* curdirname)
+{
+    int ret = E_OS_ERROR;
+    int xse_fd = -1;
+    struct stat xse_st;
+
+    xse_fd = open(".xsession-errors", O_WRONLY | O_CREAT, 0600);
+    if (xse_fd < 0)
+    {
+        log_err("cannot open `%s/%s': %m", curdirname, ".xsession-errors");
+        goto cleanup;
+    }
+    if (fstat(xse_fd, &xse_st) < 0)
+    {
+        log_err("cannot stat `%s/%s': %m", curdirname, ".xsession-errors");
+        goto cleanup;
+    }
+    if (xse_st.st_size > maxsize)
+    {
+        if (ftruncate(xse_fd, 0) < 0)
+        {
+            log_err("cannot truncate `%s/%s': %m", curdirname, ".xsession-errors");
+            goto cleanup;
+        }
+    }
+
+    /* If we made it so far, we succeeded */
+    ret = E_SUCCESS;
+
+cleanup:
+    if (xse_fd >= 0)
+        close(xse_fd);
+    return ret;
+}
 
 /*
  * setup_uid_gid() split in two functions for PAM support -
@@ -198,8 +251,43 @@ static void shutdown_pam(struct nodm_xsession_child* s)
     s->pamh = 0;
 }
 
+int nodm_xsession_child_common_env(struct nodm_xsession_child* s)
+{
+    // Setup environment
+    setenv("HOME", s->pwent.pw_dir, 1);
+    setenv("USER", s->pwent.pw_name, 1);
+    setenv("USERNAME", s->pwent.pw_name, 1);
+    setenv("LOGNAME", s->pwent.pw_name, 1);
+    setenv("PWD", s->pwent.pw_dir, 1);
+    setenv("SHELL", s->pwent.pw_shell, 1);
+    setenv("DISPLAY", s->srv->name, 1);
+    setenv("WINDOWPATH", s->srv->windowpath, 1);
+
+
+    // Clear the NODM_* environment variables
+    unsetenv("NODM_USER");
+    unsetenv("NODM_XINIT");
+    unsetenv("NODM_XSESSION");
+    unsetenv("NODM_X_OPTIONS");
+    unsetenv("NODM_MIN_SESSION_TIME");
+    unsetenv("NODM_RUN_SESSION");
+
+    // Move to home directory
+    if (chdir(s->pwent.pw_dir) == 0)
+    {
+        // Truncate ~/.xsession-errors
+        if (s->conf_cleanup_xse)
+            cleanup_xse(0, s->pwent.pw_dir);
+    }
+
+    return E_SUCCESS;
+}
+
 int nodm_xsession_child(struct nodm_xsession_child* s)
 {
+    int res = nodm_xsession_child_common_env(s);
+    if (res != E_SUCCESS) return res;
+
     /*
      * This is a workaround for Linux libc bug/feature (?) - the
      * /dev/log file descriptor is open without the close-on-exec flag
@@ -242,6 +330,9 @@ int nodm_xsession_child_pam(struct nodm_xsession_child* s)
 
     child = fork ();
     if (child == 0) {   /* child shell */
+        int res = nodm_xsession_child_common_env(s);
+        if (res != E_SUCCESS) return res;
+
         /*
          * This is a workaround for Linux libc bug/feature (?) - the
          * /dev/log file descriptor is open without the close-on-exec flag
