@@ -41,6 +41,9 @@ struct session
      */
     char conf_run_as[128];
 
+    /// Command to run as the X session
+    char conf_session_command[1024];
+
     /// X server information
     struct server srv;
 

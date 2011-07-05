@@ -271,6 +271,8 @@ void session_pam_shutdown(struct session* s)
     s->pamh = 0;
 }
 
+#define bounded_strcpy(dst, src) (snprintf(dst, sizeof(dst), "%s", (src)) < sizeof(dst))
+
 void nodm_session_init(struct session* s)
 {
     server_init(&(s->srv));
@@ -282,8 +284,11 @@ void nodm_session_init(struct session* s)
     s->conf_cleanup_xse = true;
 
     // Get the user we should run the session for
-    strncpy(s->conf_run_as, getenv_with_default("NODM_USER", "root"), 128);
-    s->conf_run_as[127] = 0;
+    if (!bounded_strcpy(s->conf_run_as, getenv_with_default("NODM_USER", "root")))
+        log_warn("username has been truncated");
+
+    if (!bounded_strcpy(s->conf_session_command, getenv_with_default("NODM_XSESSION", "/etc/X11/Xsession")))
+        log_warn("session command has been truncated");
 }
 
 void nodm_session_cleanup(struct session* s)
@@ -307,7 +312,6 @@ void nodm_session_cleanup(struct session* s)
  */
 int nodm_session(struct session* s)
 {
-    const char* xsession;
     const char* args[5];
     int res;
 
@@ -316,8 +320,6 @@ int nodm_session(struct session* s)
 
     if (s->conf_use_pam && ((res = session_pam_setup(s))))
         return res;
-
-    xsession = getenv_with_default("NODM_XSESSION", "/etc/X11/Xsession");
 
     setenv ("HOME", s->pwent.pw_dir, 1);
     setenv ("USER", s->pwent.pw_name, 1);
@@ -371,7 +373,7 @@ int nodm_session(struct session* s)
     args[0] = "/bin/sh";
     args[1] = "-l";
     args[2] = "-c";
-    args[3] = xsession;
+    args[3] = s->conf_session_command;
     args[4] = NULL;
 
     int status;
@@ -410,7 +412,7 @@ static int run_shell (const char** args, int* status)
          * F_SETFD, 1)" in libc/misc/syslog.c, but it is commented out (at
          * least in 5.4.33). Why?  --marekm
          */
-        closelog ();
+        log_end();
 
         /*
          * PAM_DATA_SILENT is not supported by some modules, and
