@@ -20,9 +20,10 @@
 
 #include "log.h"
 #include "common.h"
-#include "session.h"
+#include "dm.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void ensure_equals(const char* a, const char* b)
 {
@@ -51,67 +52,67 @@ int main(int argc, char* argv[])
     unsetenv("FOO");
     ensure_equals(getenv_with_default("FOO", "bar"), "bar");
 
-    struct session s;
+    struct nodm_display_manager s;
 
-    nodm_session_init(&s);
-    nodm_session_parse_cmdline(&s, "");
+    nodm_display_manager_init(&s);
+    nodm_display_manager_parse_xcmdline(&s, "");
     ensure_equals(s.srv.argv[0], "/usr/bin/X");
     ensure_equals(s.srv.argv[1], ":0");
     ensure_equals(s.srv.argv[2], NULL);
-    nodm_session_cleanup(&s);
+    nodm_display_manager_cleanup(&s);
 
-    nodm_session_init(&s);
-    nodm_session_parse_cmdline(&s, "foo");
+    nodm_display_manager_init(&s);
+    nodm_display_manager_parse_xcmdline(&s, "foo");
     ensure_equals(s.srv.argv[0], "/usr/bin/X");
     ensure_equals(s.srv.argv[1], ":0");
     ensure_equals(s.srv.argv[2], "foo");
     ensure_equals(s.srv.argv[3], NULL);
-    nodm_session_cleanup(&s);
+    nodm_display_manager_cleanup(&s);
 
-    nodm_session_init(&s);
-    nodm_session_parse_cmdline(&s, "/usr/bin/Xnest");
+    nodm_display_manager_init(&s);
+    nodm_display_manager_parse_xcmdline(&s, "/usr/bin/Xnest");
     ensure_equals(s.srv.argv[0], "/usr/bin/Xnest");
     ensure_equals(s.srv.argv[1], ":0");
     ensure_equals(s.srv.argv[2], NULL);
-    nodm_session_cleanup(&s);
+    nodm_display_manager_cleanup(&s);
 
-    nodm_session_init(&s);
-    nodm_session_parse_cmdline(&s, ":1");
+    nodm_display_manager_init(&s);
+    nodm_display_manager_parse_xcmdline(&s, ":1");
     ensure_equals(s.srv.argv[0], "/usr/bin/X");
     ensure_equals(s.srv.argv[1], ":1");
     ensure_equals(s.srv.argv[2], NULL);
-    nodm_session_cleanup(&s);
+    nodm_display_manager_cleanup(&s);
 
-    nodm_session_init(&s);
-    nodm_session_parse_cmdline(&s, "/usr/bin/Xnest :1");
+    nodm_display_manager_init(&s);
+    nodm_display_manager_parse_xcmdline(&s, "/usr/bin/Xnest :1");
     ensure_equals(s.srv.argv[0], "/usr/bin/Xnest");
     ensure_equals(s.srv.argv[1], ":1");
     ensure_equals(s.srv.argv[2], NULL);
-    nodm_session_cleanup(&s);
+    nodm_display_manager_cleanup(&s);
 
-    nodm_session_init(&s);
-    nodm_session_parse_cmdline(&s, "/usr/bin/Xnest foo");
+    nodm_display_manager_init(&s);
+    nodm_display_manager_parse_xcmdline(&s, "/usr/bin/Xnest foo");
     ensure_equals(s.srv.argv[0], "/usr/bin/Xnest");
     ensure_equals(s.srv.argv[1], ":0");
     ensure_equals(s.srv.argv[2], "foo");
     ensure_equals(s.srv.argv[3], NULL);
-    nodm_session_cleanup(&s);
+    nodm_display_manager_cleanup(&s);
 
-    nodm_session_init(&s);
-    nodm_session_parse_cmdline(&s, ":1 foo");
+    nodm_display_manager_init(&s);
+    nodm_display_manager_parse_xcmdline(&s, ":1 foo");
     ensure_equals(s.srv.argv[0], "/usr/bin/X");
     ensure_equals(s.srv.argv[1], ":1");
     ensure_equals(s.srv.argv[2], "foo");
     ensure_equals(s.srv.argv[3], NULL);
-    nodm_session_cleanup(&s);
+    nodm_display_manager_cleanup(&s);
 
-    nodm_session_init(&s);
-    nodm_session_parse_cmdline(&s, "/usr/bin/Xnest :1 foo");
+    nodm_display_manager_init(&s);
+    nodm_display_manager_parse_xcmdline(&s, "/usr/bin/Xnest :1 foo");
     ensure_equals(s.srv.argv[0], "/usr/bin/Xnest");
     ensure_equals(s.srv.argv[1], ":1");
     ensure_equals(s.srv.argv[2], "foo");
     ensure_equals(s.srv.argv[3], NULL);
-    nodm_session_cleanup(&s);
+    nodm_display_manager_cleanup(&s);
 
     log_end();
     return 0;

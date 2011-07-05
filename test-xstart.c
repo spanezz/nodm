@@ -19,7 +19,7 @@
  */
 
 #include "log.h"
-#include "server.h"
+#include "xserver.h"
 #include "common.h"
 #include <stdio.h>
 
@@ -33,45 +33,24 @@ int main(int argc, char* argv[])
     };
     log_start(&cfg);
 
-    struct server srv;
-    server_init(&srv);
+    struct nodm_xserver srv;
+    nodm_xserver_init(&srv);
 
     const char* server_argv[] = { "/usr/bin/Xnest", ":1", NULL };
     srv.argv = server_argv;
     srv.name = ":1";
 
-    int res = server_start(&srv, 5);
+    int res = nodm_xserver_start(&srv);
     if (res != E_SUCCESS)
     {
-        fprintf(stderr, "server_start return code: %d\n", res);
+        fprintf(stderr, "nodm_xserver_start return code: %d\n", res);
         return 1;
     }
 
-    res = server_connect(&srv);
+    res = nodm_xserver_stop(&srv);
     if (res != E_SUCCESS)
     {
-        fprintf(stderr, "server_connect return code: %d\n", res);
-        return 2;
-    }
-
-    res = server_read_window_path(&srv);
-    if (res != E_SUCCESS)
-    {
-        fprintf(stderr, "read_window_path return code: %d\n", res);
-        return 3;
-    }
-
-    res = server_disconnect(&srv);
-    if (res != E_SUCCESS)
-    {
-        fprintf(stderr, "server_disconnect return code: %d\n", res);
-        return 4;
-    }
-
-    res = server_stop(&srv);
-    if (res != E_SUCCESS)
-    {
-        fprintf(stderr, "server_stop return code: %d\n", res);
+        fprintf(stderr, "nodm_xserver_stop return code: %d\n", res);
         return 4;
     }
 

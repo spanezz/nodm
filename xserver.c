@@ -1,5 +1,5 @@
 /*
- * server - X server startup functions
+ * xserver - X server startup functions
  *
  * Copyright 2011  Enrico Zini <enrico@enricozini.org>
  *
@@ -19,7 +19,7 @@
  */
 
 /*
- * server_read_window_path is taken from xdm's dm.c which is:
+ * nodm_xserver_read_window_path is taken from xdm's dm.c which is:
  *
  * Copyright 1988, 1998  The Open Group
  *
@@ -47,7 +47,8 @@
  */
 
 
-#include "server.h"
+#define _GNU_SOURCE
+#include "xserver.h"
 #include "common.h"
 #include "log.h"
 #include <signal.h>
@@ -60,6 +61,7 @@
 #include <X11/Xfuncproto.h>
 #include <X11/Xatom.h>
 #include <stdint.h>
+#include <stdio.h>
 
 
 // Signal handlers
@@ -67,8 +69,9 @@ static bool server_started = false;
 static void on_sigusr1(int sig) { server_started = true; }
 static void on_sigchld(int sig) {}
 
-void server_init(struct server* srv)
+void nodm_xserver_init(struct nodm_xserver* srv)
 {
+    srv->conf_timeout = 5;
     srv->argv = 0;
     srv->name = 0;
     srv->pid = -1;
@@ -76,7 +79,19 @@ void server_init(struct server* srv)
     srv->windowpath = NULL;
 }
 
-int server_start(struct server* srv, unsigned timeout_sec)
+/**
+ * Start the X server and wait until it's ready to accept connections.
+ *
+ * @param srv
+ *   The struct nodm_xserver with X server information. argv and name are expected to
+ *   be filled, pid is filled.
+ * @param timeout_sec
+ *   Timeout in seconds after which if the X server is not ready, we give up
+ *   and return an error.
+ * @return
+ *   Exit status as described by the E_* constants
+ */
+static int xserver_start(struct nodm_xserver* srv, unsigned timeout_sec)
 {
     // Function return code
     int return_code = E_SUCCESS;
@@ -119,7 +134,7 @@ int server_start(struct server* srv, unsigned timeout_sec)
         // when ready
         signal(SIGUSR1, SIG_IGN);
 
-        execv(srv->argv[0], srv->argv);
+        execv(srv->argv[0], (char *const*)srv->argv);
         log_err("cannot start %s: %m", srv->argv[0]);
         exit(errno == ENOENT ? E_CMD_NOTFOUND : E_CMD_NOEXEC);
     } else if (child == -1) {
@@ -206,10 +221,14 @@ cleanup:
     return return_code;
 }
 
-int server_stop(struct server* srv)
+/// Kill the X server
+static int xserver_stop(struct nodm_xserver* srv)
 {
     kill(srv->pid, SIGTERM);
     kill(srv->pid, SIGCONT);
+    // TODO: wait
+    srv->pid = -1;
+    unsetenv("DISPLAY");
     return E_SUCCESS;
 }
 
@@ -220,7 +239,15 @@ static int xopendisplay_error_handler(Display* dpy)
     exit(E_XLIB_ERROR);
 }
 
-int server_connect(struct server* srv)
+/**
+ * Connect to the X server
+ *
+ * Uses srv->name, sets srv->dpy.
+ *
+ * @return
+ *   Exit status as described by the E_* constants
+ */
+static int xserver_connect(struct nodm_xserver* srv)
 {
     XSetIOErrorHandler(xopendisplay_error_handler);
     srv->dpy = XOpenDisplay(srv->name);
@@ -232,7 +259,15 @@ int server_connect(struct server* srv)
     return srv->dpy == NULL ? E_X_SERVER_CONNECT : E_SUCCESS;
 }
 
-int server_disconnect(struct server* srv)
+/**
+ * Close connection to the X server
+ *
+ * Uses srv->dpy, sets it to NULL.
+ *
+ * @return
+ *   Exit status as described by the E_* constants
+ */
+static int xserver_disconnect(struct nodm_xserver* srv)
 {
     // TODO: get/check pending errors (how?)
     XCloseDisplay(srv->dpy);
@@ -240,7 +275,15 @@ int server_disconnect(struct server* srv)
     return E_SUCCESS;
 }
 
-int server_read_window_path(struct server* srv)
+/**
+ * Get the WINDOWPATH value for the server
+ *
+ * Uses srv->dpy, sets srv->windowpath
+ *
+ * @return
+ *   Exit status as described by the E_* constants
+ */
+static int xserver_read_window_path(struct nodm_xserver* srv)
 {
     /* setting WINDOWPATH for clients */
     Atom prop;
@@ -313,3 +356,39 @@ int server_read_window_path(struct server* srv)
 
     return E_SUCCESS;
 }
+
+int nodm_xserver_start(struct nodm_xserver* srv)
+{
+    int return_code = E_SUCCESS;
+
+    return_code = xserver_start(srv, srv->conf_timeout);
+    if (return_code != E_SUCCESS)
+        goto cleanup;
+
+    return_code = xserver_connect(srv);
+    if (return_code != E_SUCCESS)
+        goto cleanup;
+
+    return_code = xserver_read_window_path(srv);
+    if (return_code != E_SUCCESS)
+        goto cleanup;
+
+cleanup:
+    if (return_code != E_SUCCESS)
+        nodm_xserver_stop(srv);
+    return return_code;
+}
+
+int nodm_xserver_stop(struct nodm_xserver* srv)
+{
+    int res1 = E_SUCCESS, res2 = E_SUCCESS;
+
+    if (srv->dpy != NULL)
+        res1 = xserver_disconnect(srv);
+    if (srv->pid != -1)
+        res2 = xserver_stop(srv);
+
+    if (res1 != E_SUCCESS) return res1;
+    return res2;
+}
+

@@ -55,7 +55,7 @@
 
 #include "config.h"
 #include "common.h"
-#include "session.h"
+#include "dm.h"
 #include "log.h"
 #include <getopt.h>
 #include <signal.h>
@@ -66,6 +66,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <sys/ioctl.h>
 #include <time.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -195,20 +196,20 @@ void run_and_restart(const char* xsession, const char* xoptions, int mst)
 
 	while (1)
 	{
-        struct session s;
-        nodm_session_init(&s);
+        struct nodm_display_manager dm;
+        nodm_display_manager_init(&dm);
 
-        int status = nodm_session_parse_cmdline(&s, xoptions);
+        int status = nodm_display_manager_parse_xcmdline(&dm, xoptions);
         if (status != E_SUCCESS)
             exit(status);
 
 		/* Run the X server */
 		time_t begin = time(NULL);
 		time_t end;
-        status = nodm_x_with_session(&s);
+        // TODO status = nodm_x_with_session(&s);
         log_info("X session exited with status %d", status);
         end = time(NULL);
-        nodm_session_cleanup(&s);
+        nodm_display_manager_cleanup(&dm);
 
 		/* Check if the session was too short */
 		if (end - begin < mst)

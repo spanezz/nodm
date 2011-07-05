@@ -20,8 +20,9 @@
 
 #include "log.h"
 #include "common.h"
-#include "session.h"
+#include "xsession.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 int main(int argc, char* argv[])
 {
@@ -33,20 +34,20 @@ int main(int argc, char* argv[])
     };
     log_start(&cfg);
 
-    const char* xcmdline = "/usr/bin/Xnest :1";
-    setenv("NODM_SESSION", "/bin/true");
-    setenv("NODM_USER", getenv_with_default("USER", "root"));
+    //const char* xcmdline = "/usr/bin/Xnest :1";
+    setenv("NODM_SESSION", "/bin/true", 1);
+    setenv("NODM_USER", getenv_with_default("USER", "root"), 1);
 
-    struct session s;
-    nodm_session_init(&s);
+    struct nodm_xsession s;
+    nodm_xsession_init(&s);
 
     int res = E_SUCCESS;
 
-    res = nodm_session_parse_cmdline(&s, xcmdline);
-    if (res != E_SUCCESS) goto cleanup;
+    //res = nodm_session_parse_cmdline(&s, xcmdline);
+    //if (res != E_SUCCESS) goto cleanup;
 
-    res = nodm_x_with_session(&s);
-    fprintf(stderr, "nodm_x_with_session_cmdline returned %d\n", res);
+    //res = nodm_x_with_session(&s);
+    //fprintf(stderr, "nodm_x_with_session_cmdline returned %d\n", res);
     if (res != E_SUCCESS) goto cleanup;
 
 cleanup:

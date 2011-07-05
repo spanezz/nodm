@@ -1,0 +1,334 @@
+/*
+ * xsession-child - child side of X session
+ *
+ * Copyright 2011  Enrico Zini <enrico@enricozini.org>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+#include "xsession-child.h"
+#include "common.h"
+#include "log.h"
+#include <security/pam_appl.h>
+#include <security/pam_misc.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <grp.h>
+#include <signal.h>
+#include <errno.h>
+
+/* compatibility with different versions of Linux-PAM */
+#ifndef PAM_ESTABLISH_CRED
+#define PAM_ESTABLISH_CRED PAM_CRED_ESTABLISH
+#endif
+#ifndef PAM_DELETE_CRED
+#define PAM_DELETE_CRED PAM_CRED_DELETE
+#endif
+
+/*
+ * setup_uid_gid() split in two functions for PAM support -
+ * pam_setcred() needs to be called after initgroups(), but
+ * before setuid().
+ */
+static int setup_groups(const struct passwd *info)
+{
+    /*
+     * Set the real group ID to the primary group ID in the password
+     * file.
+     */
+    if (setgid (info->pw_gid) == -1) {
+        log_err("bad group ID `%d' for user `%s': %m\n", info->pw_gid, info->pw_name);
+        return E_OS_ERROR;
+    }
+
+    /*
+     * For systems which support multiple concurrent groups, go get
+     * the group set from the /etc/group file.
+     */
+    if (initgroups (info->pw_name, info->pw_gid) == -1) {
+        log_err("initgroups failed for user `%s': %m\n", info->pw_name);
+        return E_OS_ERROR;
+    }
+    return E_SUCCESS;
+}
+
+static int change_uid (const struct passwd *info)
+{
+    /*
+     * Set the real UID to the UID value in the password file.
+     */
+    if (setuid(info->pw_uid)) {
+        log_err("bad user ID `%d' for user `%s': %m\n", (int)info->pw_uid, info->pw_name);
+        return E_OS_ERROR;
+    }
+    return E_SUCCESS;
+}
+
+static int setup_pam(struct nodm_xsession_child* s)
+{
+    static struct pam_conv conv = {
+        misc_conv,
+        NULL
+    };
+
+    char *cp;
+    const char *tty = 0;    // Name of tty SU is run from
+
+    /* We only run if we are root */
+    if (getuid() != 0)
+    {
+        log_err("can only be run by root");
+        return E_NOPERM;
+    }
+
+    // Set up the nodm_xsession_child structure
+    s->pamh = NULL;
+    s->pam_status = PAM_SUCCESS;
+
+    /*
+     * Get the tty name. Entries will be logged indicating that the user
+     * tried to change to the named new user from the current terminal.
+     */
+    if (isatty (0) && (cp = ttyname (0))) {
+        if (strncmp (cp, "/dev/", 5) == 0)
+            tty = cp + 5;
+        else
+            tty = cp;
+    } else {
+        tty = "???";
+    }
+
+    s->pam_status = pam_start("nodm", s->pwent.pw_name, &conv, &s->pamh);
+    if (s->pam_status != PAM_SUCCESS) {
+        log_err("pam_start: error %d", s->pam_status);
+        return E_PAM_ERROR;
+    }
+
+    s->pam_status = pam_set_item(s->pamh, PAM_TTY, (const void *) tty);
+    if (s->pam_status == PAM_SUCCESS)
+        s->pam_status = pam_set_item(s->pamh, PAM_RUSER, (const void *) "root");
+    if (s->pam_status != PAM_SUCCESS) {
+        log_err("pam_set_item: %s", pam_strerror(s->pamh, s->pam_status));
+        return E_PAM_ERROR;
+    }
+
+    signal (SIGINT, SIG_IGN);
+    signal (SIGQUIT, SIG_IGN);
+
+    /* FIXME: should we ignore this, or honour it?
+     * this can fail if the current user's account is invalid. "This
+     * includes checking for password and account expiration, as well as
+     * verifying access hour restrictions."
+     */
+    s->pam_status = pam_acct_mgmt(s->pamh, 0);
+    if (s->pam_status != PAM_SUCCESS)
+        log_warn("%s (Ignored)", pam_strerror(s->pamh, s->pam_status));
+
+    signal (SIGINT, SIG_DFL);
+    signal (SIGQUIT, SIG_DFL);
+
+    /* save SU information */
+    log_info("Successful su on %s for %s by %s", tty, s->pwent.pw_name, "root");
+
+    /* set primary group id and supplementary groups */
+    if (setup_groups(&(s->pwent))) {
+        s->pam_status = PAM_ABORT;
+        return E_OS_ERROR;
+    }
+
+    /*
+     * pam_setcred() may do things like resource limits, console groups,
+     * and much more, depending on the configured modules
+     */
+    s->pam_status = pam_setcred(s->pamh, PAM_ESTABLISH_CRED);
+    if (s->pam_status != PAM_SUCCESS) {
+        log_err("pam_setcred: %s", pam_strerror(s->pamh, s->pam_status));
+        return E_PAM_ERROR;
+    }
+
+    s->pam_status = pam_open_session(s->pamh, 0);
+    if (s->pam_status != PAM_SUCCESS) {
+        log_err("pam_open_session: %s", pam_strerror(s->pamh, s->pam_status));
+        pam_setcred(s->pamh, PAM_DELETE_CRED);
+        return E_PAM_ERROR;
+    }
+
+    /* update environment with all pam set variables */
+    char **envcp = pam_getenvlist(s->pamh);
+    if (envcp) {
+        while (*envcp) {
+            putenv(*envcp);
+            envcp++;
+        }
+    }
+
+    /* become the new user */
+    if (change_uid(&(s->pwent)) != 0) {
+        pam_close_session(s->pamh, 0);
+        pam_setcred(s->pamh, PAM_DELETE_CRED);
+        s->pam_status = PAM_ABORT;
+        return E_OS_ERROR;
+    }
+
+    return E_SUCCESS;
+}
+
+static void shutdown_pam(struct nodm_xsession_child* s)
+{
+    if (s->pam_status == PAM_SUCCESS)
+    {
+        s->pam_status = pam_close_session(s->pamh, 0);
+        if (s->pam_status != PAM_SUCCESS)
+            log_err("pam_close_session: %s", pam_strerror(s->pamh, s->pam_status));
+    }
+
+    pam_end(s->pamh, s->pam_status);
+    s->pamh = 0;
+}
+
+int nodm_xsession_child(struct nodm_xsession_child* s)
+{
+    /*
+     * This is a workaround for Linux libc bug/feature (?) - the
+     * /dev/log file descriptor is open without the close-on-exec flag
+     * and used to be passed to the new shell. There is "fcntl(LogFile,
+     * F_SETFD, 1)" in libc/misc/syslog.c, but it is commented out (at
+     * least in 5.4.33). Why?  --marekm
+     */
+    log_end();
+
+    /*
+     * PAM_DATA_SILENT is not supported by some modules, and
+     * there is no strong need to clean up the process space's
+     * memory since we will either call exec or exit.
+    pam_end (pamh, PAM_SUCCESS | PAM_DATA_SILENT);
+     */
+    (void)execv(s->argv[0], (char **)s->argv);
+    exit(errno == ENOENT ? E_CMD_NOTFOUND : E_CMD_NOEXEC);
+}
+
+/* Signal handler for parent process later */
+static int caught = 0;
+static void catch_signals (int sig)
+{
+    ++caught;
+}
+
+/* This I ripped out of su.c from sh-utils after the Mandrake pam patch
+ * have been applied.  Some work was needed to get it integrated into
+ * su.c from shadow.
+ */
+int nodm_xsession_child_pam(struct nodm_xsession_child* s)
+{
+    int child;
+    sigset_t ourset;
+    struct sigaction action;
+
+    int res = setup_pam(s);
+    if (res != E_SUCCESS)
+        return res;
+
+    child = fork ();
+    if (child == 0) {   /* child shell */
+        /*
+         * This is a workaround for Linux libc bug/feature (?) - the
+         * /dev/log file descriptor is open without the close-on-exec flag
+         * and used to be passed to the new shell. There is "fcntl(LogFile,
+         * F_SETFD, 1)" in libc/misc/syslog.c, but it is commented out (at
+         * least in 5.4.33). Why?  --marekm
+         */
+        log_end();
+
+        /*
+         * PAM_DATA_SILENT is not supported by some modules, and
+         * there is no strong need to clean up the process space's
+         * memory since we will either call exec or exit.
+        pam_end (pamh, PAM_SUCCESS | PAM_DATA_SILENT);
+         */
+        (void) execv(s->argv[0], (char **)s->argv);
+        exit (errno == ENOENT ? E_CMD_NOTFOUND : E_CMD_NOEXEC);
+    } else if (child == -1) {
+        log_err("cannot fork user shell: %m");
+        return E_OS_ERROR;
+    }
+
+    /* parent only */
+
+    /* Reset caught signal flag */
+    caught = 0;
+
+    /* Block all signals */
+    sigfillset (&ourset);
+    if (sigprocmask (SIG_BLOCK, &ourset, NULL)) {
+        log_err("sigprocmask malfunction");
+        goto killed;
+    }
+
+    /* Catch SIGTERM and SIGALRM using 'catch_signals' */
+    action.sa_handler = catch_signals;
+    sigemptyset (&action.sa_mask);
+    action.sa_flags = 0;
+    sigemptyset (&ourset);
+
+    if (sigaddset (&ourset, SIGTERM)
+#ifdef DEBUG_NODM
+        || sigaddset (&ourset, SIGINT)
+        || sigaddset (&ourset, SIGQUIT)
+#endif
+        || sigaddset (&ourset, SIGALRM)
+        || sigaction (SIGTERM, &action, NULL)
+        || sigprocmask (SIG_UNBLOCK, &ourset, NULL)
+        ) {
+        log_err("signal masking malfunction");
+        goto killed;
+    }
+
+    do {
+        int pid;
+
+        pid = waitpid (-1, &(s->exit_status), WUNTRACED);
+
+        if (WIFSTOPPED (s->exit_status)) {
+            kill (getpid (), SIGSTOP);
+            /* once we get here, we must have resumed */
+            kill (pid, SIGCONT);
+        }
+    } while (WIFSTOPPED (s->exit_status));
+
+    /* Unblock signals */
+    sigfillset (&ourset);
+    if (sigprocmask (SIG_UNBLOCK, &ourset, NULL)) {
+        log_err("signal malfunction");
+        goto killed;
+    }
+
+    if (caught)
+        goto killed;
+
+    shutdown_pam(s);
+
+    return E_SUCCESS;
+
+killed:
+    log_warn("session terminated, killing shell...");
+    kill (child, SIGTERM);
+    sleep (2);
+    kill (child, SIGKILL);
+    log_warn(" ...shell killed.");
+
+    shutdown_pam(s);
+
+    return E_SESSION_DIED;
+}

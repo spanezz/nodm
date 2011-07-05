@@ -1,12 +1,14 @@
 ## Process this file with automake to produce Makefile.in
 
+CFLAGS += -Wall -Werror
+
 ACLOCAL_AMFLAGS = -I m4
 
 sbin_PROGRAMS = nodm
 
-dist_noinst_HEADERS = common.h log.h server.h session.h
+dist_noinst_HEADERS = common.h dm.h log.h xserver.h xsession.h xsession-child.h 
 
-libsources = common.c log.c server.c session.c
+libsources = common.c log.c xsession-child.c xserver.c xsession.c dm.c
 
 AM_CPPFLAGS = $(X11_CFLAGS)
 AM_LDFLAGS = $(PAM_LIBS) $(X11_LIBS)

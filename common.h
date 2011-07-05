@@ -48,4 +48,14 @@
  */
 const char* getenv_with_default(const char* envname, const char* def);
 
+/**
+ * Like strcpy but:
+ *
+ *  * it works only for sized character arrays (it expects sizeof on them)
+ *  * it always null-terminates the destination string
+ *  * it returns false if the string was truncated, else true
+ */
+#define bounded_strcpy(dst, src) (snprintf(dst, sizeof(dst), "%s", (src)) < sizeof(dst))
+
+
 #endif
