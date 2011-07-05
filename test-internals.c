@@ -20,12 +20,15 @@
 
 #include "log.h"
 #include "common.h"
+#include "session.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 void ensure_equals(const char* a, const char* b)
 {
-    if (strcmp(a, b) != 0)
+    if (a == NULL && b == NULL)
+        return;
+    if (a == NULL || b == NULL || strcmp(a, b) != 0)
     {
         log_warn("strings differ: \"%s\" != \"%s\"", a, b);
         exit(1);
@@ -48,6 +51,67 @@ int main(int argc, char* argv[])
     unsetenv("FOO");
     ensure_equals(getenv_with_default("FOO", "bar"), "bar");
 
+    struct session s;
+
+    nodm_session_init(&s);
+    nodm_session_parse_cmdline(&s, "");
+    ensure_equals(s.srv.argv[0], "/usr/bin/X");
+    ensure_equals(s.srv.argv[1], ":0");
+    ensure_equals(s.srv.argv[2], NULL);
+    nodm_session_cleanup(&s);
+
+    nodm_session_init(&s);
+    nodm_session_parse_cmdline(&s, "foo");
+    ensure_equals(s.srv.argv[0], "/usr/bin/X");
+    ensure_equals(s.srv.argv[1], ":0");
+    ensure_equals(s.srv.argv[2], "foo");
+    ensure_equals(s.srv.argv[3], NULL);
+    nodm_session_cleanup(&s);
+
+    nodm_session_init(&s);
+    nodm_session_parse_cmdline(&s, "/usr/bin/Xnest");
+    ensure_equals(s.srv.argv[0], "/usr/bin/Xnest");
+    ensure_equals(s.srv.argv[1], ":0");
+    ensure_equals(s.srv.argv[2], NULL);
+    nodm_session_cleanup(&s);
+
+    nodm_session_init(&s);
+    nodm_session_parse_cmdline(&s, ":1");
+    ensure_equals(s.srv.argv[0], "/usr/bin/X");
+    ensure_equals(s.srv.argv[1], ":1");
+    ensure_equals(s.srv.argv[2], NULL);
+    nodm_session_cleanup(&s);
+
+    nodm_session_init(&s);
+    nodm_session_parse_cmdline(&s, "/usr/bin/Xnest :1");
+    ensure_equals(s.srv.argv[0], "/usr/bin/Xnest");
+    ensure_equals(s.srv.argv[1], ":1");
+    ensure_equals(s.srv.argv[2], NULL);
+    nodm_session_cleanup(&s);
+
+    nodm_session_init(&s);
+    nodm_session_parse_cmdline(&s, "/usr/bin/Xnest foo");
+    ensure_equals(s.srv.argv[0], "/usr/bin/Xnest");
+    ensure_equals(s.srv.argv[1], ":0");
+    ensure_equals(s.srv.argv[2], "foo");
+    ensure_equals(s.srv.argv[3], NULL);
+    nodm_session_cleanup(&s);
+
+    nodm_session_init(&s);
+    nodm_session_parse_cmdline(&s, ":1 foo");
+    ensure_equals(s.srv.argv[0], "/usr/bin/X");
+    ensure_equals(s.srv.argv[1], ":1");
+    ensure_equals(s.srv.argv[2], "foo");
+    ensure_equals(s.srv.argv[3], NULL);
+    nodm_session_cleanup(&s);
+
+    nodm_session_init(&s);
+    nodm_session_parse_cmdline(&s, "/usr/bin/Xnest :1 foo");
+    ensure_equals(s.srv.argv[0], "/usr/bin/Xnest");
+    ensure_equals(s.srv.argv[1], ":1");
+    ensure_equals(s.srv.argv[2], "foo");
+    ensure_equals(s.srv.argv[3], NULL);
+    nodm_session_cleanup(&s);
 
     log_end();
     return 0;

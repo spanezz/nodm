@@ -198,12 +198,17 @@ void run_and_restart(const char* xsession, const char* xoptions, int mst)
         struct session s;
         nodm_session_init(&s);
 
+        int status = nodm_session_parse_cmdline(&s, xoptions);
+        if (status != E_SUCCESS)
+            exit(status);
+
 		/* Run the X server */
 		time_t begin = time(NULL);
 		time_t end;
-        int status = nodm_x_with_session_cmdline(&s, xoptions);
+        status = nodm_x_with_session(&s);
         log_info("X session exited with status %d", status);
-		end = time(NULL);
+        end = time(NULL);
+        nodm_session_cleanup(&s);
 
 		/* Check if the session was too short */
 		if (end - begin < mst)

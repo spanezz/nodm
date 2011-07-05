@@ -40,9 +40,16 @@ int main(int argc, char* argv[])
     struct session s;
     nodm_session_init(&s);
 
-    int res = nodm_x_with_session_cmdline(&s, xcmdline);
-    fprintf("nodm_x_with_session_cmdline returned %d\n", res);
+    int res = E_SUCCESS;
 
+    res = nodm_session_parse_cmdline(&s, xcmdline);
+    if (res != E_SUCCESS) goto cleanup;
+
+    res = nodm_x_with_session(&s);
+    fprintf(stderr, "nodm_x_with_session_cmdline returned %d\n", res);
+    if (res != E_SUCCESS) goto cleanup;
+
+cleanup:
     log_end();
     return res;
 }

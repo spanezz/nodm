@@ -52,10 +52,16 @@ struct session
 
     /// Return code of the last PAM function called
     int pam_status;
+
+    /// Storage for split server arguments used by nodm_x_cmdline_split
+    void* srv_split_args;
 };
 
 /// Initialise a session structure with default values
 void nodm_session_init(struct session* s);
+
+/// Cleanup at the end of a session
+void nodm_session_cleanup(struct session* s);
 
 /**
  * nodm X session
@@ -69,11 +75,10 @@ int nodm_session(struct session* s);
  * Start the X server using the given command line, change user to $NODM_USER
  * and run $NODM_XSESSION
  */
-int nodm_x_with_session_argv(struct session* s, const char* argv[]);
+int nodm_x_with_session(struct session* s);
 
 /**
- * Split xcmdline using wordexp shell-like expansion and run
- * nodm_x_with_session_argv().
+ * Split xcmdline using wordexp shell-like expansion and set s->srv.argv.
  *
  * If the first token starts with '/' or '.', it is used as the X server, else
  * "X" is used as the server.
@@ -82,6 +87,6 @@ int nodm_x_with_session_argv(struct session* s, const char* argv[]);
  * to the X server) looks like ":<NUMBER>", it is used as the display name,
  * else ":0" is used.
  */
-int nodm_x_with_session_cmdline(struct session* s, const char* xcmdline);
+int nodm_session_parse_cmdline(struct session* s, const char* xcmdline);
 
 #endif

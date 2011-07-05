@@ -47,19 +47,6 @@
 #define STRFCPY(A,B) \
         (strncpy((A), (B), sizeof(A) - 1), (A)[sizeof(A) - 1] = '\0')
 
-void nodm_session_init(struct session* s)
-{
-    server_init(&(s->srv));
-
-    s->pamh = NULL;
-    s->conf_use_pam = true;
-    s->conf_cleanup_xse = true;
-
-    // Get the user we should run the session for
-    strncpy(s->conf_run_as, getenv_with_default("NODM_USER", "root"), 128);
-    s->conf_run_as[127] = 0;
-}
-
 static int run_shell (const char** args, int* status);
 
 /*
@@ -271,7 +258,7 @@ static int session_pam_setup(struct session* s)
     return E_SUCCESS;
 }
 
-static void session_pam_shutdown(struct session* s)
+void session_pam_shutdown(struct session* s)
 {
     if (s->pam_status == PAM_SUCCESS)
     {
@@ -282,6 +269,37 @@ static void session_pam_shutdown(struct session* s)
 
     pam_end(s->pamh, s->pam_status);
     s->pamh = 0;
+}
+
+void nodm_session_init(struct session* s)
+{
+    server_init(&(s->srv));
+    s->pamh = NULL;
+    s->pam_status = PAM_SUCCESS;
+    s->srv_split_args = NULL;
+
+    s->conf_use_pam = true;
+    s->conf_cleanup_xse = true;
+
+    // Get the user we should run the session for
+    strncpy(s->conf_run_as, getenv_with_default("NODM_USER", "root"), 128);
+    s->conf_run_as[127] = 0;
+}
+
+void nodm_session_cleanup(struct session* s)
+{
+    // End pam session if used
+    if (s->pamh)
+        session_pam_shutdown(s);
+
+    // Deallocate parsed arguments, if used
+    if (s->srv_split_args)
+    {
+        wordexp_t* we = (wordexp_t*)s->srv_split_args;
+        wordfree(we);
+        free(we);
+        s->srv_split_args = NULL;
+    }
 }
 
 /*
@@ -360,8 +378,7 @@ int nodm_session(struct session* s)
     if ((res = run_shell(args, &status)))
         return res;
 
-    if (s->pamh)
-        session_pam_shutdown(s);
+    nodm_session_cleanup(s);
 
     return status;
 }
@@ -472,12 +489,9 @@ killed:
     return E_SESSION_DIED;
 }
 
-int nodm_x_with_session_argv(struct session* s, const char* argv[])
+int nodm_x_with_session(struct session* s)
 {
     int return_code = 0;
-
-    s->srv.argv = argv;
-    s->srv.name = argv[1];
 
     return_code = server_start(&(s->srv), 5);
     if (return_code != E_SUCCESS)
@@ -503,48 +517,61 @@ cleanup:
     return return_code;
 }
 
-int nodm_x_with_session_cmdline(struct session* s, const char* xcmdline)
+int nodm_session_parse_cmdline(struct session* s, const char* xcmdline)
 {
+    int return_code = E_SUCCESS;
+
     // tokenize xoptions
-    wordexp_t toks = { .we_offs = 0 };
-    switch (wordexp(xcmdline, &toks, WRDE_NOCMD))
+    wordexp_t* toks = (wordexp_t*)calloc(1, sizeof(wordexp_t));
+    switch (wordexp(xcmdline, toks, WRDE_NOCMD))
     {
         case 0: break;
         case WRDE_NOSPACE:
-            wordfree(&toks);
-            return E_OS_ERROR;
+            return_code = E_OS_ERROR;
+            goto cleanup;
         default:
-            return E_BAD_ARG;
+            toks->we_wordv = NULL;
+            return_code = E_BAD_ARG;
+            goto cleanup;
     }
 
     unsigned in_arg = 0;
     unsigned argc = 0;
-    char *argv[100];
+    char **argv = (char**)malloc((toks->we_wordc + 3) * sizeof(char*));
 
     // Server command
-    if (toks.we_wordc == in_arg ||
-           (toks.we_wordv[in_arg][0] != '/' && toks.we_wordv[in_arg][0] != '.'))
-        argv[argc++] = toks.we_wordv[in_arg++];
+    if (in_arg < toks->we_wordc &&
+           (toks->we_wordv[in_arg][0] == '/' || toks->we_wordv[in_arg][0] == '.'))
+        argv[argc++] = toks->we_wordv[in_arg++];
     else
         argv[argc++] = "/usr/bin/X";
 
     // Server name
-    if (toks.we_wordc == in_arg ||
-           (toks.we_wordv[in_arg][0] == ':' && isdigit(toks.we_wordv[in_arg][1])))
-        argv[argc++] = toks.we_wordv[in_arg++];
+    if (in_arg < toks->we_wordc &&
+           toks->we_wordv[in_arg][0] == ':' && isdigit(toks->we_wordv[in_arg][1]))
+        argv[argc++] = toks->we_wordv[in_arg++];
     else
         argv[argc++] = ":0";
 
     // Copy other args
-    while (in_arg < toks.we_wordc && argc < 100)
-        argv[argc++] = toks.we_wordv[in_arg++];
-    argv[99] = NULL;
+    while (in_arg < toks->we_wordc)
+        argv[argc++] = toks->we_wordv[in_arg++];
+    argv[argc] = NULL;
 
-    // Run session
-    int res = nodm_x_with_session_argv(s, argv);
+    s->srv.argv = argv;
+    s->srv_split_args = toks;
+    argv = NULL;
+    toks = NULL;
 
-    // Free arg list
-    wordfree(&toks);
+cleanup:
+    if (toks != NULL)
+    {
+        if (toks->we_wordv)
+            wordfree(toks);
+        free(toks);
+    }
+    if (argv != NULL)
+        free(argv);
 
-    return res;
+    return E_SUCCESS;
 }
