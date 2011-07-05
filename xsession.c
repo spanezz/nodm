@@ -34,6 +34,7 @@
 
 int nodm_xsession_init(struct nodm_xsession* s)
 {
+    s->child_body = NULL;
     s->conf_use_pam = true;
     s->conf_cleanup_xse = true;
 
@@ -105,7 +106,9 @@ int nodm_xsession_start(struct nodm_xsession* s, struct nodm_xserver* srv)
     if (s->pid == 0)
     {
         // child shell */
-        if (s->conf_use_pam)
+        if (s->child_body)
+            exit(s->child_body(&child));
+        else if (s->conf_use_pam)
             exit(nodm_xsession_child_pam(&child));
         else
             exit(nodm_xsession_child(&child));

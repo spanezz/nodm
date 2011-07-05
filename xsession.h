@@ -25,6 +25,7 @@
 #include <sys/types.h>
 
 struct nodm_xserver;
+struct nodm_xsession_child;
 
 /// Supervise an X session
 struct nodm_xsession
@@ -47,6 +48,9 @@ struct nodm_xsession
 
     /// X session pid
     pid_t pid;
+
+    /// If non-NULL, use as child process main body (used for tests)
+    int (*child_body)(struct nodm_xsession_child* s);
 };
 
 /// Initialise a struct nodm_session with default values
