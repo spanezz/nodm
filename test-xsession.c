@@ -20,9 +20,14 @@
 
 #include "log.h"
 #include "common.h"
-#include "xsession.h"
+#include "dm.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+int test_session(struct nodm_xsession_child* s)
+{
+    return E_SUCCESS;
+}
 
 int main(int argc, char* argv[])
 {
@@ -38,17 +43,45 @@ int main(int argc, char* argv[])
     setenv("NODM_SESSION", "/bin/true", 1);
     setenv("NODM_USER", getenv_with_default("USER", "root"), 1);
 
-    struct nodm_xsession s;
-    nodm_xsession_init(&s);
+    int res;
 
-    int res = E_SUCCESS;
+    struct nodm_display_manager dm;
+    nodm_display_manager_init(&dm);
 
-    //res = nodm_session_parse_cmdline(&s, xcmdline);
-    //if (res != E_SUCCESS) goto cleanup;
+    // configure display manager for testing
+    res = nodm_display_manager_parse_xcmdline(&dm, "/usr/bin/Xnest :1 -geometry 1x1+0+0");
+    if (res != E_SUCCESS)
+    {
+        fprintf(stderr, "nodm_display_manager_parse_xcmdline return code: %d\n", res);
+        goto cleanup;
+    }
+    dm.session.conf_use_pam = false;
+    dm.session.conf_cleanup_xse = false;
+    dm.session.conf_run_as[0] = 0;
+    dm.session.child_body = test_session;
 
-    //res = nodm_x_with_session(&s);
-    //fprintf(stderr, "nodm_x_with_session_cmdline returned %d\n", res);
-    if (res != E_SUCCESS) goto cleanup;
+    res = nodm_display_manager_start(&dm);
+    if (res != E_SUCCESS)
+    {
+        fprintf(stderr, "nodm_display_manager_start return code: %d\n", res);
+        goto cleanup;
+    }
+
+    res = nodm_display_manager_wait(&dm);
+    if (res != E_SUCCESS)
+    {
+        fprintf(stderr, "nodm_display_manager_wait return code: %d\n", res);
+        goto cleanup;
+    }
+
+    res = nodm_display_manager_stop(&dm);
+    if (res != E_SUCCESS)
+    {
+        fprintf(stderr, "nodm_display_manager_stop return code: %d\n", res);
+        goto cleanup;
+    }
+
+    nodm_display_manager_cleanup(&dm);
 
 cleanup:
     log_end();

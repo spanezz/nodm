@@ -44,16 +44,16 @@ int main(int argc, char* argv[])
     if (res != E_SUCCESS)
     {
         fprintf(stderr, "nodm_xserver_start return code: %d\n", res);
-        return 1;
+        return res;
     }
 
     res = nodm_xserver_stop(&srv);
     if (res != E_SUCCESS)
     {
         fprintf(stderr, "nodm_xserver_stop return code: %d\n", res);
-        return 4;
+        return res;
     }
 
     log_end();
-    return 0;
+    return E_SUCCESS;
 }

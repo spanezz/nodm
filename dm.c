@@ -20,9 +20,14 @@
 
 #include "dm.h"
 #include "common.h"
+#include "log.h"
 #include <wordexp.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <errno.h>
+
 
 void nodm_display_manager_init(struct nodm_display_manager* dm)
 {
@@ -40,6 +45,59 @@ void nodm_display_manager_cleanup(struct nodm_display_manager* dm)
         wordfree(we);
         free(we);
         dm->_srv_split_args = NULL;
+    }
+}
+
+int nodm_display_manager_start(struct nodm_display_manager* dm)
+{
+    int res = nodm_xserver_start(&dm->srv);
+    if (res != E_SUCCESS) return res;
+
+    res = nodm_xsession_start(&dm->session, &dm->srv);
+    if (res != E_SUCCESS) return res;
+
+    return E_SUCCESS;
+}
+
+int nodm_display_manager_stop(struct nodm_display_manager* dm)
+{
+    int res = nodm_xsession_stop(&dm->session);
+    if (res != E_SUCCESS) return res;
+
+    res = nodm_xserver_stop(&dm->srv);
+    if (res != E_SUCCESS) return res;
+
+    return E_SUCCESS;
+}
+
+int nodm_display_manager_wait(struct nodm_display_manager* dm)
+{
+    while (true)
+    {
+        // Wait for one child to exit
+        int status;
+        pid_t child = waitpid(-1, &status, 0);
+        if (child == -1)
+        {
+            if (errno == EINTR)
+                continue;
+            else
+            {
+                log_warn("waitpid error: %m");
+                return E_OS_ERROR;
+            }
+        }
+
+        if (child == dm->srv.pid)
+        {
+            // Server died
+            log_warn("X server died with status %d", status);
+            return E_X_SERVER_DIED;
+        } else if (child == dm->session.pid) {
+            // Session died
+            log_warn("X session died with status %d", status);
+            return status;
+        }
     }
 }
 

@@ -43,6 +43,15 @@ void nodm_display_manager_init(struct nodm_display_manager* dm);
 /// Cleanup at the end of the display manager
 void nodm_display_manager_cleanup(struct nodm_display_manager* dm);
 
+/// Start X and the X session
+int nodm_display_manager_start(struct nodm_display_manager* dm);
+
+/// Wait for X or the X session to end
+int nodm_display_manager_wait(struct nodm_display_manager* dm);
+
+/// Stop X and the X session
+int nodm_display_manager_stop(struct nodm_display_manager* dm);
+
 /**
  * Split xcmdline using wordexp shell-like expansion and set dm->srv.argv.
  *

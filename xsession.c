@@ -51,7 +51,7 @@ int nodm_xsession_init(struct nodm_xsession* s)
     return E_SUCCESS;
 }
 
-int nodm_xsession_start(struct nodm_xsession* s, struct nodm_xserver* srv)
+int nodm_xsession_start(struct nodm_xsession* s, const struct nodm_xserver* srv)
 {
     struct nodm_xsession_child child;
     child.srv = srv;
