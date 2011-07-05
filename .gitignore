@@ -19,5 +19,6 @@ debian/nodm/
 .libs
 *.swp
 *.o
+/test-internals
 /test-xstart
 /test-xsession

@@ -20,12 +20,14 @@ nodm.8: nodm
 
 man_MANS = nodm.8
 
-TESTS = test-xstart test-xsession
-check_PROGRAMS = test-xstart test-xsession
+TESTS = test-internals test-xstart test-xsession
+check_PROGRAMS = test-internals test-xstart test-xsession
 
 test_xstart_SOURCES = $(libsources) test-xstart.c
 
 test_xsession_SOURCES = $(libsources) test-xsession.c
+
+test_internals_SOURCES = $(libsources) test-internals.c
 
 EXTRA_DIST = test_nodm TODO nodm-man-extras autogen.sh
 

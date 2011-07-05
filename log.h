@@ -61,8 +61,13 @@ void log_start(const struct log_config* conf);
  */
 void log_end();
 
+/// Log a message about the normal progress of things
 void log_info(const char* fmt, ...);
+
+/// Log a warning message
 void log_warn(const char* fmt, ...);
+
+/// Log an error message
 void log_err(const char* fmt, ...);
 
 #endif
