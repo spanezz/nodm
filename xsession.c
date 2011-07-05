@@ -59,8 +59,13 @@ int nodm_xsession_start(struct nodm_xsession* s, const struct nodm_xserver* srv)
 
     // Validate the user using the normal system user database
     struct passwd *pw = 0;
-    if (!(pw = getpwnam(s->conf_run_as))) {
-        log_err("Unknown username: %s", s->conf_run_as);
+    if (s->conf_run_as[0] == 0)
+        pw = getpwuid(getuid());
+    else
+        pw = getpwnam(s->conf_run_as);
+    if (pw == NULL)
+    {
+        log_err("unknown username: %s", s->conf_run_as);
         return E_OS_ERROR;
     }
     child.pwent = *pw;
