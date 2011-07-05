@@ -195,10 +195,13 @@ void run_and_restart(const char* xsession, const char* xoptions, int mst)
 
 	while (1)
 	{
+        struct session s;
+        nodm_session_init(&s);
+
 		/* Run the X server */
 		time_t begin = time(NULL);
 		time_t end;
-        int status = nodm_x_with_session_cmdline(xoptions);
+        int status = nodm_x_with_session_cmdline(&s, xoptions);
         log_info("X session exited with status %d", status);
 		end = time(NULL);
 

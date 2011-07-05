@@ -21,22 +21,27 @@
 #ifndef NODM_DEFS_H
 #define NODM_DEFS_H
 
-/*
- * Exit codes used by shadow programs
- */
-#define E_SUCCESS               0       /* success */
-#define E_NOPERM                1       /* permission denied */
-#define E_USAGE                 2       /* invalid command syntax */
-#define E_BAD_ARG               3       /* invalid argument to option */
-#define E_PASSWD_NOTFOUND       14      /* not found password file */
-#define E_SHADOW_NOTFOUND       15      /* not found shadow password file */
-#define E_GROUP_NOTFOUND        16      /* not found group file */
-#define E_GSHADOW_NOTFOUND      17      /* not found shadow group file */
-#define E_CMD_NOEXEC            126     /* can't run command/shell */
-#define E_CMD_NOTFOUND          127     /* can't find command/shell to run */
+// Exit codes used by shadow programs
+#define E_SUCCESS             0     ///< success
+#define E_NOPERM              1     ///< permission denied
+#define E_USAGE               2     ///< invalid command syntax
+#define E_BAD_ARG             3     ///< invalid argument to option
+#define E_PASSWD_NOTFOUND     14    ///< not found password file
+#define E_SHADOW_NOTFOUND     15    ///< not found shadow password file
+#define E_GROUP_NOTFOUND      16    ///< not found group file
+#define E_GSHADOW_NOTFOUND    17    ///< not found shadow group file
+#define E_CMD_NOEXEC          126   ///< can't run command/shell
+#define E_CMD_NOTFOUND        127   ///< can't find command/shell to run
 
-// X-related exit codes
-#define E_X_ERROR               200     /* something wrong talking with X */
+// Other nodm-specific exit codes
+#define E_PROGRAMMING         200   ///< Programming error
+#define E_PAM_ERROR           201   ///< something wrong talking with PAM
+#define E_OS_ERROR            202   ///< something wrong talking with the Operating System
+#define E_XLIB_ERROR          203   ///< Xlib error
+#define E_X_SERVER_DIED       210   ///< Server died
+#define E_X_SERVER_TIMEOUT    211   ///< Server not ready before timeout
+#define E_X_SERVER_CONNECT    212   ///< Could not connect to X server
+#define E_SESSION_DIED        220   ///< X session died
 
 /**
  * Like getenv, but if the variable is not defined it returns \a def

@@ -24,15 +24,6 @@
 #include <sys/types.h>
 #include <X11/Xlib.h>
 
-#define NODM_SERVER_SUCCESS 0            ///< Server is ready for connections
-#define NODM_SERVER_ERROR_PROGRAMMING 2  ///< Programming error
-#define NODM_SERVER_ERROR_SYSTEM 3       ///< Unexpected OS error
-#define NODM_SERVER_ERROR_SERVER_DIED 4  ///< Server died
-#define NODM_SERVER_ERROR_TIMEOUT 5      ///< Server not ready before timeout
-#define NODM_SERVER_ERROR_CONNECT 6      ///< Could not connect to X server
-#define NODM_SERVER_ERROR_XLIB 7         ///< Xlib error
-
-
 struct server
 {
     /// X server command line
@@ -62,7 +53,7 @@ void server_init(struct server* srv);
  *   Timeout in seconds after which if the X server is not ready, we give up
  *   and return an error.
  * @return
- *   Exit status as described by the NODM_SERVER_* constants
+ *   Exit status as described by the E_* constants
  */
 int server_start(struct server* srv, unsigned timeout_sec);
 
@@ -71,11 +62,32 @@ int server_stop(struct server* srv);
 
 /**
  * Connect to the X server
+ *
+ * Uses srv->name, sets srv->dpy.
+ *
+ * @return
+ *   Exit status as described by the E_* constants
  */
 int server_connect(struct server* srv);
 
+/**
+ * Close connection to the X server
+ *
+ * Uses srv->dpy, sets it to NULL.
+ *
+ * @return
+ *   Exit status as described by the E_* constants
+ */
 int server_disconnect(struct server* srv);
 
+/**
+ * Get the WINDOWPATH value for the server
+ *
+ * Uses srv->dpy, sets srv->windowpath
+ *
+ * @return
+ *   Exit status as described by the E_* constants
+ */
 int server_read_window_path(struct server* srv);
 
 #endif

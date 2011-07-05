@@ -47,16 +47,18 @@
 #define STRFCPY(A,B) \
         (strncpy((A), (B), sizeof(A) - 1), (A)[sizeof(A) - 1] = '\0')
 
+void nodm_session_init(struct session* s)
+{
+    server_init(&(s->srv));
 
-static pam_handle_t *pamh = NULL;
+    s->pamh = NULL;
+    s->conf_use_pam = true;
+    s->conf_cleanup_xse = true;
 
-static struct pam_conv conv = {
-    misc_conv,
-    NULL
-};
-
-/* User we are changing to */
-static char name[BUFSIZ];
+    // Get the user we should run the session for
+    strncpy(s->conf_run_as, getenv_with_default("NODM_USER", "root"), 128);
+    s->conf_run_as[127] = 0;
+}
 
 static int run_shell (const char** args, int* status);
 
@@ -65,7 +67,7 @@ static int run_shell (const char** args, int* status);
  * pam_setcred() needs to be called after initgroups(), but
  * before setuid().
  */
-static int setup_groups (const struct passwd *info)
+static int setup_groups(const struct passwd *info)
 {
     /*
      * Set the real group ID to the primary group ID in the password
@@ -73,7 +75,7 @@ static int setup_groups (const struct passwd *info)
      */
     if (setgid (info->pw_gid) == -1) {
         log_err("bad group ID `%d' for user `%s': %m\n", info->pw_gid, info->pw_name);
-        return -1;
+        return E_OS_ERROR;
     }
 
     /*
@@ -82,9 +84,9 @@ static int setup_groups (const struct passwd *info)
      */
     if (initgroups (info->pw_name, info->pw_gid) == -1) {
         log_err("initgroups failed for user `%s': %m\n", info->pw_name);
-        return -1;
+        return E_OS_ERROR;
     }
-    return 0;
+    return E_SUCCESS;
 }
 
 static int change_uid (const struct passwd *info)
@@ -94,13 +96,13 @@ static int change_uid (const struct passwd *info)
      */
     if (setuid(info->pw_uid)) {
         log_err("bad user ID `%d' for user `%s': %m\n", (int)info->pw_uid, info->pw_name);
-        return -1;
+        return E_OS_ERROR;
     }
-    return 0;
+    return E_SUCCESS;
 }
 
 /*
- * Cleanup ~/.xsession-errors.
+ * Truncate ~/.xsession-errors if it is longer than \a maxsize.
  *
  * The function looks for .xsession-errors in the current directory, so when it
  * is called the current directory must be the user's homedir.
@@ -116,7 +118,7 @@ static int change_uid (const struct passwd *info)
  */
 static int cleanup_xse(off_t maxsize, const char* curdirname)
 {
-    int ret = 0;
+    int ret = E_OS_ERROR;
     int xse_fd = -1;
     struct stat xse_st;
 
@@ -141,7 +143,7 @@ static int cleanup_xse(off_t maxsize, const char* curdirname)
     }
 
     /* If we made it so far, we succeeded */
-    ret = 1;
+    ret = E_SUCCESS;
 
 cleanup:
     if (xse_fd >= 0)
@@ -149,20 +151,30 @@ cleanup:
     return ret;
 }
 
-
-/*
- * Start the session, with proper autologin and pam handling
- */
-int nodm_session(struct server* srv)
+static int session_user_setup(struct session* s)
 {
-    int ret;
-    char *cp;
-    char **envcp;
-    const char *tty = 0;    /* Name of tty SU is run from        */
+    /*
+     * Validate the user using the normal system user database
+     */
     struct passwd *pw = 0;
-    int status;
-    const char* xsession;
-    const char* args[5];
+    if (!(pw = getpwnam(s->conf_run_as))) {
+        log_err("Unknown username: %s", s->conf_run_as);
+        return E_OS_ERROR;
+    }
+    s->pwent = *pw;
+
+    return E_SUCCESS;
+}
+
+static int session_pam_setup(struct session* s)
+{
+    static struct pam_conv conv = {
+        misc_conv,
+        NULL
+    };
+
+    char *cp;
+    const char *tty = 0;    /* Name of tty SU is run from        */
 
     /* We only run if we are root */
     if (getuid() != 0)
@@ -170,8 +182,6 @@ int nodm_session(struct server* srv)
         log_err("can only be run by root");
         return E_NOPERM;
     }
-
-    xsession = getenv_with_default("NODM_XSESSION", "/etc/X11/Xsession");
 
     /*
      * Get the tty name. Entries will be logged indicating that the user
@@ -186,37 +196,19 @@ int nodm_session(struct server* srv)
         tty = "???";
     }
 
-    /* Get the user we should run the session for */
-    if (getenv("NODM_USER") == NULL)
-        strcpy(name, "root");
-    else
-        STRFCPY(name, getenv("NODM_USER"));
-
-    ret = pam_start ("nodm", name, &conv, &pamh);
-    if (ret != PAM_SUCCESS) {
-        log_err("pam_start: error %d", ret);
-        exit(1);
+    s->pam_status = pam_start("nodm", s->pwent.pw_name, &conv, &s->pamh);
+    if (s->pam_status != PAM_SUCCESS) {
+        log_err("pam_start: error %d", s->pam_status);
+        return E_PAM_ERROR;
     }
 
-    ret = pam_set_item (pamh, PAM_TTY, (const void *) tty);
-    if (ret == PAM_SUCCESS)
-        ret = pam_set_item (pamh, PAM_RUSER, (const void *) "root");
-    if (ret != PAM_SUCCESS) {
-        log_err("pam_set_item: %s", pam_strerror(pamh, ret));
-        pam_end(pamh, ret);
-        log_end();
-        exit (1);
+    s->pam_status = pam_set_item(s->pamh, PAM_TTY, (const void *) tty);
+    if (s->pam_status == PAM_SUCCESS)
+        s->pam_status = pam_set_item(s->pamh, PAM_RUSER, (const void *) "root");
+    if (s->pam_status != PAM_SUCCESS) {
+        log_err("pam_set_item: %s", pam_strerror(s->pamh, s->pam_status));
+        return E_PAM_ERROR;
     }
-
-    /*
-     * Validate the user using the normal system user database
-     */
-    if (!(pw = getpwnam(name))) {
-        log_err("Unknown username: %s", name);
-        log_end();
-        exit (1);
-    }
-    struct passwd pwent = *pw;
 
     signal (SIGINT, SIG_IGN);
     signal (SIGQUIT, SIG_IGN);
@@ -226,45 +218,41 @@ int nodm_session(struct server* srv)
      * includes checking for password and account expiration, as well as
      * verifying access hour restrictions."
      */
-    ret = pam_acct_mgmt (pamh, 0);
-    if (ret != PAM_SUCCESS) {
-        log_warn("%s (Ignored)", pam_strerror (pamh, ret));
-    }
+    s->pam_status = pam_acct_mgmt(s->pamh, 0);
+    if (s->pam_status != PAM_SUCCESS)
+        log_warn("%s (Ignored)", pam_strerror(s->pamh, s->pam_status));
 
     signal (SIGINT, SIG_DFL);
     signal (SIGQUIT, SIG_DFL);
 
     /* save SU information */
-    log_info("Successful su on %s for %s by %s", tty, name, "root");
+    log_info("Successful su on %s for %s by %s", tty, s->pwent.pw_name, "root");
 
     /* set primary group id and supplementary groups */
-    if (setup_groups (&pwent)) {
-        pam_end (pamh, PAM_ABORT);
-        log_end();
-        exit (1);
+    if (setup_groups(&(s->pwent))) {
+        s->pam_status = PAM_ABORT;
+        return E_OS_ERROR;
     }
 
     /*
      * pam_setcred() may do things like resource limits, console groups,
      * and much more, depending on the configured modules
      */
-    ret = pam_setcred (pamh, PAM_ESTABLISH_CRED);
-    if (ret != PAM_SUCCESS) {
-        log_err("pam_setcred: %s", pam_strerror (pamh, ret));
-        pam_end (pamh, ret);
-        exit (1);
+    s->pam_status = pam_setcred(s->pamh, PAM_ESTABLISH_CRED);
+    if (s->pam_status != PAM_SUCCESS) {
+        log_err("pam_setcred: %s", pam_strerror(s->pamh, s->pam_status));
+        return E_PAM_ERROR;
     }
 
-    ret = pam_open_session (pamh, 0);
-    if (ret != PAM_SUCCESS) {
-        log_err("pam_open_session: %s", pam_strerror(pamh, ret));
-        pam_setcred (pamh, PAM_DELETE_CRED);
-        pam_end (pamh, ret);
-        exit (1);
+    s->pam_status = pam_open_session(s->pamh, 0);
+    if (s->pam_status != PAM_SUCCESS) {
+        log_err("pam_open_session: %s", pam_strerror(s->pamh, s->pam_status));
+        pam_setcred(s->pamh, PAM_DELETE_CRED);
+        return E_PAM_ERROR;
     }
 
     /* update environment with all pam set variables */
-    envcp = pam_getenvlist (pamh);
+    char **envcp = pam_getenvlist(s->pamh);
     if (envcp) {
         while (*envcp) {
             putenv(*envcp);
@@ -273,22 +261,54 @@ int nodm_session(struct server* srv)
     }
 
     /* become the new user */
-    if (change_uid (&pwent)) {
-        pam_close_session (pamh, 0);
-        pam_setcred (pamh, PAM_DELETE_CRED);
-        pam_end (pamh, PAM_ABORT);
-        log_end();
-        exit (1);
+    if (change_uid(&(s->pwent)) != 0) {
+        pam_close_session(s->pamh, 0);
+        pam_setcred(s->pamh, PAM_DELETE_CRED);
+        s->pam_status = PAM_ABORT;
+        return E_OS_ERROR;
     }
 
-    setenv ("HOME", pwent.pw_dir, 1);
-    setenv ("USER", pwent.pw_name, 1);
-    setenv ("USERNAME", pwent.pw_name, 1);
-    setenv ("LOGNAME", pwent.pw_name, 1);
-    setenv ("PWD", pwent.pw_dir, 1);
-    setenv ("SHELL", pwent.pw_shell, 1);
-    setenv ("DISPLAY", srv->name, 1);
-    setenv ("WINDOWPATH", srv->windowpath, 1);
+    return E_SUCCESS;
+}
+
+static void session_pam_shutdown(struct session* s)
+{
+    if (s->pam_status == PAM_SUCCESS)
+    {
+        s->pam_status = pam_close_session(s->pamh, 0);
+        if (s->pam_status != PAM_SUCCESS)
+            log_err("pam_close_session: %s", pam_strerror(s->pamh, s->pam_status));
+    }
+
+    pam_end(s->pamh, s->pam_status);
+    s->pamh = 0;
+}
+
+/*
+ * Start the session, with proper autologin and pam handling
+ */
+int nodm_session(struct session* s)
+{
+    const char* xsession;
+    const char* args[5];
+    int res;
+
+    if ((res = session_user_setup(s)))
+        return res;
+
+    if (s->conf_use_pam && ((res = session_pam_setup(s))))
+        return res;
+
+    xsession = getenv_with_default("NODM_XSESSION", "/etc/X11/Xsession");
+
+    setenv ("HOME", s->pwent.pw_dir, 1);
+    setenv ("USER", s->pwent.pw_name, 1);
+    setenv ("USERNAME", s->pwent.pw_name, 1);
+    setenv ("LOGNAME", s->pwent.pw_name, 1);
+    setenv ("PWD", s->pwent.pw_dir, 1);
+    setenv ("SHELL", s->pwent.pw_shell, 1);
+    setenv ("DISPLAY", s->srv.name, 1);
+    setenv ("WINDOWPATH", s->srv.windowpath, 1);
 
     // Variables that gdm sets but we do not:
     //
@@ -326,9 +346,9 @@ int nodm_session(struct server* srv)
     unsetenv("NODM_MIN_SESSION_TIME");
     unsetenv("NODM_RUN_SESSION");
 
-    if (chdir (pwent.pw_dir) == 0)
+    if (chdir(s->pwent.pw_dir) == 0)
         /* Truncate ~/.xsession-errors */
-        cleanup_xse(0, pwent.pw_dir);
+        cleanup_xse(0, s->pwent.pw_dir);
 
     args[0] = "/bin/sh";
     args[1] = "-l";
@@ -336,16 +356,12 @@ int nodm_session(struct server* srv)
     args[3] = xsession;
     args[4] = NULL;
 
-    run_shell(args, &status);
+    int status;
+    if ((res = run_shell(args, &status)))
+        return res;
 
-    ret = pam_close_session (pamh, 0);
-    if (ret != PAM_SUCCESS) {
-        log_err("pam_close_session: %s", pam_strerror (pamh, ret));
-        pam_end (pamh, ret);
-        return 1;
-    }
-
-    ret = pam_end (pamh, PAM_SUCCESS);
+    if (s->pamh)
+        session_pam_shutdown(s);
 
     return status;
 }
@@ -389,7 +405,7 @@ static int run_shell (const char** args, int* status)
         exit (errno == ENOENT ? E_CMD_NOTFOUND : E_CMD_NOEXEC);
     } else if (child == -1) {
         log_err("cannot fork user shell: %m");
-        return 1;
+        return E_OS_ERROR;
     }
 
     /* parent only */
@@ -445,68 +461,60 @@ static int run_shell (const char** args, int* status)
     if (caught)
         goto killed;
 
-    return 0;
+    return E_SUCCESS;
 
 killed:
-    fprintf (stderr, "\nSession terminated, killing shell...");
+    log_warn("session terminated, killing shell...");
     kill (child, SIGTERM);
     sleep (2);
     kill (child, SIGKILL);
-    fprintf (stderr, " ...killed.\n");
-    return -1;
+    log_warn(" ...shell killed.");
+    return E_SESSION_DIED;
 }
 
-int nodm_x_with_session_argv(const char* argv[])
+int nodm_x_with_session_argv(struct session* s, const char* argv[])
 {
     int return_code = 0;
 
-    struct server srv;
-    server_init(&srv);
-    srv.argv = argv;
-    srv.name = argv[1];
+    s->srv.argv = argv;
+    s->srv.name = argv[1];
 
-    int res = server_start(&srv, 5);
-    if (res != NODM_SERVER_SUCCESS)
-        return -1;
+    return_code = server_start(&(s->srv), 5);
+    if (return_code != E_SUCCESS)
+        goto cleanup;
 
-    res = server_connect(&srv);
-    if (res != NODM_SERVER_SUCCESS)
-    {
-        return_code = -1;
+    return_code = server_connect(&(s->srv));
+    if (return_code != E_SUCCESS)
         goto cleanup_server;
-    }
 
-    res = server_read_window_path(&srv);
-    if (res != NODM_SERVER_SUCCESS)
-    {
-        return_code = -1;
+    return_code = server_read_window_path(&(s->srv));
+    if (return_code != E_SUCCESS)
         goto cleanup_connection;
-    }
 
-    return_code = nodm_session(&srv);
+    return_code = nodm_session(s);
 
 cleanup_connection:
-    res = server_disconnect(&srv);
-    if (res != NODM_SERVER_SUCCESS)
-        return_code = -1;
+    return_code = server_disconnect(&(s->srv));
 
 cleanup_server:
-    res = server_stop(&srv);
-    if (res != NODM_SERVER_SUCCESS)
-        return_code = -1;
+    return_code = server_stop(&(s->srv));
 
+cleanup:
     return return_code;
 }
 
-int nodm_x_with_session_cmdline(const char* xcmdline)
+int nodm_x_with_session_cmdline(struct session* s, const char* xcmdline)
 {
     // tokenize xoptions
     wordexp_t toks = { .we_offs = 0 };
     switch (wordexp(xcmdline, &toks, WRDE_NOCMD))
     {
         case 0: break;
-        case WRDE_NOSPACE: wordfree(&toks); break;
-        default: return -1;
+        case WRDE_NOSPACE:
+            wordfree(&toks);
+            return E_OS_ERROR;
+        default:
+            return E_BAD_ARG;
     }
 
     unsigned in_arg = 0;
@@ -533,7 +541,7 @@ int nodm_x_with_session_cmdline(const char* xcmdline)
     argv[99] = NULL;
 
     // Run session
-    int res = nodm_x_with_session_argv(argv);
+    int res = nodm_x_with_session_argv(s, argv);
 
     // Free arg list
     wordfree(&toks);

@@ -37,7 +37,10 @@ int main(int argc, char* argv[])
     setenv("NODM_SESSION", "/bin/true");
     setenv("NODM_USER", getenv_with_default("USER", "root"));
 
-    int res = nodm_x_with_session_cmdline(xcmdline);
+    struct session s;
+    nodm_session_init(&s);
+
+    int res = nodm_x_with_session_cmdline(&s, xcmdline);
     fprintf("nodm_x_with_session_cmdline returned %d\n", res);
 
     log_end();

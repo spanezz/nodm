@@ -79,7 +79,7 @@ void server_init(struct server* srv)
 int server_start(struct server* srv, unsigned timeout_sec)
 {
     // Function return code
-    int return_code = NODM_SERVER_SUCCESS;
+    int return_code = E_SUCCESS;
 
     // Initialise common signal handling machinery
     struct sigaction sa;
@@ -87,7 +87,7 @@ int server_start(struct server* srv, unsigned timeout_sec)
     if (sigemptyset(&sa.sa_mask) < 0)
     {
         log_err("sigemptyset failed: %m");
-        return NODM_SERVER_ERROR_PROGRAMMING;
+        return E_PROGRAMMING;
     }
 
     // Take note of the old SIGCHLD handler
@@ -95,7 +95,7 @@ int server_start(struct server* srv, unsigned timeout_sec)
     if (sigaction(SIGCHLD, NULL, &sa_sigchld_old) == -1)
     {
         log_err("sigaction failed: %m");
-        return NODM_SERVER_ERROR_PROGRAMMING;
+        return E_PROGRAMMING;
     }
 
     // Catch server ready notifications via SIGUSR1
@@ -105,7 +105,7 @@ int server_start(struct server* srv, unsigned timeout_sec)
     if (sigaction(SIGUSR1, &sa, &sa_usr1_old) == -1)
     {
         log_err("sigaction failed: %m");
-        return NODM_SERVER_ERROR_PROGRAMMING;
+        return E_PROGRAMMING;
     }
     // From now on we need to perform cleanup before returning
 
@@ -124,7 +124,7 @@ int server_start(struct server* srv, unsigned timeout_sec)
         exit(errno == ENOENT ? E_CMD_NOTFOUND : E_CMD_NOEXEC);
     } else if (child == -1) {
         log_err("cannot fork to run %s: %m", srv->argv[0]);
-        return_code = NODM_SERVER_ERROR_SYSTEM;
+        return_code = E_OS_ERROR;
         goto cleanup;
     }
 
@@ -135,7 +135,7 @@ int server_start(struct server* srv, unsigned timeout_sec)
     if (sigaction(SIGCHLD, &sa, NULL) == -1)
     {
         log_err("sigaction failed: %m");
-        return_code = NODM_SERVER_ERROR_PROGRAMMING;
+        return_code = E_PROGRAMMING;
         goto cleanup;
     }
 
@@ -150,7 +150,7 @@ int server_start(struct server* srv, unsigned timeout_sec)
         {
             if (errno == EINTR) continue;
             log_err("waitpid on %s failed: %m", srv->argv[0]);
-            return_code = NODM_SERVER_ERROR_SYSTEM;
+            return_code = E_OS_ERROR;
             goto cleanup;
         }
         if (res == child)
@@ -163,7 +163,7 @@ int server_start(struct server* srv, unsigned timeout_sec)
                 // This should never happen, but it's better to have a message
                 // than to fail silently through an open code path
                 log_err("X server quit, waitpid gave unrecognised status=%d", status);
-            return_code = NODM_SERVER_ERROR_SERVER_DIED;
+            return_code = E_X_SERVER_DIED;
             goto cleanup;
         }
 
@@ -177,11 +177,11 @@ int server_start(struct server* srv, unsigned timeout_sec)
                 continue;
             }
             log_err("nanosleep failed: %m");
-            return_code = NODM_SERVER_ERROR_SYSTEM;
+            return_code = E_OS_ERROR;
             goto cleanup;
         } else {
             log_err("X server did not respond after %u seconds", timeout_sec);
-            return_code = NODM_SERVER_ERROR_TIMEOUT;
+            return_code = E_X_SERVER_TIMEOUT;
             goto cleanup;
         }
     }
@@ -190,13 +190,13 @@ int server_start(struct server* srv, unsigned timeout_sec)
     if (setenv("DISPLAY", srv->name, 1) == -1)
     {
         log_err("setenv DISPLAY=%s failed: %m", srv->name);
-        return_code = NODM_SERVER_ERROR_SYSTEM;
+        return_code = E_OS_ERROR;
         goto cleanup;
     }
 
 cleanup:
     // Kill the X server if an error happened
-    if (child > 0 && return_code != NODM_SERVER_SUCCESS)
+    if (child > 0 && return_code != E_SUCCESS)
         kill(child, SIGTERM);
     else
         srv->pid = child;
@@ -210,14 +210,14 @@ int server_stop(struct server* srv)
 {
     kill(srv->pid, SIGTERM);
     kill(srv->pid, SIGCONT);
-    return NODM_SERVER_SUCCESS;
+    return E_SUCCESS;
 }
 
 static int xopendisplay_error_handler(Display* dpy)
 {
     log_err("I/O error in XOpenDisplay");
     log_end();
-    exit(E_X_ERROR);
+    exit(E_XLIB_ERROR);
 }
 
 int server_connect(struct server* srv)
@@ -229,13 +229,15 @@ int server_connect(struct server* srv)
     // Remove close-on-exec and register to close at the next fork, why? We'll find
     // RegisterCloseOnFork (ConnectionNumber (d->dpy));
     // fcntl (ConnectionNumber (d->dpy), F_SETFD, 0);
-    return srv->dpy == NULL ? NODM_SERVER_ERROR_CONNECT : NODM_SERVER_SUCCESS;
+    return srv->dpy == NULL ? E_X_SERVER_CONNECT : E_SUCCESS;
 }
 
 int server_disconnect(struct server* srv)
 {
+    // TODO: get/check pending errors (how?)
     XCloseDisplay(srv->dpy);
-    return NODM_SERVER_SUCCESS;
+    srv->dpy = NULL;
+    return E_SUCCESS;
 }
 
 int server_read_window_path(struct server* srv)
@@ -255,14 +257,14 @@ int server_read_window_path(struct server* srv)
     if (prop == None)
     {
         log_err("no XFree86_VT atom");
-        return NODM_SERVER_ERROR_XLIB;
+        return E_XLIB_ERROR;
     }
     if (XGetWindowProperty(srv->dpy, DefaultRootWindow(srv->dpy), prop, 0, 1,
                 False, AnyPropertyType, &actualtype, &actualformat,
                 &nitems, &bytes_after, &buf))
     {
         log_err("no XFree86 VT property");
-        return NODM_SERVER_ERROR_XLIB;
+        return E_XLIB_ERROR;
     }
     if (nitems == 0)
         num = DefaultRootWindow(srv->dpy);
@@ -272,7 +274,7 @@ int server_read_window_path(struct server* srv)
         {
             log_err("%lu!=1 items in XFree86_VT property", nitems);
             XFree(buf);
-            return NODM_SERVER_ERROR_XLIB;
+            return E_XLIB_ERROR;
         }
         switch (actualtype) {
             case XA_CARDINAL:
@@ -291,13 +293,13 @@ int server_read_window_path(struct server* srv)
                 default:
                     log_err("unsupported format %d in XFree86_VT property", actualformat);
                     XFree(buf);
-                    return NODM_SERVER_ERROR_XLIB;
+                    return E_XLIB_ERROR;
                 }
                 break;
             default:
                 log_err("unsupported type %lx in XFree86_VT property", actualtype);
                 XFree(buf);
-                return NODM_SERVER_ERROR_XLIB;
+                return E_XLIB_ERROR;
         }
     }
     XFree(buf);
@@ -309,5 +311,5 @@ int server_read_window_path(struct server* srv)
     if (srv->windowpath) free(srv->windowpath);
     srv->windowpath = newwindowpath;
 
-    return NODM_SERVER_SUCCESS;
+    return E_SUCCESS;
 }

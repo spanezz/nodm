@@ -20,6 +20,7 @@
 
 #include "log.h"
 #include "server.h"
+#include "common.h"
 #include <stdio.h>
 
 int main(int argc, char* argv[])
@@ -40,35 +41,35 @@ int main(int argc, char* argv[])
     srv.name = ":1";
 
     int res = server_start(&srv, 5);
-    if (res != NODM_SERVER_SUCCESS)
+    if (res != E_SUCCESS)
     {
         fprintf(stderr, "server_start return code: %d\n", res);
         return 1;
     }
 
     res = server_connect(&srv);
-    if (res != NODM_SERVER_SUCCESS)
+    if (res != E_SUCCESS)
     {
         fprintf(stderr, "server_connect return code: %d\n", res);
         return 2;
     }
 
     res = server_read_window_path(&srv);
-    if (res != NODM_SERVER_SUCCESS)
+    if (res != E_SUCCESS)
     {
         fprintf(stderr, "read_window_path return code: %d\n", res);
         return 3;
     }
 
     res = server_disconnect(&srv);
-    if (res != NODM_SERVER_SUCCESS)
+    if (res != E_SUCCESS)
     {
         fprintf(stderr, "server_disconnect return code: %d\n", res);
         return 4;
     }
 
     res = server_stop(&srv);
-    if (res != NODM_SERVER_SUCCESS)
+    if (res != E_SUCCESS)
     {
         fprintf(stderr, "server_stop return code: %d\n", res);
         return 4;

@@ -22,6 +22,40 @@
 #define NODM_SESSION_H
 
 #include "server.h"
+#include <stdbool.h>
+#include <pwd.h>
+#include <security/pam_appl.h>
+
+struct session
+{
+    /// If set to true, do a PAM-aware session
+    bool conf_use_pam;
+
+    /// If set to true, perform ~/.xsession-errors cleanup
+    bool conf_cleanup_xse;
+
+    /**
+     * Username to use for the X session.
+     *
+     * Empty string means 'do not change user'
+     */
+    char conf_run_as[128];
+
+    /// X server information
+    struct server srv;
+
+    /// Information about the user we run the session for
+    struct passwd pwent;
+
+    /// PAM session handle (or NULL if not used)
+    pam_handle_t *pamh;
+
+    /// Return code of the last PAM function called
+    int pam_status;
+};
+
+/// Initialise a session structure with default values
+void nodm_session_init(struct session* s);
 
 /**
  * nodm X session
@@ -29,13 +63,13 @@
  * Perform PAM bookkeeping, init the session environment and start the X
  * session requested by the user
  */
-int nodm_session(struct server* srv);
+int nodm_session(struct session* s);
 
 /**
  * Start the X server using the given command line, change user to $NODM_USER
  * and run $NODM_XSESSION
  */
-int nodm_x_with_session_argv(const char* argv[]);
+int nodm_x_with_session_argv(struct session* s, const char* argv[]);
 
 /**
  * Split xcmdline using wordexp shell-like expansion and run
@@ -48,6 +82,6 @@ int nodm_x_with_session_argv(const char* argv[]);
  * to the X server) looks like ":<NUMBER>", it is used as the display name,
  * else ":0" is used.
  */
-int nodm_x_with_session_cmdline(const char* xcmdline);
+int nodm_x_with_session_cmdline(struct session* s, const char* xcmdline);
 
 #endif
