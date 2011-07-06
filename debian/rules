@@ -6,9 +6,8 @@
 configure:
 	./autogen.sh
 
-override-dh_auto_configure: configure
-	dh_auto_configure
+override_dh_auto_test:
+	#make check
 
-
-override-dh_installinit:
+override_dh_installinit:
 	dh_installinit -r -u "defaults 30 01"
