@@ -97,6 +97,7 @@ int nodm_display_manager_stop(struct nodm_display_manager* dm)
 
 int nodm_display_manager_wait(struct nodm_display_manager* dm, int* session_status)
 {
+    *session_status = -1;
     while (true)
     {
         // Wait for one child to exit

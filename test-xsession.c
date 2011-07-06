@@ -52,20 +52,27 @@ int test_session_x_killer(struct nodm_xsession_child* s)
     return E_SUCCESS;
 }
 
+void setup_dm(struct nodm_display_manager* dm, const char* xcmdline)
+{
+    nodm_display_manager_init(dm);
+    ensure_succeeds(nodm_display_manager_parse_xcmdline(dm, xcmdline));
+    dm->session.conf_use_pam = false;
+    dm->session.conf_cleanup_xse = false;
+    dm->session.conf_run_as[0] = 0;
+    dm->vt.conf_initial_vt = -1;
+}
+
 // X server starts, X session quits with success
 void test_trivial_session()
 {
+    log_verbose("test_trivial_session");
     struct nodm_display_manager dm;
-    nodm_display_manager_init(&dm);
-    ensure_succeeds(nodm_display_manager_parse_xcmdline(&dm, "/usr/bin/Xnest :1 -geometry 1x1+0+0"));
-    dm.session.conf_use_pam = false;
-    dm.session.conf_cleanup_xse = false;
-    dm.session.conf_run_as[0] = 0;
-    dm.vt.conf_initial_vt = -1;
+    setup_dm(&dm, "/usr/bin/Xnest :1 -geometry 1x1+0+0");
     dm.session.child_body = test_session;
+
     ensure_succeeds(nodm_display_manager_start(&dm));
     int sstatus;
-    ensure_succeeds(nodm_display_manager_wait(&dm, &sstatus));
+    ensure_equali(nodm_display_manager_wait(&dm, &sstatus), E_SESSION_DIED);
     ensure_equali(sstatus, E_SUCCESS);
     ensure_succeeds(nodm_display_manager_stop(&dm));
     nodm_display_manager_cleanup(&dm);
@@ -74,13 +81,9 @@ void test_trivial_session()
 // X server does not start
 void test_bad_x_server()
 {
+    log_verbose("test_bad_x_server");
     struct nodm_display_manager dm;
-    nodm_display_manager_init(&dm);
-    ensure_succeeds(nodm_display_manager_parse_xcmdline(&dm, "/bin/false :1 -geometry 1x1+0+0"));
-    dm.session.conf_use_pam = false;
-    dm.session.conf_cleanup_xse = false;
-    dm.session.conf_run_as[0] = 0;
-    dm.vt.conf_initial_vt = -1;
+    setup_dm(&dm, "/bin/false :1 -geometry 1x1+0+0");
     dm.session.child_body = test_session;
 
     ensure_equali(nodm_display_manager_start(&dm), E_X_SERVER_DIED);
@@ -99,19 +102,18 @@ void test_bad_x_server()
 // X server starts, X session quits with error
 void test_failing_x_session()
 {
+    log_verbose("test_failing_x_session");
     struct nodm_display_manager dm;
-    nodm_display_manager_init(&dm);
-    ensure_succeeds(nodm_display_manager_parse_xcmdline(&dm, "/usr/bin/Xnest :1 -geometry 1x1+0+0"));
-    dm.session.conf_use_pam = false;
-    dm.session.conf_cleanup_xse = false;
-    dm.session.conf_run_as[0] = 0;
-    dm.vt.conf_initial_vt = -1;
+    setup_dm(&dm, "/usr/bin/Xnest :1 -geometry 1x1+0+0");
     dm.session.child_body = test_session_bad;
 
     ensure_succeeds(nodm_display_manager_start(&dm));
+
     int sstatus;
-    ensure_succeeds(nodm_display_manager_wait(&dm, &sstatus));
-    ensure_equali(sstatus, E_SUCCESS);
+    ensure_equali(nodm_display_manager_wait(&dm, &sstatus), E_SESSION_DIED);
+    ensure_equali(WIFEXITED(sstatus) ? 1 : 0, 1);
+    ensure_equali(WEXITSTATUS(sstatus), E_USAGE);
+
     ensure_succeeds(nodm_display_manager_stop(&dm));
     nodm_display_manager_cleanup(&dm);
 }
@@ -119,26 +121,24 @@ void test_failing_x_session()
 // X server starts, X session starts, then server dies
 void test_dying_x_server()
 {
+    log_verbose("test_dying_x_server");
     struct nodm_display_manager dm;
-    nodm_display_manager_init(&dm);
-    ensure_succeeds(nodm_display_manager_parse_xcmdline(&dm, "/usr/bin/Xnest :1 -geometry 1x1+0+0"));
-    dm.session.conf_use_pam = false;
-    dm.session.conf_cleanup_xse = false;
-    dm.session.conf_run_as[0] = 0;
-    dm.vt.conf_initial_vt = -1;
+    setup_dm(&dm, "/usr/bin/Xnest :1 -geometry 1x1+0+0");
     dm.session.child_body = test_session_x_killer;
 
     ensure_succeeds(nodm_display_manager_start(&dm));
+
     int sstatus;
-    ensure_succeeds(nodm_display_manager_wait(&dm, &sstatus));
-    ensure_equali(sstatus, E_SUCCESS);
+    ensure_equali(nodm_display_manager_wait(&dm, &sstatus), E_X_SERVER_DIED);
+    ensure_equali(sstatus, -1);
+
     ensure_succeeds(nodm_display_manager_stop(&dm));
     nodm_display_manager_cleanup(&dm);
 }
 
 int main(int argc, char* argv[])
 {
-    test_start("test-xsession", false);
+    test_start("test-xsession", true);
 
     test_trivial_session();
     test_bad_x_server();

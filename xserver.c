@@ -203,14 +203,6 @@ static int xserver_start(struct nodm_xserver* srv, unsigned timeout_sec)
 
     log_verbose("X is ready to accept connections");
 
-    // Set the DISPLAY env var
-    if (setenv("DISPLAY", srv->name, 1) == -1)
-    {
-        log_err("setenv DISPLAY=%s failed: %m", srv->name);
-        return_code = E_OS_ERROR;
-        goto cleanup;
-    }
-
 cleanup:
     // Kill the X server if an error happened
     if (child > 0 && return_code != E_SUCCESS)
@@ -233,7 +225,6 @@ static int xserver_stop(struct nodm_xserver* srv)
     }
     // TODO: wait
     srv->pid = -1;
-    unsetenv("DISPLAY");
 
     if (srv->windowpath != NULL)
     {
