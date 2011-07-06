@@ -30,34 +30,46 @@ int test_session(struct nodm_xsession_child* s)
     return E_SUCCESS;
 }
 
-int main(int argc, char* argv[])
+void test_trivial_session()
 {
-    test_start("test-xsession", false);
-
     struct nodm_display_manager dm;
     nodm_display_manager_init(&dm);
-
-    // configure display manager for testing
     ensure_succeeds(nodm_display_manager_parse_xcmdline(&dm, "/usr/bin/Xnest :1 -geometry 1x1+0+0"));
     dm.session.conf_use_pam = false;
     dm.session.conf_cleanup_xse = false;
     dm.session.conf_run_as[0] = 0;
     dm.session.child_body = test_session;
-
-    //nodm_display_manager_dump_status(&dm);
-
     ensure_succeeds(nodm_display_manager_start(&dm));
-
     ensure_succeeds(nodm_display_manager_wait(&dm));
-
     ensure_succeeds(nodm_display_manager_stop(&dm));
+    nodm_display_manager_cleanup(&dm);
+}
+
+void test_bad_x_server()
+{
+    struct nodm_display_manager dm;
+    nodm_display_manager_init(&dm);
+    ensure_succeeds(nodm_display_manager_parse_xcmdline(&dm, "/bin/false :1 -geometry 1x1+0+0"));
+    dm.session.conf_use_pam = false;
+    dm.session.conf_cleanup_xse = false;
+    dm.session.conf_run_as[0] = 0;
+    dm.session.child_body = test_session;
+    ensure_equali(nodm_display_manager_start(&dm), E_X_SERVER_DIED);
+    ensure_succeeds(nodm_display_manager_stop(&dm));
+    nodm_display_manager_cleanup(&dm);
+}
+
+int main(int argc, char* argv[])
+{
+    test_start("test-xsession", false);
+
+    test_trivial_session();
+    test_bad_x_server();
 
     // TODO:
     //  - test a wrong xserver command line (dying X server)
     //  - test a wrong username (dying X session)
     //  - start everything fine then kill the X server
-
-    nodm_display_manager_cleanup(&dm);
 
     test_ok();
 }

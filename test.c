@@ -57,6 +57,15 @@ void ensure_equals(const char* a, const char* b)
     }
 }
 
+void ensure_equali(int a, int b)
+{
+    if (a != b)
+    {
+        log_warn("values differ: %d != %d", a, b);
+        test_fail();
+    }
+}
+
 void _ensure_succeeds(int code, const char* file, int line, const char* desc)
 {
     if (code != E_SUCCESS)

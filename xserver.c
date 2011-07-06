@@ -226,8 +226,11 @@ cleanup:
 /// Kill the X server
 static int xserver_stop(struct nodm_xserver* srv)
 {
-    kill(srv->pid, SIGTERM);
-    kill(srv->pid, SIGCONT);
+    if (srv->pid > 0)
+    {
+        kill(srv->pid, SIGTERM);
+        kill(srv->pid, SIGCONT);
+    }
     // TODO: wait
     srv->pid = -1;
     unsetenv("DISPLAY");

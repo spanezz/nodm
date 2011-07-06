@@ -127,8 +127,11 @@ int nodm_xsession_start(struct nodm_xsession* s, const struct nodm_xserver* srv)
 
 int nodm_xsession_stop(struct nodm_xsession* s)
 {
-    kill(s->pid, SIGTERM);
-    kill(s->pid, SIGCONT);
+    if (s->pid > 0)
+    {
+        kill(s->pid, SIGTERM);
+        kill(s->pid, SIGCONT);
+    }
     // TODO: wait
     s->pid = -1;
     return E_SUCCESS;

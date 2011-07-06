@@ -37,6 +37,9 @@ void test_ok() __attribute__((noreturn));
 /// Ensure that two strings are the same
 void ensure_equals(const char* a, const char* b);
 
+/// Ensure that two integers are the same
+void ensure_equali(int a, int b);
+
 #define ensure_succeeds(val) _ensure_succeeds((val), __FILE__, __LINE__, #val)
 void _ensure_succeeds(int code, const char* file, int line, const char* desc);
 
