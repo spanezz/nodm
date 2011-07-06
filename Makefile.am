@@ -6,9 +6,10 @@ ACLOCAL_AMFLAGS = -I m4
 
 sbin_PROGRAMS = nodm
 
-dist_noinst_HEADERS = common.h dm.h log.h xserver.h xsession.h xsession-child.h 
+dist_noinst_HEADERS = common.h dm.h log.h test.h xserver.h xsession.h xsession-child.h
 
 libsources = common.c log.c xsession-child.c xserver.c xsession.c dm.c
+testlibsources = $(libsources) test.c
 
 AM_CPPFLAGS = $(X11_CFLAGS)
 AM_LDFLAGS = $(PAM_LIBS) $(X11_LIBS)
@@ -25,11 +26,11 @@ man_MANS = nodm.8
 TESTS = test-internals test-xstart test-xsession
 check_PROGRAMS = test-internals test-xstart test-xsession
 
-test_xstart_SOURCES = $(libsources) test-xstart.c
+test_xstart_SOURCES = $(testlibsources) test-xstart.c
 
-test_xsession_SOURCES = $(libsources) test-xsession.c
+test_xsession_SOURCES = $(testlibsources) test-xsession.c
 
-test_internals_SOURCES = $(libsources) test-internals.c
+test_internals_SOURCES = $(testlibsources) test-internals.c
 
 EXTRA_DIST = test_nodm TODO nodm-man-extras autogen.sh
 

@@ -1,5 +1,5 @@
 /*
- * test-xstart - test that we are able to start X
+ * test - nodm test utilities
  *
  * Copyright 2011  Enrico Zini <enrico@enricozini.org>
  *
@@ -18,36 +18,25 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#ifndef NODM_TEST_H
+#define NODM_TEST_H
+
 #include "log.h"
-#include "xserver.h"
-#include "test.h"
-#include "common.h"
-#include <stdio.h>
+#include <stdlib.h>
 
-int main(int argc, char* argv[])
-{
-    test_start("test-xstart");
+/// Setup the logging system for a test script
+void test_start(const char* testname);
 
-    struct nodm_xserver srv;
-    nodm_xserver_init(&srv);
+/// exit() the program reporting a test failure
+void test_fail() __attribute__((noreturn));
 
-    const char* server_argv[] = { "/usr/bin/Xnest", ":1", "-geometry", "1x1+0+0", NULL };
-    srv.argv = server_argv;
-    srv.name = ":1";
+/// exit() the program reporting a success
+void test_ok() __attribute__((noreturn));
 
-    int res = nodm_xserver_start(&srv);
-    if (res != E_SUCCESS)
-    {
-        fprintf(stderr, "nodm_xserver_start return code: %d\n", res);
-        return res;
-    }
+/// Ensure that two strings are the same
+void ensure_equals(const char* a, const char* b);
 
-    res = nodm_xserver_stop(&srv);
-    if (res != E_SUCCESS)
-    {
-        fprintf(stderr, "nodm_xserver_stop return code: %d\n", res);
-        return res;
-    }
+#define ensure_succeeds(val) _ensure_succeeds((val), __FILE__, __LINE__, #val)
+void _ensure_succeeds(int code, const char* file, int line, const char* desc);
 
-    test_ok();
-}
+#endif

@@ -21,6 +21,7 @@
 #include "log.h"
 #include "common.h"
 #include "dm.h"
+#include "test.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -31,55 +32,27 @@ int test_session(struct nodm_xsession_child* s)
 
 int main(int argc, char* argv[])
 {
-    struct log_config cfg = {
-        .program_name = "test-xsession",
-        .log_to_syslog = false,
-        .log_to_stderr = true,
-        .info_to_stderr = true,
-    };
-    log_start(&cfg);
+    test_start("test-xsession");
 
     //const char* xcmdline = "/usr/bin/Xnest :1";
     setenv("NODM_SESSION", "/bin/true", 1);
     setenv("NODM_USER", getenv_with_default("USER", "root"), 1);
 
-    int res;
-
     struct nodm_display_manager dm;
     nodm_display_manager_init(&dm);
 
     // configure display manager for testing
-    res = nodm_display_manager_parse_xcmdline(&dm, "/usr/bin/Xnest :1 -geometry 1x1+0+0");
-    if (res != E_SUCCESS)
-    {
-        fprintf(stderr, "nodm_display_manager_parse_xcmdline return code: %d\n", res);
-        goto cleanup;
-    }
+    ensure_succeeds(nodm_display_manager_parse_xcmdline(&dm, "/usr/bin/Xnest :1 -geometry 1x1+0+0"));
     dm.session.conf_use_pam = false;
     dm.session.conf_cleanup_xse = false;
     dm.session.conf_run_as[0] = 0;
     dm.session.child_body = test_session;
 
-    res = nodm_display_manager_start(&dm);
-    if (res != E_SUCCESS)
-    {
-        fprintf(stderr, "nodm_display_manager_start return code: %d\n", res);
-        goto cleanup;
-    }
+    ensure_succeeds(nodm_display_manager_start(&dm));
 
-    res = nodm_display_manager_wait(&dm);
-    if (res != E_SUCCESS)
-    {
-        fprintf(stderr, "nodm_display_manager_wait return code: %d\n", res);
-        goto cleanup;
-    }
+    ensure_succeeds(nodm_display_manager_wait(&dm));
 
-    res = nodm_display_manager_stop(&dm);
-    if (res != E_SUCCESS)
-    {
-        fprintf(stderr, "nodm_display_manager_stop return code: %d\n", res);
-        goto cleanup;
-    }
+    ensure_succeeds(nodm_display_manager_stop(&dm));
 
     // TODO:
     //  - test a wrong xserver command line (dying X server)
@@ -88,9 +61,5 @@ int main(int argc, char* argv[])
 
     nodm_display_manager_cleanup(&dm);
 
-cleanup:
-    if (res != E_SUCCESS)
-        fprintf(stderr, "Error: %s\n", nodm_strerror(res));
-    log_end();
-    return res;
+    test_ok();
 }

@@ -1,5 +1,5 @@
 /*
- * test-xstart - test that we are able to start X
+ * test - nodm test utilities
  *
  * Copyright 2011  Enrico Zini <enrico@enricozini.org>
  *
@@ -18,36 +18,49 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "log.h"
-#include "xserver.h"
 #include "test.h"
 #include "common.h"
+#include <string.h>
 #include <stdio.h>
 
-int main(int argc, char* argv[])
+void test_start(const char* testname)
 {
-    test_start("test-xstart");
+    static struct log_config cfg;
+    cfg.program_name = testname,
+    cfg.log_to_syslog = false,
+    cfg.log_to_stderr = true,
+    cfg.info_to_stderr = true,
+    log_start(&cfg);
+}
 
-    struct nodm_xserver srv;
-    nodm_xserver_init(&srv);
+void test_fail()
+{
+    log_end();
+    exit(1);
+}
 
-    const char* server_argv[] = { "/usr/bin/Xnest", ":1", "-geometry", "1x1+0+0", NULL };
-    srv.argv = server_argv;
-    srv.name = ":1";
+void test_ok()
+{
+    log_end();
+    exit(0);
+}
 
-    int res = nodm_xserver_start(&srv);
-    if (res != E_SUCCESS)
+void ensure_equals(const char* a, const char* b)
+{
+    if (a == NULL && b == NULL)
+        return;
+    if (a == NULL || b == NULL || strcmp(a, b) != 0)
     {
-        fprintf(stderr, "nodm_xserver_start return code: %d\n", res);
-        return res;
+        log_warn("strings differ: \"%s\" != \"%s\"", a, b);
+        test_fail();
     }
+}
 
-    res = nodm_xserver_stop(&srv);
-    if (res != E_SUCCESS)
+void _ensure_succeeds(int code, const char* file, int line, const char* desc)
+{
+    if (code != E_SUCCESS)
     {
-        fprintf(stderr, "nodm_xserver_stop return code: %d\n", res);
-        return res;
+        log_err("%s:%d:%s failed with code %d (%s)", file, line, desc, code, nodm_strerror(code));
+        test_fail();
     }
-
-    test_ok();
 }

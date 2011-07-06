@@ -53,7 +53,7 @@ void log_info(const char* fmt, ...)
 
     if (config->info_to_stderr)
     {
-        fprintf(stderr, "%s: ", config->program_name);
+        fprintf(stderr, "%s:", config->program_name);
         va_start(ap, fmt);
         vfprintf(stderr, fmt, ap);
         va_end(ap);
@@ -74,7 +74,7 @@ void log_warn(const char* fmt, ...)
 
     if (config->log_to_stderr)
     {
-        fprintf(stderr, "%s: ", config->program_name);
+        fprintf(stderr, "%s:", config->program_name);
         va_start(ap, fmt);
         vfprintf(stderr, fmt, ap);
         va_end(ap);
@@ -95,7 +95,7 @@ void log_err(const char* fmt, ...)
 
     if (config->log_to_stderr)
     {
-        fprintf(stderr, "%s: ", config->program_name);
+        fprintf(stderr, "%s:", config->program_name);
         va_start(ap, fmt);
         vfprintf(stderr, fmt, ap);
         va_end(ap);

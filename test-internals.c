@@ -21,30 +21,14 @@
 #include "log.h"
 #include "common.h"
 #include "dm.h"
+#include "test.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-void ensure_equals(const char* a, const char* b)
-{
-    if (a == NULL && b == NULL)
-        return;
-    if (a == NULL || b == NULL || strcmp(a, b) != 0)
-    {
-        log_warn("strings differ: \"%s\" != \"%s\"", a, b);
-        exit(1);
-    }
-}
-
 int main(int argc, char* argv[])
 {
-    struct log_config cfg = {
-        .program_name = "test-internals",
-        .log_to_syslog = false,
-        .log_to_stderr = true,
-        .info_to_stderr = true,
-    };
-    log_start(&cfg);
+    test_start("test-internals");
 
     // Test getenv_with_default
     setenv("FOO", "foo", 1);
@@ -114,6 +98,5 @@ int main(int argc, char* argv[])
     ensure_equals(s.srv.argv[3], NULL);
     nodm_display_manager_cleanup(&s);
 
-    log_end();
-    return 0;
+    test_ok();
 }
