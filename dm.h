@@ -25,6 +25,7 @@
 #include "xsession.h"
 #include "vt.h"
 #include <time.h>
+#include <signal.h>
 
 struct nodm_display_manager
 {
@@ -46,6 +47,9 @@ struct nodm_display_manager
     /// Time the last session started
     time_t last_session_start;
 
+    /// Original signal mask at program startup
+    sigset_t orig_signal_mask;
+
     /// Storage for split server arguments used by nodm_x_cmdline_split
     char** _srv_split_argv;
     void* _srv_split_args;
@@ -60,7 +64,12 @@ void nodm_display_manager_init(struct nodm_display_manager* dm);
 /// Cleanup at the end of the display manager
 void nodm_display_manager_cleanup(struct nodm_display_manager* dm);
 
-/// Start X and the X session
+/**
+ * Start X and the X session
+ *
+ * This function sets the signal mask to block all signals. The original signal
+ * mask is restored by nodm_display_manager_cleanup().
+ */
 int nodm_display_manager_start(struct nodm_display_manager* dm);
 
 /// Restart X and the X session after they died

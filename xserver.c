@@ -77,12 +77,16 @@ void nodm_xserver_init(struct nodm_xserver* srv)
     srv->pid = -1;
     srv->dpy = NULL;
     srv->windowpath = NULL;
+    if (sigemptyset(&srv->orig_signal_mask) == -1)
+        log_err("sigemptyset error: %m");
 }
 
 int nodm_xserver_start(struct nodm_xserver* srv)
 {
     // Function return code
     int return_code = E_SUCCESS;
+    // True if we should restore the signal mask at exit
+    bool signal_mask_altered = false;
 
     // Initialise common signal handling machinery
     struct sigaction sa;
@@ -113,8 +117,15 @@ int nodm_xserver_start(struct nodm_xserver* srv)
     // From now on we need to perform cleanup before returning
 
     // fork/exec the X server
-    pid_t child = fork ();
-    if (child == 0) {   /* child shell */
+    srv->pid = fork ();
+    if (srv->pid == 0)
+    {
+        // child
+
+        // Restore the original signal mask
+        if (sigprocmask(SIG_SETMASK, &srv->orig_signal_mask, NULL) == -1)
+            log_err("sigprocmask failed: %m");
+
         // Stop the logging subsystem before we quit via exec
         log_end();
 
@@ -125,7 +136,7 @@ int nodm_xserver_start(struct nodm_xserver* srv)
         execv(srv->argv[0], (char *const*)srv->argv);
         log_err("cannot start %s: %m", srv->argv[0]);
         exit(errno == ENOENT ? E_CMD_NOTFOUND : E_CMD_NOEXEC);
-    } else if (child == -1) {
+    } else if (srv->pid == -1) {
         log_err("cannot fork to run %s: %m", srv->argv[0]);
         return_code = E_OS_ERROR;
         goto cleanup;
@@ -142,13 +153,36 @@ int nodm_xserver_start(struct nodm_xserver* srv)
         goto cleanup;
     }
 
+    // Unblock SIGCHLD and SIGUSR1
+    sigset_t orig_set;
+    sigset_t cur_set;
+    if (sigemptyset(&cur_set) == -1)
+    {
+        log_err("sigemptyset failed: %m");
+        return_code = E_PROGRAMMING;
+        goto cleanup;
+    }
+    if (sigaddset(&cur_set, SIGCHLD) == -1 || sigaddset(&cur_set, SIGUSR1) == -1)
+    {
+        log_err("sigaddset failed: %m");
+        return_code = E_PROGRAMMING;
+        goto cleanup;
+    }
+    if (sigprocmask(SIG_UNBLOCK, &cur_set, &orig_set) == -1)
+    {
+        log_err("sigprocmask failed: %m");
+        return_code = E_PROGRAMMING;
+        goto cleanup;
+    }
+    signal_mask_altered = true;
+
     // Wait for SIGUSR1, for the server to die or for a timeout
     struct timespec timeout = { .tv_sec = srv->conf_timeout, .tv_nsec = 0 };
     while (!server_started)
     {
         // Check if the server has died
         int status;
-        pid_t res = waitpid(child, &status, WNOHANG);
+        pid_t res = waitpid(srv->pid, &status, WNOHANG);
         if (res == -1)
         {
             if (errno == EINTR) continue;
@@ -156,7 +190,7 @@ int nodm_xserver_start(struct nodm_xserver* srv)
             return_code = E_OS_ERROR;
             goto cleanup;
         }
-        if (res == child)
+        if (res == srv->pid)
         {
             if (WIFEXITED(status))
                 log_err("X server exited with status=%d", WEXITSTATUS(status));
@@ -166,6 +200,7 @@ int nodm_xserver_start(struct nodm_xserver* srv)
                 // This should never happen, but it's better to have a message
                 // than to fail silently through an open code path
                 log_err("X server quit, waitpid gave unrecognised status=%d", status);
+            srv->pid = -1;
             return_code = E_X_SERVER_DIED;
             goto cleanup;
         }
@@ -192,11 +227,15 @@ int nodm_xserver_start(struct nodm_xserver* srv)
     log_verbose("X is ready to accept connections");
 
 cleanup:
+    // Restore signal mask
+    if (signal_mask_altered)
+        if (sigprocmask(SIG_SETMASK, &orig_set, NULL) == -1)
+            log_err("sigprocmask failed: %m");
+
     // Kill the X server if an error happened
-    if (child > 0 && return_code != E_SUCCESS)
-        kill(child, SIGTERM);
-    else
-        srv->pid = child;
+    if (srv->pid > 0 && return_code != E_SUCCESS)
+        nodm_xserver_stop(srv);
+
     // Restore signal handlers
     sigaction(SIGCHLD, NULL, &sa_sigchld_old);
     sigaction(SIGUSR1, NULL, &sa_usr1_old);
@@ -205,24 +244,7 @@ cleanup:
 
 int nodm_xserver_stop(struct nodm_xserver* srv)
 {
-    int res = E_SUCCESS;
-    if (srv->pid > 0)
-    {
-        kill(srv->pid, SIGTERM);
-        kill(srv->pid, SIGCONT);
-        while (true)
-        {
-            int status;
-            if (waitpid(srv->pid, &status, 0) == -1)
-            {
-                if (errno == EINTR)
-                    continue;
-                if (errno != ECHILD)
-                    res = E_OS_ERROR;
-            }
-            break;
-        }
-    }
+    int res = child_must_exit(srv->pid, "X server");
     srv->pid = -1;
 
     if (srv->windowpath != NULL)
@@ -252,12 +274,21 @@ int nodm_xserver_connect(struct nodm_xserver* srv)
 {
     //XSetErrorHandler(x_error_handler);
 
-    XSetIOErrorHandler(xopendisplay_error_handler);
-    srv->dpy = XOpenDisplay(srv->name);
-    XSetIOErrorHandler((int (*)(Display *))0);
+    for (int i = 0; i < 5; ++i)
+    {
+        if (i > 0)
+            log_info("connecting to X server, attempt #%d", i+1);
+        XSetIOErrorHandler(xopendisplay_error_handler);
+        srv->dpy = XOpenDisplay(srv->name);
+        XSetIOErrorHandler((int (*)(Display *))0);
 
-    if (srv->dpy == NULL)
-        log_err("could not connect to X server on \"%s\"", srv->name);
+        if (srv->dpy == NULL)
+        {
+            log_err("could not connect to X server on \"%s\"", srv->name);
+            sleep(1);
+        } else
+            break;
+    }
 
     // from xdm: remove close-on-exec and register to close at the next fork, why? We'll find out
     // RegisterCloseOnFork (ConnectionNumber (d->dpy));

@@ -39,6 +39,9 @@ int nodm_xsession_init(struct nodm_xsession* s)
     s->conf_use_pam = true;
     s->conf_cleanup_xse = true;
 
+    if (sigemptyset(&s->orig_signal_mask) == -1)
+        log_err("sigemptyset error: %m");
+
     // Get the user we should run the session for
     if (!bounded_strcpy(s->conf_run_as, getenv_with_default("NODM_USER", "root")))
         log_warn("username has been truncated");
@@ -111,6 +114,10 @@ int nodm_xsession_start(struct nodm_xsession* s, struct nodm_xserver* srv)
     s->pid = fork();
     if (s->pid == 0)
     {
+        // Restore the original signal mask
+        if (sigprocmask(SIG_SETMASK, &s->orig_signal_mask, NULL) == -1)
+            log_err("sigprocmask failed: %m");
+
         // child shell */
         if (s->child_body)
             exit(s->child_body(&child));
@@ -128,25 +135,7 @@ int nodm_xsession_start(struct nodm_xsession* s, struct nodm_xserver* srv)
 
 int nodm_xsession_stop(struct nodm_xsession* s)
 {
-    int res = E_SUCCESS;
-
-    if (s->pid > 0)
-    {
-        kill(s->pid, SIGTERM);
-        kill(s->pid, SIGCONT);
-        while (true)
-        {
-            int status;
-            if (waitpid(s->pid, &status, 0) == -1)
-            {
-                if (errno == EINTR)
-                    continue;
-                if (errno != ECHILD)
-                    res = E_OS_ERROR;
-            }
-            break;
-        }
-    }
+    int res = child_must_exit(s->pid, "X session");
     s->pid = -1;
     return res;
 }

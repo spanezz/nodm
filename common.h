@@ -21,6 +21,8 @@
 #ifndef NODM_DEFS_H
 #define NODM_DEFS_H
 
+#include <sys/types.h>
+
 // Exit codes used by shadow programs
 #define E_SUCCESS             0     ///< success
 #define E_NOPERM              1     ///< permission denied
@@ -43,6 +45,7 @@
 #define E_X_SERVER_TIMEOUT    211   ///< Server not ready before timeout
 #define E_X_SERVER_CONNECT    212   ///< Could not connect to X server
 #define E_SESSION_DIED        220   ///< X session died
+#define E_USER_QUIT           221   ///< Quit requested
 
 /// Return the basename of a path, as a pointer inside \a str
 const char* basename (const char* str);
@@ -63,5 +66,29 @@ const char* getenv_with_default(const char* envname, const char* def);
 
 /// Return the string description of an exit code
 const char* nodm_strerror(int code);
+
+/**
+ * Check if a child has died.
+ *
+ * @param pid
+ *   process ID to check
+ * @retval quit
+ *   0 if it is still running
+ *   1 if it has just quit and we got its exit status
+ *   2 if the pid does not exist
+ * @retval status
+ *   the exit status if it has quit
+ */
+int child_has_quit(pid_t pid, int* quit, int* status);
+
+/**
+ * Kill a child process if it still running and wait for it to end
+ *
+ * @param pid
+ *   The child pid
+ * @param procdesc
+ *   Child process description to use in the logs
+ */
+int child_must_exit(pid_t pid, const char* procdesc);
 
 #endif

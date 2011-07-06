@@ -51,6 +51,9 @@ struct nodm_xsession
 
     /// If non-NULL, use as child process main body (used for tests)
     int (*child_body)(struct nodm_xsession_child* s);
+
+    /// Original signal mask at program startup
+    sigset_t orig_signal_mask;
 };
 
 /// Initialise a struct nodm_session with default values

@@ -40,6 +40,8 @@ struct nodm_xserver
     pid_t pid;
     /// xlib Display connected to the server
     Display *dpy;
+    /// Original signal mask at program startup
+    sigset_t orig_signal_mask;
 };
 
 /**
