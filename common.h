@@ -57,5 +57,7 @@ const char* getenv_with_default(const char* envname, const char* def);
  */
 #define bounded_strcpy(dst, src) (snprintf(dst, sizeof(dst), "%s", (src)) < sizeof(dst))
 
+/// Return the string description of an exit code
+const char* nodm_strerror(int code);
 
 #endif

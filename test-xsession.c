@@ -81,9 +81,16 @@ int main(int argc, char* argv[])
         goto cleanup;
     }
 
+    // TODO:
+    //  - test a wrong xserver command line (dying X server)
+    //  - test a wrong username (dying X session)
+    //  - start everything fine then kill the X server
+
     nodm_display_manager_cleanup(&dm);
 
 cleanup:
+    if (res != E_SUCCESS)
+        fprintf(stderr, "Error: %s\n", nodm_strerror(res));
     log_end();
     return res;
 }

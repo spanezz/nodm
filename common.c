@@ -29,3 +29,29 @@ const char* getenv_with_default(const char* envname, const char* def)
     else
         return def;
 }
+
+const char* nodm_strerror(int code)
+{
+    switch (code)
+    {
+        case E_SUCCESS:            return "success";
+        case E_NOPERM:             return "permission denied";
+        case E_USAGE:              return "invalid command syntax";
+        case E_BAD_ARG:            return "invalid argument to option";
+        case E_PASSWD_NOTFOUND:    return "not found password file";
+        case E_SHADOW_NOTFOUND:    return "not found shadow password file";
+        case E_GROUP_NOTFOUND:     return "not found group file";
+        case E_GSHADOW_NOTFOUND:   return "not found shadow group file";
+        case E_CMD_NOEXEC:         return "can't run command/shell";
+        case E_CMD_NOTFOUND:       return "can't find command/shell to run";
+        case E_PROGRAMMING:        return "Programming error";
+        case E_PAM_ERROR:          return "something wrong talking with PAM";
+        case E_OS_ERROR:           return "something wrong talking with the Operating System";
+        case E_XLIB_ERROR:         return "Xlib error";
+        case E_X_SERVER_DIED:      return "Server died";
+        case E_X_SERVER_TIMEOUT:   return "Server not ready before timeout";
+        case E_X_SERVER_CONNECT:   return "Could not connect to X server";
+        case E_SESSION_DIED:       return "X session died";
+        default: return "unknown error";
+    }
+}
