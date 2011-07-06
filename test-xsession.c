@@ -61,9 +61,12 @@ void test_trivial_session()
     dm.session.conf_use_pam = false;
     dm.session.conf_cleanup_xse = false;
     dm.session.conf_run_as[0] = 0;
+    dm.vt.conf_initial_vt = -1;
     dm.session.child_body = test_session;
     ensure_succeeds(nodm_display_manager_start(&dm));
-    ensure_succeeds(nodm_display_manager_wait(&dm));
+    int sstatus;
+    ensure_succeeds(nodm_display_manager_wait(&dm, &sstatus));
+    ensure_equali(sstatus, E_SUCCESS);
     ensure_succeeds(nodm_display_manager_stop(&dm));
     nodm_display_manager_cleanup(&dm);
 }
@@ -77,6 +80,7 @@ void test_bad_x_server()
     dm.session.conf_use_pam = false;
     dm.session.conf_cleanup_xse = false;
     dm.session.conf_run_as[0] = 0;
+    dm.vt.conf_initial_vt = -1;
     dm.session.child_body = test_session;
 
     ensure_equali(nodm_display_manager_start(&dm), E_X_SERVER_DIED);
@@ -101,10 +105,13 @@ void test_failing_x_session()
     dm.session.conf_use_pam = false;
     dm.session.conf_cleanup_xse = false;
     dm.session.conf_run_as[0] = 0;
+    dm.vt.conf_initial_vt = -1;
     dm.session.child_body = test_session_bad;
 
     ensure_succeeds(nodm_display_manager_start(&dm));
-    ensure_succeeds(nodm_display_manager_wait(&dm));
+    int sstatus;
+    ensure_succeeds(nodm_display_manager_wait(&dm, &sstatus));
+    ensure_equali(sstatus, E_SUCCESS);
     ensure_succeeds(nodm_display_manager_stop(&dm));
     nodm_display_manager_cleanup(&dm);
 }
@@ -118,10 +125,13 @@ void test_dying_x_server()
     dm.session.conf_use_pam = false;
     dm.session.conf_cleanup_xse = false;
     dm.session.conf_run_as[0] = 0;
+    dm.vt.conf_initial_vt = -1;
     dm.session.child_body = test_session_x_killer;
 
     ensure_succeeds(nodm_display_manager_start(&dm));
-    ensure_succeeds(nodm_display_manager_wait(&dm));
+    int sstatus;
+    ensure_succeeds(nodm_display_manager_wait(&dm, &sstatus));
+    ensure_equali(sstatus, E_SUCCESS);
     ensure_succeeds(nodm_display_manager_stop(&dm));
     nodm_display_manager_cleanup(&dm);
 }

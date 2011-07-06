@@ -20,6 +20,13 @@
 
 #include "common.h"
 #include <stdlib.h>
+#include <string.h>
+
+const char* basename (const char* str)
+{
+    const char *cp = strrchr (str, '/');
+    return cp ? cp + 1 : str;
+}
 
 const char* getenv_with_default(const char* envname, const char* def)
 {

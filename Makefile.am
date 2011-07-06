@@ -6,9 +6,9 @@ ACLOCAL_AMFLAGS = -I m4
 
 sbin_PROGRAMS = nodm
 
-dist_noinst_HEADERS = common.h dm.h log.h test.h xserver.h xsession.h xsession-child.h
+dist_noinst_HEADERS = common.h dm.h log.h test.h vt.h xserver.h xsession.h xsession-child.h
 
-libsources = common.c log.c xsession-child.c xserver.c xsession.c dm.c
+libsources = common.c log.c vt.c xsession-child.c xserver.c xsession.c dm.c
 testlibsources = $(libsources) test.c
 
 AM_CPPFLAGS = $(X11_CFLAGS)

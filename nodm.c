@@ -1,49 +1,22 @@
 /*
- * Copyright 1989 - 1994, Julianne Frances Haugh
- * Copyright 2009, Enrico Zini
- * All rights reserved.
+ * nodm - nodm X display manager
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of Julianne F. Haugh nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
+ * Copyright 2009--2011  Enrico Zini <enrico@enricozini.org>
  *
- * THIS SOFTWARE IS PROVIDED BY JULIE HAUGH AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL JULIE HAUGH OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-/* Some parts substantially derived from an ancestor of: */
-/* su for GNU.  Run a shell with substitute user and group IDs.
-   Copyright (C) 1992-2003 Free Software Foundation, Inc.
-
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 
 #define NAME "nodm"
@@ -63,105 +36,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <sys/wait.h>
-#include <sys/ioctl.h>
 #include <time.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <sys/vt.h>
 
 
 #define _(...) (__VA_ARGS__)
 
-/*
- * Assorted #defines to control su's behavior
- */
-/*
- * Global variables
- */
-
 /* Program name used in error messages */
-static char *Prog;
-
-/*
- * External identifiers
- */
-
-extern char **newenvp;
-extern char **environ;
-extern size_t newenvc;
-
-/* local function prototypes */
-
-static char *Basename (char *str)
-{
-	char *cp = strrchr (str, '/');
-
-	return cp ? cp + 1 : str;
-}
-
-
-static int try_vtstate(const char* dev, struct vt_stat* vtstat)
-{
-	int res = 0;
-	int fd = open(dev, O_WRONLY | O_NOCTTY, 0);
-	if (fd < 0)
-		goto cleanup;
-	if (ioctl (fd, VT_GETSTATE, vtstat) < 0)
-		goto cleanup;
-	res = 1;
-
-cleanup:
-	if (fd >= 0) close(fd);
-	return res;
-}
-
-static int get_vtstate(struct vt_stat* vtstat)
-{
-	if (try_vtstate("/dev/tty", vtstat)) return 1;
-	if (try_vtstate("/dev/tty0", vtstat)) return 1;
-	if (try_vtstate("/dev/console", vtstat)) return 1;
-	return 0;
-}
-
-/*
- * Allocate a new vt, open it and return the file descriptor and the vt number.
- *
- * Searching the vt starts at the initial value of vtnum.
- */
-int open_vt(int *vtnum)
-{
-	char vtname[15];
-	int res = -1;
-	struct vt_stat vtstat;
-	unsigned short vtmask;
-
-	if (!get_vtstate(&vtstat))
-	{
-		fprintf (stderr, _("%s: cannot find or open the console\n"), Prog);
-		goto cleanup;
-	}
-
-	for (vtmask = 1 << *vtnum; vtstat.v_state & vtmask; ++*vtnum, vtmask <<= 1)
-		;
-	if (!vtmask) {
-		fprintf (stderr, _("%s: all VTs seem to be busy\n"), Prog);
-		goto cleanup;
-	}
-
-	snprintf(vtname, 15, "/dev/tty%d", *vtnum);
-
-	res = open(vtname, O_RDWR | O_NOCTTY, 0);
-	if (res < 0) {
-		fprintf (stderr, _("%s: cannot open %s: %m\n"), Prog, vtname);
-		goto cleanup;
-	}
-
-cleanup:
-	return res;
-}
+static const char *Prog;
 
 /*
  * Run the X session
@@ -273,11 +156,8 @@ static int nodm_monitor(int argc, char **argv)
 	};
 	const char* opt_session = NODM_SESSION;
 	char xoptions[BUFSIZ];
-	char xoptions1[BUFSIZ];
 	char* cp;
 	int mst;
-	int vt_fd = -1;
-	int vt_num;
 
 	/* Parse command line options */
 	while (1)
@@ -315,31 +195,13 @@ static int nodm_monitor(int argc, char **argv)
 
 	log_info("starting nodm monitor");
 
-	{
-		char startvt[BUFSIZ];
-		string_from_env(startvt, "NODM_FIRST_VT", "7");
-		vt_num = strtoul(startvt, NULL, 10);
-	}
-	if ((vt_fd = open_vt(&vt_num)) == -1)
-	{
-		fprintf (stderr, _("%s: cannot allocate a virtual terminal\n"), Prog);
-		return 1;
-	}
-
 	/* Read the configuration from the environment */
 	cp = getenv("NODM_MIN_SESSION_TIME");
 	mst = cp ? atoi(cp) : 60;
 	string_from_env(xoptions, "NODM_X_OPTIONS", "");
 
-	if (xoptions[0] == 0)
-		snprintf(xoptions1, BUFSIZ, "vt%d", vt_num);
-	else
-		snprintf(xoptions1, BUFSIZ, "vt%d %s", vt_num, xoptions);
-
 	setenv("NODM_RUN_SESSION", "1", 1);
-	run_and_restart(opt_session, xoptions1, mst);
-
-	close(vt_fd);
+	run_and_restart(opt_session, xoptions, mst);
 
 	return 0;
 }
@@ -359,7 +221,7 @@ int main (int argc, char **argv)
 	 * Get the program name. The program name is used as a prefix to
 	 * most error messages.
 	 */
-	Prog = Basename (argv[0]);
+	Prog = basename(argv[0]);
 
     // TODO: move these after command line parsing, so we can implement
     // --verbose --no-syslog --no-stderr and the like

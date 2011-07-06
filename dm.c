@@ -1,5 +1,5 @@
 /*
- * session - nodm X display manager
+ * dm - nodm X display manager
  *
  * Copyright 2011  Enrico Zini <enrico@enricozini.org>
  *
@@ -27,12 +27,14 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <errno.h>
+#include <stdio.h>
 
 
 void nodm_display_manager_init(struct nodm_display_manager* dm)
 {
-    nodm_xserver_init(&(dm->srv));
-    nodm_xsession_init(&(dm->session));
+    nodm_xserver_init(&dm->srv);
+    nodm_xsession_init(&dm->session);
+    nodm_vt_init(&dm->vt);
     dm->_srv_split_args = NULL;
     dm->_srv_split_argv = NULL;
 }
@@ -57,7 +59,21 @@ void nodm_display_manager_cleanup(struct nodm_display_manager* dm)
 
 int nodm_display_manager_start(struct nodm_display_manager* dm)
 {
-    int res = nodm_xserver_start(&dm->srv);
+    int res = nodm_vt_start(&dm->vt);
+    if (res != E_SUCCESS) return res;
+
+    if (dm->vt.num != -1)
+    {
+        // Create the vtN argument
+        snprintf(dm->_vtarg, sizeof(dm->_vtarg), "vt%d", dm->vt.num);
+        // Append it to srv args
+        const char** s = dm->srv.argv;
+        while (*s) ++s;
+        *s++ = dm->_vtarg;
+        *s = NULL;
+    }
+
+    res = nodm_xserver_start(&dm->srv);
     if (res != E_SUCCESS) return res;
 
     res = nodm_xsession_start(&dm->session, &dm->srv);
@@ -74,10 +90,12 @@ int nodm_display_manager_stop(struct nodm_display_manager* dm)
     res = nodm_xserver_stop(&dm->srv);
     if (res != E_SUCCESS) return res;
 
+    nodm_vt_stop(&dm->vt);
+
     return E_SUCCESS;
 }
 
-int nodm_display_manager_wait(struct nodm_display_manager* dm)
+int nodm_display_manager_wait(struct nodm_display_manager* dm, int* session_status)
 {
     while (true)
     {
@@ -103,7 +121,8 @@ int nodm_display_manager_wait(struct nodm_display_manager* dm)
         } else if (child == dm->session.pid) {
             // Session died
             log_warn("X session died with status %d", status);
-            return status;
+            *session_status = status;
+            return E_SESSION_DIED;
         }
     }
 }
@@ -128,7 +147,9 @@ int nodm_display_manager_parse_xcmdline(struct nodm_display_manager* s, const ch
 
     unsigned in_arg = 0;
     unsigned argc = 0;
-    char **argv = (char**)malloc((toks->we_wordc + 3) * sizeof(char*));
+    // +1 for the X server pathname, +1 for the display name,
+    // +1 for the VT number, +1 for the trailing NULL
+    char **argv = (char**)malloc((toks->we_wordc + 4) * sizeof(char*));
     if (argv == NULL)
     {
         return_code = E_OS_ERROR;
@@ -159,7 +180,13 @@ int nodm_display_manager_parse_xcmdline(struct nodm_display_manager* s, const ch
 
     // Copy other args
     while (in_arg < toks->we_wordc)
+    {
+        int vtn;
+        if (sscanf(toks->we_wordv[in_arg], "vt%d", &vtn) == 1)
+            // if vtN has been provided by the caller, disable VT allocation
+            s->vt.conf_initial_vt = -1;
         argv[argc++] = toks->we_wordv[in_arg++];
+    }
     argv[argc] = NULL;
 
     s->srv.argv = (const char**)argv;

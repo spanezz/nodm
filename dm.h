@@ -1,5 +1,5 @@
 /*
- * session - nodm X display manager
+ * dm - nodm X display manager
  *
  * Copyright 2011  Enrico Zini <enrico@enricozini.org>
  *
@@ -23,6 +23,7 @@
 
 #include "xserver.h"
 #include "xsession.h"
+#include "vt.h"
 
 struct nodm_display_manager
 {
@@ -32,10 +33,15 @@ struct nodm_display_manager
     /// X session supervision
     struct nodm_xsession session;
 
+    /// VT allocation
+    struct nodm_vt vt;
 
     /// Storage for split server arguments used by nodm_x_cmdline_split
     char** _srv_split_argv;
     void* _srv_split_args;
+
+    /// Storage for vtN argument from dynamic VT allocation
+    char _vtarg[10];
 };
 
 /// Initialise a display_manager structure with default values
@@ -48,7 +54,9 @@ void nodm_display_manager_cleanup(struct nodm_display_manager* dm);
 int nodm_display_manager_start(struct nodm_display_manager* dm);
 
 /// Wait for X or the X session to end
-int nodm_display_manager_wait(struct nodm_display_manager* dm);
+int nodm_display_manager_wait(struct nodm_display_manager* dm, int* session_status);
+
+// TODO: int nodm_display_manager_restart(struct nodm_display_manager* dm);
 
 /// Stop X and the X session
 int nodm_display_manager_stop(struct nodm_display_manager* dm);

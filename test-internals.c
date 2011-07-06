@@ -44,6 +44,7 @@ int main(int argc, char* argv[])
     ensure_equals(s.srv.argv[1], ":0");
     ensure_equals(s.srv.argv[2], NULL);
     ensure_equals(s.srv.name, ":0");
+    ensure_equali(s.vt.conf_initial_vt, 7);
     nodm_display_manager_cleanup(&s);
 
     nodm_display_manager_init(&s);
@@ -53,6 +54,7 @@ int main(int argc, char* argv[])
     ensure_equals(s.srv.argv[2], "foo");
     ensure_equals(s.srv.argv[3], NULL);
     ensure_equals(s.srv.name, ":0");
+    ensure_equali(s.vt.conf_initial_vt, 7);
     nodm_display_manager_cleanup(&s);
 
     nodm_display_manager_init(&s);
@@ -61,6 +63,7 @@ int main(int argc, char* argv[])
     ensure_equals(s.srv.argv[1], ":0");
     ensure_equals(s.srv.argv[2], NULL);
     ensure_equals(s.srv.name, ":0");
+    ensure_equali(s.vt.conf_initial_vt, 7);
     nodm_display_manager_cleanup(&s);
 
     nodm_display_manager_init(&s);
@@ -69,6 +72,7 @@ int main(int argc, char* argv[])
     ensure_equals(s.srv.argv[1], ":1");
     ensure_equals(s.srv.argv[2], NULL);
     ensure_equals(s.srv.name, ":1");
+    ensure_equali(s.vt.conf_initial_vt, 7);
     nodm_display_manager_cleanup(&s);
 
     nodm_display_manager_init(&s);
@@ -77,6 +81,7 @@ int main(int argc, char* argv[])
     ensure_equals(s.srv.argv[1], ":1");
     ensure_equals(s.srv.argv[2], NULL);
     ensure_equals(s.srv.name, ":1");
+    ensure_equali(s.vt.conf_initial_vt, 7);
     nodm_display_manager_cleanup(&s);
 
     nodm_display_manager_init(&s);
@@ -86,6 +91,7 @@ int main(int argc, char* argv[])
     ensure_equals(s.srv.argv[2], "foo");
     ensure_equals(s.srv.argv[3], NULL);
     ensure_equals(s.srv.name, ":0");
+    ensure_equali(s.vt.conf_initial_vt, 7);
     nodm_display_manager_cleanup(&s);
 
     nodm_display_manager_init(&s);
@@ -95,6 +101,7 @@ int main(int argc, char* argv[])
     ensure_equals(s.srv.argv[2], "foo");
     ensure_equals(s.srv.argv[3], NULL);
     ensure_equals(s.srv.name, ":1");
+    ensure_equali(s.vt.conf_initial_vt, 7);
     nodm_display_manager_cleanup(&s);
 
     nodm_display_manager_init(&s);
@@ -104,6 +111,28 @@ int main(int argc, char* argv[])
     ensure_equals(s.srv.argv[2], "foo");
     ensure_equals(s.srv.argv[3], NULL);
     ensure_equals(s.srv.name, ":1");
+    ensure_equali(s.vt.conf_initial_vt, 7);
+    nodm_display_manager_cleanup(&s);
+
+    nodm_display_manager_init(&s);
+    nodm_display_manager_parse_xcmdline(&s, "vt2");
+    ensure_equals(s.srv.argv[0], "/usr/bin/X");
+    ensure_equals(s.srv.argv[1], ":0");
+    ensure_equals(s.srv.argv[2], "vt2");
+    ensure_equals(s.srv.argv[3], NULL);
+    ensure_equals(s.srv.name, ":0");
+    ensure_equali(s.vt.conf_initial_vt, -1);
+    nodm_display_manager_cleanup(&s);
+
+    nodm_display_manager_init(&s);
+    nodm_display_manager_parse_xcmdline(&s, "/usr/bin/Xnest :1 vt42 foo");
+    ensure_equals(s.srv.argv[0], "/usr/bin/Xnest");
+    ensure_equals(s.srv.argv[1], ":1");
+    ensure_equals(s.srv.argv[2], "vt42");
+    ensure_equals(s.srv.argv[3], "foo");
+    ensure_equals(s.srv.argv[4], NULL);
+    ensure_equals(s.srv.name, ":1");
+    ensure_equali(s.vt.conf_initial_vt, -1);
     nodm_display_manager_cleanup(&s);
 
     test_ok();

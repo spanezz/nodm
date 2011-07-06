@@ -38,10 +38,14 @@
 #define E_PAM_ERROR           201   ///< something wrong talking with PAM
 #define E_OS_ERROR            202   ///< something wrong talking with the Operating System
 #define E_XLIB_ERROR          203   ///< Xlib error
+#define E_VT_ALLOC_ERROR      204   ///< VT allocation error
 #define E_X_SERVER_DIED       210   ///< Server died
 #define E_X_SERVER_TIMEOUT    211   ///< Server not ready before timeout
 #define E_X_SERVER_CONNECT    212   ///< Could not connect to X server
 #define E_SESSION_DIED        220   ///< X session died
+
+/// Return the basename of a path, as a pointer inside \a str
+const char* basename (const char* str);
 
 /**
  * Like getenv, but if the variable is not defined it returns \a def
