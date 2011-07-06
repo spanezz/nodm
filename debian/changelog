@@ -1,10 +1,16 @@
-nodm (0.7-2) UNRELEASED; urgency=low
+nodm (8.0-1) UNRELEASED; urgency=low
 
   [ Marco Amadori ]
   * Update Standards-Version to 3.9.1 (no changes required).
   * Check if plymouth is available before using it.
 
- -- Marco Amadori <marco.amadori@vdavda.com>  Fri, 11 Feb 2011 15:36:30 +0100
+  [ Enrico Zini ]
+  * Redesigned like a proper display manager.
+    Closes: #540201, #531869
+  * If vtN is present in NODM_X_OPTIONS, disable VT allocation.
+    Closes: #538797, #538796
+
+ -- Enrico Zini <enrico@debian.org>  Thu, 07 Jul 2011 01:43:34 +0200
 
 nodm (0.7-1.1) unstable; urgency=low
 
