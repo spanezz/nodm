@@ -379,7 +379,7 @@ static void catch_signals (int sig)
  */
 int nodm_xsession_child_pam(struct nodm_xsession_child* s)
 {
-    int child;
+    int child = -1;
     sigset_t ourset;
     struct sigaction action;
 
@@ -387,8 +387,24 @@ int nodm_xsession_child_pam(struct nodm_xsession_child* s)
     if (res != E_SUCCESS)
         return res;
 
+    // Read current signal mask
+    sigset_t origmask;
+
+    // Block all signals
+    sigfillset (&ourset);
+    if (sigprocmask (SIG_BLOCK, &ourset, &origmask)) {
+        log_err("sigprocmask malfunction");
+        goto killed;
+    }
+
     child = fork ();
     if (child == 0) {   /* child shell */
+        // Restore original signal mask
+        if (sigprocmask (SIG_SETMASK, &origmask, NULL)) {
+            log_err("sigprocmask malfunction");
+            goto killed;
+        }
+
         int res = nodm_xsession_child_common_env(s);
         if (res != E_SUCCESS) return res;
 
@@ -419,19 +435,12 @@ int nodm_xsession_child_pam(struct nodm_xsession_child* s)
     /* Reset caught signal flag */
     caught = 0;
 
-    /* Block all signals */
-    sigfillset (&ourset);
-    if (sigprocmask (SIG_BLOCK, &ourset, NULL)) {
-        log_err("sigprocmask malfunction");
-        goto killed;
-    }
-
     /* Catch SIGTERM and SIGALRM using 'catch_signals' */
     action.sa_handler = catch_signals;
     sigemptyset (&action.sa_mask);
     action.sa_flags = 0;
-    sigemptyset (&ourset);
 
+    sigemptyset (&ourset);
     if (sigaddset (&ourset, SIGTERM)
 #ifdef DEBUG_NODM
         || sigaddset (&ourset, SIGINT)
@@ -472,11 +481,14 @@ int nodm_xsession_child_pam(struct nodm_xsession_child* s)
     return E_SUCCESS;
 
 killed:
-    log_warn("session terminated, killing shell...");
-    kill (child, SIGTERM);
-    sleep (2);
-    kill (child, SIGKILL);
-    log_warn(" ...shell killed.");
+    if (child != -1)
+    {
+        log_warn("session terminated, killing shell...");
+        kill (child, SIGTERM);
+        sleep (2);
+        kill (child, SIGKILL);
+        log_warn(" ...shell killed.");
+    }
 
     shutdown_pam(s);
 
