@@ -42,12 +42,14 @@
 
 static void do_help(int argc, char** argv, FILE* out)
 {
-	fprintf(out, "Usage: %s [options]\n\n", argv[0]);
-	fprintf(out, "Options:\n");
-	fprintf(out, " --help         print this help message\n");
-	fprintf(out, " --version      print %s's version number\n", NAME);
-	fprintf(out, " --session=cmd  run cmd instead of %s\n", NODM_SESSION);
-	fprintf(out, "                (use for testing)\n");
+    fprintf(out, "Usage: %s [options]\n\n", argv[0]);
+    fprintf(out, "Options:\n");
+    fprintf(out, " --help      print this help message\n");
+    fprintf(out, " --version   print %s's version number\n", NAME);
+    fprintf(out, " --verbose   verbose outpout or logging\n");
+    fprintf(out, " --nested    run a nested X server, does not require root.");
+    fprintf(out, "             The server defaults to \"/usr/bin/Xnest :1\",");
+    fprintf(out, "             override with NODM_X_OPTIONS\n");
 }
 
 
@@ -63,13 +65,18 @@ int main (int argc, char **argv)
 {
     static int opt_help = 0;
     static int opt_version = 0;
+    static int opt_verbose = 0;
+    static int opt_nested = 0;
     static struct option options[] =
     {
         /* These options set a flag. */
         {"help",    no_argument,       &opt_help, 1},
         {"version", no_argument,       &opt_version, 1},
+        {"verbose", no_argument,       &opt_verbose, 1},
+        {"nested",  no_argument,       &opt_nested, 1},
         {0, 0, 0, 0}
     };
+    // TODO: implement --no-syslog --no-stderr and the like
 
     // Parse command line options
     while (1)
@@ -98,34 +105,58 @@ int main (int argc, char **argv)
     }
 
     // We only run if we are root
-    if (getuid() != 0)
+    if (!opt_nested && getuid() != 0)
     {
         fprintf(stderr, "%s: can only be run by root\n", basename(argv[0]));
         return E_NOPERM;
     }
 
-    // TODO: implement --verbose --no-syslog --no-stderr and the like
+    // Setup logging
     struct log_config cfg = {
         .program_name = basename(argv[0]),
-        .log_to_syslog = true,
-        .log_to_stderr = false,
-        .info_to_stderr = false,
-        .verbose = false
+        .verbose = opt_verbose
     };
+    if (opt_nested)
+    {
+        cfg.log_to_syslog = false;
+        cfg.log_to_stderr = true;
+        cfg.info_to_stderr = opt_verbose;
+    } else {
+        cfg.log_to_syslog = true;
+        cfg.log_to_stderr = false;
+        cfg.info_to_stderr = false;
+    }
     log_start(&cfg);
 
     log_info("starting nodm");
 
-    // Run the display manager
+    // Setup the display manager
     struct nodm_display_manager dm;
     nodm_display_manager_init(&dm);
 
-    int res = nodm_display_manager_parse_xcmdline(&dm, getenv_with_default("NODM_X_OPTIONS", ""));
+    // Choose the default X server
+    const char* default_x_server = opt_nested ? "/usr/bin/Xnest :1" : "";
+
+    // Parse X server command line
+    int res = nodm_display_manager_parse_xcmdline(&dm,
+            getenv_with_default("NODM_X_OPTIONS", default_x_server));
     if (res != E_SUCCESS) goto cleanup;
 
+    if (opt_nested)
+    {
+        // For nested servers, disable PAM, user change, ~/.xsession-error
+        // cleanup and VT allocation
+        dm.session.conf_use_pam = false;
+        dm.session.conf_cleanup_xse = false;
+        dm.session.conf_run_as[0] = 0;
+        dm.vt.conf_initial_vt = -1;
+    }
+
+    // Start the first session
     res = nodm_display_manager_start(&dm);
     if (res != E_SUCCESS) goto cleanup;
 
+    // Enter the wait/restart loop
     res = nodm_display_manager_wait_restart_loop(&dm);
     if (res != E_SUCCESS) goto cleanup;
 

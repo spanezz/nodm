@@ -29,6 +29,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <time.h>
 
 
 void nodm_display_manager_init(struct nodm_display_manager* dm)
@@ -265,7 +266,23 @@ int nodm_display_manager_wait_restart_loop(struct nodm_display_manager* dm)
         {
             log_warn("session lasted less than %d seconds: sleeping %d seconds before restarting it",
                     dm->conf_minimum_session_time, retry_times[restart_count]);
-            sleep(retry_times[restart_count]);
+            struct timespec tosleep = { .tv_sec = retry_times[restart_count], .tv_nsec = 0 };
+            struct timespec remaining;
+            while (true)
+            {
+                int r = nanosleep(&tosleep, &remaining);
+                if (r != -1)
+                    break;
+                else if (errno == EINTR)
+                {
+                    tosleep = remaining;
+                }
+                else
+                {
+                    log_warn("sleep aborted: %m (ignoring error");
+                    break;
+                }
+            }
         }
 
         log_info("restarting session");

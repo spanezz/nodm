@@ -22,13 +22,17 @@ of least surprise.  This is what is offered:
    setting up the session via PAM, updating lastlog, logging to syslog.
  - nodm performs VT allocation, looking for a free virtual terminal in which to
    run X and keeping it allocated across X restarts.
- - X is started (by default, /usr/bin/X), nodm waits until it is ready to
-   accept connections and then runs a standard X session script (by default,
-   /etc/X11/Xsession).
+ - X is started (by default, /usr/bin/X)
+ - once the X esrver is ready to accept connections, the X session is set up:
+    - the DISPLAY and WINDOWPATH environment variables are set
+    - the session is wrapped in a PAM session, which sets up the user
+      environment
+    - ~/.xsession-error is truncated if it exists
+ - The session script is run (by default, /etc/X11/Xsession) using "sh -l"
  - If the X server or the X session exit, the other is killed and then both are
    restarted.
  - If a session exits too soon, nodm will wait a bit before restarting.  The
-   waiting time go as follow:
+   waiting times go as follow:
     - The first time the session exits too soon, restart immediately
     - The second and third time, wait 30 seconds
     - All remaining times, wait 1 minute.
