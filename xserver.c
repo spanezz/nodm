@@ -205,12 +205,24 @@ cleanup:
 
 int nodm_xserver_stop(struct nodm_xserver* srv)
 {
+    int res = E_SUCCESS;
     if (srv->pid > 0)
     {
         kill(srv->pid, SIGTERM);
         kill(srv->pid, SIGCONT);
+        while (true)
+        {
+            int status;
+            if (waitpid(srv->pid, &status, 0) == -1)
+            {
+                if (errno == EINTR)
+                    continue;
+                if (errno != ECHILD)
+                    res = E_OS_ERROR;
+            }
+            break;
+        }
     }
-    // TODO: wait
     srv->pid = -1;
 
     if (srv->windowpath != NULL)
@@ -218,7 +230,7 @@ int nodm_xserver_stop(struct nodm_xserver* srv)
         free(srv->windowpath);
         srv->windowpath = NULL;
     }
-    return E_SUCCESS;
+    return res;
 }
 
 static int xopendisplay_error_handler(Display* dpy)

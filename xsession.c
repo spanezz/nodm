@@ -27,6 +27,7 @@
 #include <signal.h>
 #include <pwd.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -127,14 +128,27 @@ int nodm_xsession_start(struct nodm_xsession* s, struct nodm_xserver* srv)
 
 int nodm_xsession_stop(struct nodm_xsession* s)
 {
+    int res = E_SUCCESS;
+
     if (s->pid > 0)
     {
         kill(s->pid, SIGTERM);
         kill(s->pid, SIGCONT);
+        while (true)
+        {
+            int status;
+            if (waitpid(s->pid, &status, 0) == -1)
+            {
+                if (errno == EINTR)
+                    continue;
+                if (errno != ECHILD)
+                    res = E_OS_ERROR;
+            }
+            break;
+        }
     }
-    // TODO: wait
     s->pid = -1;
-    return E_SUCCESS;
+    return res;
 }
 
 void nodm_xsession_dump_status(struct nodm_xsession* s)

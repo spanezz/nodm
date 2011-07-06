@@ -274,9 +274,7 @@ int nodm_display_manager_wait_restart_loop(struct nodm_display_manager* dm)
                 if (r != -1)
                     break;
                 else if (errno == EINTR)
-                {
                     tosleep = remaining;
-                }
                 else
                 {
                     log_warn("sleep aborted: %m (ignoring error");

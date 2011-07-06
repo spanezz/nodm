@@ -76,7 +76,7 @@ int main (int argc, char **argv)
         {"nested",  no_argument,       &opt_nested, 1},
         {0, 0, 0, 0}
     };
-    // TODO: implement --no-syslog --no-stderr and the like
+    // TODO: more output control, such as something like --quiet, --no-syslog, --no-stderr
 
     // Parse command line options
     while (1)
