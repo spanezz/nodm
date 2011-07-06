@@ -37,7 +37,7 @@ void test_start(const char* testname, bool verbose)
 void test_fail()
 {
     log_end();
-    exit(1);
+    exit(E_PROGRAMMING);
 }
 
 void test_ok()
@@ -53,6 +53,20 @@ void ensure_equals(const char* a, const char* b)
     if (a == NULL || b == NULL || strcmp(a, b) != 0)
     {
         log_warn("strings differ: \"%s\" != \"%s\"", a, b);
+        test_fail();
+    }
+}
+
+void ensure_not_equals(const char* a, const char* b)
+{
+    if (a == NULL && b == NULL)
+    {
+        log_warn("strings are both NULL");
+        test_fail();
+    }
+    if (a != NULL && b != NULL && strcmp(a, b) == 0)
+    {
+        log_warn("strings are both \"%s\"", a);
         test_fail();
     }
 }

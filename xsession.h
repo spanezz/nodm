@@ -57,7 +57,7 @@ struct nodm_xsession
 int nodm_xsession_init(struct nodm_xsession* s);
 
 /// Start the X session
-int nodm_xsession_start(struct nodm_xsession* s, const struct nodm_xserver* srv);
+int nodm_xsession_start(struct nodm_xsession* s, struct nodm_xserver* srv);
 
 /// Stop the X session
 int nodm_xsession_stop(struct nodm_xsession* s);

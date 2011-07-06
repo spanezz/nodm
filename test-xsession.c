@@ -30,18 +30,32 @@
 #include <signal.h>
 #include <unistd.h>
 
+static char orig_windowpath[1024];
+
 int test_session(struct nodm_xsession_child* s)
 {
+    int res = nodm_xsession_child_common_env(s);
+    if (res != E_SUCCESS) return res;
+
+    // Check environment
+    ensure_not_equals(orig_windowpath, getenv_with_default("WINDOWPATH", ""));
+
     return E_SUCCESS;
 }
 
 int test_session_bad(struct nodm_xsession_child* s)
 {
+    int res = nodm_xsession_child_common_env(s);
+    if (res != E_SUCCESS) return res;
+
     return E_USAGE;
 }
 
 int test_session_x_killer(struct nodm_xsession_child* s)
 {
+    int res = nodm_xsession_child_common_env(s);
+    if (res != E_SUCCESS) return res;
+
     if (s->srv->pid == -1)
     {
         fprintf(stderr, "server PID has not been set\n");
@@ -139,6 +153,9 @@ void test_dying_x_server()
 int main(int argc, char* argv[])
 {
     test_start("test-xsession", true);
+
+    // Save original window path to check if it changed in the X session
+    (void)bounded_strcpy(orig_windowpath, getenv_with_default("WINDOWPATH", ""));
 
     test_trivial_session();
     test_bad_x_server();

@@ -79,19 +79,7 @@ void nodm_xserver_init(struct nodm_xserver* srv)
     srv->windowpath = NULL;
 }
 
-/**
- * Start the X server and wait until it's ready to accept connections.
- *
- * @param srv
- *   The struct nodm_xserver with X server information. argv and name are expected to
- *   be filled, pid is filled.
- * @param timeout_sec
- *   Timeout in seconds after which if the X server is not ready, we give up
- *   and return an error.
- * @return
- *   Exit status as described by the E_* constants
- */
-static int xserver_start(struct nodm_xserver* srv, unsigned timeout_sec)
+int nodm_xserver_start(struct nodm_xserver* srv)
 {
     // Function return code
     int return_code = E_SUCCESS;
@@ -155,7 +143,7 @@ static int xserver_start(struct nodm_xserver* srv, unsigned timeout_sec)
     }
 
     // Wait for SIGUSR1, for the server to die or for a timeout
-    struct timespec timeout = { .tv_sec = timeout_sec, .tv_nsec = 0 };
+    struct timespec timeout = { .tv_sec = srv->conf_timeout, .tv_nsec = 0 };
     while (!server_started)
     {
         // Check if the server has died
@@ -195,7 +183,7 @@ static int xserver_start(struct nodm_xserver* srv, unsigned timeout_sec)
             return_code = E_OS_ERROR;
             goto cleanup;
         } else {
-            log_err("X server did not respond after %u seconds", timeout_sec);
+            log_err("X server did not respond after %u seconds", srv->conf_timeout);
             return_code = E_X_SERVER_TIMEOUT;
             goto cleanup;
         }
@@ -215,8 +203,7 @@ cleanup:
     return return_code;
 }
 
-/// Kill the X server
-static int xserver_stop(struct nodm_xserver* srv)
+int nodm_xserver_stop(struct nodm_xserver* srv)
 {
     if (srv->pid > 0)
     {
@@ -249,15 +236,7 @@ static int x_error_handler(Display* dpy, XErrorEvent* e)
 }
 */
 
-/**
- * Connect to the X server
- *
- * Uses srv->name, sets srv->dpy.
- *
- * @return
- *   Exit status as described by the E_* constants
- */
-static int xserver_connect(struct nodm_xserver* srv)
+int nodm_xserver_connect(struct nodm_xserver* srv)
 {
     //XSetErrorHandler(x_error_handler);
 
@@ -274,31 +253,18 @@ static int xserver_connect(struct nodm_xserver* srv)
     return srv->dpy == NULL ? E_X_SERVER_CONNECT : E_SUCCESS;
 }
 
-/**
- * Close connection to the X server
- *
- * Uses srv->dpy, sets it to NULL.
- *
- * @return
- *   Exit status as described by the E_* constants
- */
-static int xserver_disconnect(struct nodm_xserver* srv)
+int nodm_xserver_disconnect(struct nodm_xserver* srv)
 {
     // TODO: get/check pending errors (how?)
-    XCloseDisplay(srv->dpy);
-    srv->dpy = NULL;
+    if (srv->dpy != NULL)
+    {
+        XCloseDisplay(srv->dpy);
+        srv->dpy = NULL;
+    }
     return E_SUCCESS;
 }
 
-/**
- * Get the WINDOWPATH value for the server
- *
- * Uses srv->dpy, sets srv->windowpath
- *
- * @return
- *   Exit status as described by the E_* constants
- */
-static int xserver_read_window_path(struct nodm_xserver* srv)
+int nodm_xserver_read_window_path(struct nodm_xserver* srv)
 {
     /* setting WINDOWPATH for clients */
     Atom prop;
@@ -370,41 +336,6 @@ static int xserver_read_window_path(struct nodm_xserver* srv)
     srv->windowpath = newwindowpath;
 
     return E_SUCCESS;
-}
-
-int nodm_xserver_start(struct nodm_xserver* srv)
-{
-    int return_code = E_SUCCESS;
-
-    return_code = xserver_start(srv, srv->conf_timeout);
-    if (return_code != E_SUCCESS)
-        goto cleanup;
-
-    return_code = xserver_connect(srv);
-    if (return_code != E_SUCCESS)
-        goto cleanup;
-
-    return_code = xserver_read_window_path(srv);
-    if (return_code != E_SUCCESS)
-        goto cleanup;
-
-cleanup:
-    if (return_code != E_SUCCESS)
-        nodm_xserver_stop(srv);
-    return return_code;
-}
-
-int nodm_xserver_stop(struct nodm_xserver* srv)
-{
-    int res1 = E_SUCCESS, res2 = E_SUCCESS;
-
-    if (srv->dpy != NULL)
-        res1 = xserver_disconnect(srv);
-    if (srv->pid != -1)
-        res2 = xserver_stop(srv);
-
-    if (res1 != E_SUCCESS) return res1;
-    return res2;
 }
 
 void nodm_xserver_dump_status(struct nodm_xserver* srv)

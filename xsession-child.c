@@ -300,6 +300,16 @@ static void shutdown_pam(struct nodm_xsession_child* s)
 
 int nodm_xsession_child_common_env(struct nodm_xsession_child* s)
 {
+    int return_code = E_SUCCESS;
+
+    // Read the WINDOWPATH value from the X server
+    return_code = nodm_xserver_connect(s->srv);
+    if (return_code != E_SUCCESS) goto cleanup;
+    return_code = nodm_xserver_read_window_path(s->srv);
+    if (return_code != E_SUCCESS) goto cleanup;
+    return_code = nodm_xserver_disconnect(s->srv);
+    if (return_code != E_SUCCESS) goto cleanup;
+
     // Setup environment
     setenv("HOME", s->pwent.pw_dir, 1);
     setenv("USER", s->pwent.pw_name, 1);
@@ -327,7 +337,10 @@ int nodm_xsession_child_common_env(struct nodm_xsession_child* s)
             cleanup_xse(0, s->pwent.pw_dir);
     }
 
-    return E_SUCCESS;
+cleanup:
+    if (s->srv->dpy != NULL)
+        nodm_xserver_disconnect(s->srv);
+    return return_code;
 }
 
 int nodm_xsession_child(struct nodm_xsession_child* s)

@@ -47,7 +47,15 @@ struct nodm_xserver
  */
 void nodm_xserver_init(struct nodm_xserver* srv);
 
-/// Start the X server
+/**
+ * Start the X server and wait until it is ready to accept connections.
+ *
+ * @param srv
+ *   The struct nodm_xserver with X server information. argv and name are expected to
+ *   be filled, pid is filled.
+ * @return
+ *   Exit status as described by the E_* constants
+ */
 int nodm_xserver_start(struct nodm_xserver* srv);
 
 /// Stop the X server
@@ -55,5 +63,35 @@ int nodm_xserver_stop(struct nodm_xserver* srv);
 
 /// Dump all internal status to stderr
 void nodm_xserver_dump_status(struct nodm_xserver* srv);
+
+/**
+ * Connect to the X server
+ *
+ * Uses srv->name, sets srv->dpy.
+ *
+ * @return
+ *   Exit status as described by the E_* constants
+ */
+int nodm_xserver_connect(struct nodm_xserver* srv);
+
+/**
+ * Close connection to the X server
+ *
+ * Uses srv->dpy, sets it to NULL.
+ *
+ * @return
+ *   Exit status as described by the E_* constants
+ */
+int nodm_xserver_disconnect(struct nodm_xserver* srv);
+
+/**
+ * Get the WINDOWPATH value for the server
+ *
+ * Uses srv->dpy, sets srv->windowpath
+ *
+ * @return
+ *   Exit status as described by the E_* constants
+ */
+int nodm_xserver_read_window_path(struct nodm_xserver* srv);
 
 #endif

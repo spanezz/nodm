@@ -30,7 +30,7 @@ struct nodm_xserver;
 struct nodm_xsession_child
 {
     /// X server we connect to
-    const struct nodm_xserver* srv;
+    struct nodm_xserver* srv;
 
     /// If set to true, perform ~/.xsession-errors cleanup
     bool conf_cleanup_xse;

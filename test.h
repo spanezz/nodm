@@ -37,6 +37,9 @@ void test_ok() __attribute__((noreturn));
 /// Ensure that two strings are the same
 void ensure_equals(const char* a, const char* b);
 
+/// Ensure that two strings are different
+void ensure_not_equals(const char* a, const char* b);
+
 /// Ensure that two integers are the same
 void ensure_equali(int a, int b);
 
