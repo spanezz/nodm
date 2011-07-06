@@ -1,9 +1,5 @@
 nodm (0.7-2) UNRELEASED; urgency=low
 
-  [ Joachim Breitner ]
-  * Included upstart job (Closes: #602511). Thanks to Luigi Capriotti for
-    providing it.
-
   [ Marco Amadori ]
   * Update Standards-Version to 3.9.1 (no changes required).
   * Check if plymouth is available before using it.
