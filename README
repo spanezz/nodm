@@ -20,11 +20,19 @@ of least surprise.  This is what is offered:
 
  - Automatic login with a fixed user, doing all that needs to be done like
    setting up the session via PAM, updating lastlog, logging to syslog.
- - X is started via /usr/bin/xinit and a standard X session script (by default,
-   /etc/X11/Xsession).
- - The session is restarted when it exits.
+ - nodm performs VT allocation, looking for a free virtual terminal in which to
+   run X and keeping it allocated across X restarts.
+ - X is started (by default, /usr/bin/X)
+ - once the X esrver is ready to accept connections, the X session is set up:
+    - the DISPLAY and WINDOWPATH environment variables are set
+    - the session is wrapped in a PAM session, which sets up the user
+      environment
+    - ~/.xsession-error is truncated if it exists
+ - The session script is run (by default, /etc/X11/Xsession) using "sh -l"
+ - If the X server or the X session exit, the other is killed and then both are
+   restarted.
  - If a session exits too soon, nodm will wait a bit before restarting.  The
-   waiting time go as follow:
+   waiting times go as follow:
     - The first time the session exits too soon, restart immediately
     - The second and third time, wait 30 seconds
     - All remaining times, wait 1 minute.
@@ -44,41 +52,35 @@ NODM_USER
   Controls the user that is used to automatically log in.
 
 NODM_X_OPTIONS
-  Options to pass to the X server (for example: "vt7 -nolisten tcp")
+  X server command line (for example: "vt7 -nolisten tcp").
+
+  It is expanded using wordexp, with tilde expansion, variable substitution,
+  arithmetic expansion, wildcard expansion and quote removal, but no command
+  substitution. If command substitution is needed, please get in touch
+  providing a real-life use case for it.
+
+  If the first optiom starts with '/' or '.', it is used as the X server, else
+  "X" is used as the server.
+
+  If the second option (or the first if the first was not recognised as a path
+  to the X server) looks like ":<NUMBER>", it is used as the display name, else
+  ":0" is used.
+
+  If the command line contains a "vt<N>" virtual terminal indicator, automatic
+  VT allocation is switched off. Otherwise, the appropriate vt<N> option is
+  appended to the X command line according to the virtual terminal that has
+  been allocated.
 
 NODM_MIN_SESSION_TIME
   Minimum time (in seconds) that a session should last in order for nodm to
-  decide that it has not quit too soon.  If an X session will run for less than
-  this time, nodm will wait an increasing bit of time before restarting it
+  decide that it has not quit too soon. If an X session runs for less than
+  this time, nodm will wait an increasing amount of time before restarting it
   (default: 60).
 
-NODM_XINIT
-  Path to the xinit program (default: /usr/bin/xinit)
-
 NODM_XSESSION
-  Path to the X session script (default: /etc/X11/Xsession)
+  X session command (default: /etc/X11/Xsession). It is run using the shell, so
+  it can be any shell command.
 
-
- * Implementation details
-
-You probably do not need to read this section, unless you have found a problem
-and want to know what nodm is doing in order to debug it.
-
-First thing, the X server must be started by root, or otherwise most X setups
-will refuse a normal user to run an X server without being logged in.  This
-means that nodm cannot perform the log in before starting the X server, and
-must do it at the beginning of the X session.
-
-Because of this, nodm passes itself to xinit as the X session script.  It will
-then set the NODM_RUN_SESSION environment variable so that when xinit will run
-nodm again, it will know that it has to set up the session.
-
-This means that there are two instances of nodm running: one is the monitor
-process, that starts xinit and restarts it when it exits, and the other is the
-session process, that performs the session set up at the beginning of the
-session and tear down at the end.
-
-To set up the session, nodm does all that is required: logging, PAM, changing
-user ID, setting up groups and so on.  In the end, all the known NODM_*
-variables are cleared from the environment and Xsession is run.
-
+NODM_XINIT
+  Was used by older versions of nodm as the path to the xinit program, but it
+  is now ignored.

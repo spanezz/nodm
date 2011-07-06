@@ -1,3 +1,4 @@
+/autom4te.cache/
 /Makefile.in
 /Makefile
 /config
@@ -14,3 +15,10 @@ debian/nodm.prerm.debhelper
 debian/nodm.substvars
 debian/nodm/
 /nodm
+.deps
+.libs
+*.swp
+*.o
+/test-internals
+/test-xstart
+/test-xsession
