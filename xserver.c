@@ -201,6 +201,8 @@ static int xserver_start(struct nodm_xserver* srv, unsigned timeout_sec)
         }
     }
 
+    log_verbose("X is ready to accept connections");
+
     // Set the DISPLAY env var
     if (setenv("DISPLAY", srv->name, 1) == -1)
     {
@@ -239,6 +241,14 @@ static int xopendisplay_error_handler(Display* dpy)
     exit(E_XLIB_ERROR);
 }
 
+/*
+static int x_error_handler(Display* dpy, XErrorEvent* e)
+{
+    log_err("X error");
+    return 0;
+}
+*/
+
 /**
  * Connect to the X server
  *
@@ -249,11 +259,16 @@ static int xopendisplay_error_handler(Display* dpy)
  */
 static int xserver_connect(struct nodm_xserver* srv)
 {
+    //XSetErrorHandler(x_error_handler);
+
     XSetIOErrorHandler(xopendisplay_error_handler);
     srv->dpy = XOpenDisplay(srv->name);
     XSetIOErrorHandler((int (*)(Display *))0);
 
-    // Remove close-on-exec and register to close at the next fork, why? We'll find
+    if (srv->dpy == NULL)
+        log_err("could not connect to X server on \"%s\"", srv->name);
+
+    // from xdm: remove close-on-exec and register to close at the next fork, why? We'll find out
     // RegisterCloseOnFork (ConnectionNumber (d->dpy));
     // fcntl (ConnectionNumber (d->dpy), F_SETFD, 0);
     return srv->dpy == NULL ? E_X_SERVER_CONNECT : E_SUCCESS;
@@ -392,3 +407,15 @@ int nodm_xserver_stop(struct nodm_xserver* srv)
     return res2;
 }
 
+void nodm_xserver_dump_status(struct nodm_xserver* srv)
+{
+    fprintf(stderr, "xserver start timeout: %d\n", srv->conf_timeout);
+    fprintf(stderr, "xserver command line:");
+    for (const char** s = srv->argv; *s; ++s)
+        fprintf(stderr, " %s", *s);
+    fputc('\n', stderr);
+    fprintf(stderr, "xserver name: %s\n", srv->name);
+    fprintf(stderr, "xserver window path: %s\n", srv->windowpath);
+    fprintf(stderr, "xserver PID: %d\n", (int)srv->pid);
+    fprintf(stderr, "xserver connected: %s\n", (srv->dpy != NULL) ? "yes" : "no");
+}

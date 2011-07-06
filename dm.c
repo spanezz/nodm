@@ -138,9 +138,17 @@ int nodm_display_manager_parse_xcmdline(struct nodm_display_manager* s, const ch
     // Server name
     if (in_arg < toks->we_wordc &&
            toks->we_wordv[in_arg][0] == ':' && isdigit(toks->we_wordv[in_arg][1]))
-        argv[argc++] = toks->we_wordv[in_arg++];
+    {
+        argv[argc] = toks->we_wordv[in_arg++];
+        s->srv.name = argv[argc];
+        ++argc;
+    }
     else
-        argv[argc++] = ":0";
+    {
+        argv[argc] = ":0";
+        s->srv.name = argv[argc];
+        ++argc;
+    }
 
     // Copy other args
     while (in_arg < toks->we_wordc)
@@ -163,4 +171,10 @@ cleanup:
         free(argv);
 
     return return_code;
+}
+
+void nodm_display_manager_dump_status(struct nodm_display_manager* dm)
+{
+    nodm_xserver_dump_status(&dm->srv);
+    nodm_xsession_dump_status(&dm->session);
 }

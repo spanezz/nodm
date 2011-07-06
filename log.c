@@ -31,6 +31,7 @@ void log_config_init(struct log_config* conf)
     conf->log_to_syslog = true;
     conf->log_to_stderr = true;
     conf->info_to_stderr = false;
+    conf->verbose = false;
 }
 
 void log_start(const struct log_config* conf)
@@ -45,6 +46,29 @@ void log_end()
 {
     if (config->log_to_syslog)
         closelog();
+}
+
+void log_verbose(const char* fmt, ...)
+{
+    if (!config->verbose) return;
+
+    va_list ap;
+
+    if (config->info_to_stderr)
+    {
+        fprintf(stderr, "%s:", config->program_name);
+        va_start(ap, fmt);
+        vfprintf(stderr, fmt, ap);
+        va_end(ap);
+        fputc('\n', stderr);
+    }
+
+    if (config->log_to_syslog)
+    {
+        va_start(ap, fmt);
+        vsyslog(LOG_WARNING, fmt, ap);
+        va_end(ap);
+    }
 }
 
 void log_info(const char* fmt, ...)

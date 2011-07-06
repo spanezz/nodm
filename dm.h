@@ -64,5 +64,7 @@ int nodm_display_manager_stop(struct nodm_display_manager* dm);
  */
 int nodm_display_manager_parse_xcmdline(struct nodm_display_manager* dm, const char* xcmdline);
 
+/// Dump all internal status to stderr
+void nodm_display_manager_dump_status(struct nodm_display_manager* dm);
 
 #endif

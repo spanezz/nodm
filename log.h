@@ -37,6 +37,9 @@ struct log_config
 
     /// Also log info messages to stderr
     bool info_to_stderr;
+
+    /// Log verbose messages
+    bool verbose;
 };
 
 /**
@@ -61,7 +64,10 @@ void log_start(const struct log_config* conf);
  */
 void log_end();
 
-/// Log a message about the normal progress of things
+/// Log a message about the trivial normal progress of things
+void log_verbose(const char* fmt, ...);
+
+/// Log a message about the relevant normal progress of things
 void log_info(const char* fmt, ...);
 
 /// Log a warning message

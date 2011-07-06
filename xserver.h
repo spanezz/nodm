@@ -53,4 +53,7 @@ int nodm_xserver_start(struct nodm_xserver* srv);
 /// Stop the X server
 int nodm_xserver_stop(struct nodm_xserver* srv);
 
+/// Dump all internal status to stderr
+void nodm_xserver_dump_status(struct nodm_xserver* srv);
+
 #endif

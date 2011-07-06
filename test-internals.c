@@ -28,7 +28,7 @@
 
 int main(int argc, char* argv[])
 {
-    test_start("test-internals");
+    test_start("test-internals", false);
 
     // Test getenv_with_default
     setenv("FOO", "foo", 1);
@@ -43,6 +43,7 @@ int main(int argc, char* argv[])
     ensure_equals(s.srv.argv[0], "/usr/bin/X");
     ensure_equals(s.srv.argv[1], ":0");
     ensure_equals(s.srv.argv[2], NULL);
+    ensure_equals(s.srv.name, ":0");
     nodm_display_manager_cleanup(&s);
 
     nodm_display_manager_init(&s);
@@ -51,6 +52,7 @@ int main(int argc, char* argv[])
     ensure_equals(s.srv.argv[1], ":0");
     ensure_equals(s.srv.argv[2], "foo");
     ensure_equals(s.srv.argv[3], NULL);
+    ensure_equals(s.srv.name, ":0");
     nodm_display_manager_cleanup(&s);
 
     nodm_display_manager_init(&s);
@@ -58,6 +60,7 @@ int main(int argc, char* argv[])
     ensure_equals(s.srv.argv[0], "/usr/bin/Xnest");
     ensure_equals(s.srv.argv[1], ":0");
     ensure_equals(s.srv.argv[2], NULL);
+    ensure_equals(s.srv.name, ":0");
     nodm_display_manager_cleanup(&s);
 
     nodm_display_manager_init(&s);
@@ -65,6 +68,7 @@ int main(int argc, char* argv[])
     ensure_equals(s.srv.argv[0], "/usr/bin/X");
     ensure_equals(s.srv.argv[1], ":1");
     ensure_equals(s.srv.argv[2], NULL);
+    ensure_equals(s.srv.name, ":1");
     nodm_display_manager_cleanup(&s);
 
     nodm_display_manager_init(&s);
@@ -72,6 +76,7 @@ int main(int argc, char* argv[])
     ensure_equals(s.srv.argv[0], "/usr/bin/Xnest");
     ensure_equals(s.srv.argv[1], ":1");
     ensure_equals(s.srv.argv[2], NULL);
+    ensure_equals(s.srv.name, ":1");
     nodm_display_manager_cleanup(&s);
 
     nodm_display_manager_init(&s);
@@ -80,6 +85,7 @@ int main(int argc, char* argv[])
     ensure_equals(s.srv.argv[1], ":0");
     ensure_equals(s.srv.argv[2], "foo");
     ensure_equals(s.srv.argv[3], NULL);
+    ensure_equals(s.srv.name, ":0");
     nodm_display_manager_cleanup(&s);
 
     nodm_display_manager_init(&s);
@@ -88,6 +94,7 @@ int main(int argc, char* argv[])
     ensure_equals(s.srv.argv[1], ":1");
     ensure_equals(s.srv.argv[2], "foo");
     ensure_equals(s.srv.argv[3], NULL);
+    ensure_equals(s.srv.name, ":1");
     nodm_display_manager_cleanup(&s);
 
     nodm_display_manager_init(&s);
@@ -96,6 +103,7 @@ int main(int argc, char* argv[])
     ensure_equals(s.srv.argv[1], ":1");
     ensure_equals(s.srv.argv[2], "foo");
     ensure_equals(s.srv.argv[3], NULL);
+    ensure_equals(s.srv.name, ":1");
     nodm_display_manager_cleanup(&s);
 
     test_ok();

@@ -23,13 +23,14 @@
 #include <string.h>
 #include <stdio.h>
 
-void test_start(const char* testname)
+void test_start(const char* testname, bool verbose)
 {
     static struct log_config cfg;
     cfg.program_name = testname,
     cfg.log_to_syslog = false,
     cfg.log_to_stderr = true,
-    cfg.info_to_stderr = true,
+    cfg.info_to_stderr = verbose,
+    cfg.verbose = verbose,
     log_start(&cfg);
 }
 

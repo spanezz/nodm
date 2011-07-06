@@ -9,12 +9,12 @@ AC_CONFIG_MACRO_DIR([m4])
 dnl AC_GNU_SOURCE
 dnl AM_MAINTAINER_MODE
 
-dnl We use C99
-AC_PROG_CC_C99
-
 dnl Checks for programs.
 AC_PROG_CC
 AC_ISC_POSIX
+
+dnl We use C99
+AC_PROG_CC_C99
 
 dnl Checks for header files.
 AC_HEADER_STDC

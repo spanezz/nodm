@@ -26,7 +26,7 @@
 
 int main(int argc, char* argv[])
 {
-    test_start("test-xstart");
+    test_start("test-xstart", false);
 
     struct nodm_xserver srv;
     nodm_xserver_init(&srv);

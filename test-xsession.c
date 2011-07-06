@@ -32,11 +32,7 @@ int test_session(struct nodm_xsession_child* s)
 
 int main(int argc, char* argv[])
 {
-    test_start("test-xsession");
-
-    //const char* xcmdline = "/usr/bin/Xnest :1";
-    setenv("NODM_SESSION", "/bin/true", 1);
-    setenv("NODM_USER", getenv_with_default("USER", "root"), 1);
+    test_start("test-xsession", false);
 
     struct nodm_display_manager dm;
     nodm_display_manager_init(&dm);
@@ -47,6 +43,8 @@ int main(int argc, char* argv[])
     dm.session.conf_cleanup_xse = false;
     dm.session.conf_run_as[0] = 0;
     dm.session.child_body = test_session;
+
+    //nodm_display_manager_dump_status(&dm);
 
     ensure_succeeds(nodm_display_manager_start(&dm));
 

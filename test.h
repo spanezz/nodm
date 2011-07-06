@@ -23,9 +23,10 @@
 
 #include "log.h"
 #include <stdlib.h>
+#include <stdbool.h>
 
 /// Setup the logging system for a test script
-void test_start(const char* testname);
+void test_start(const char* testname, bool verbose);
 
 /// exit() the program reporting a test failure
 void test_fail() __attribute__((noreturn));

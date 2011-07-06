@@ -62,4 +62,7 @@ int nodm_xsession_start(struct nodm_xsession* s, const struct nodm_xserver* srv)
 /// Stop the X session
 int nodm_xsession_stop(struct nodm_xsession* s);
 
+/// Dump all internal status to stderr
+void nodm_xsession_dump_status(struct nodm_xsession* s);
+
 #endif

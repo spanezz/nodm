@@ -133,3 +133,13 @@ int nodm_xsession_stop(struct nodm_xsession* s)
     s->pid = -1;
     return E_SUCCESS;
 }
+
+void nodm_xsession_dump_status(struct nodm_xsession* s)
+{
+    fprintf(stderr, "xsession command: %s\n", s->conf_session_command);
+    fprintf(stderr, "xsession user: %s\n", s->conf_run_as);
+    fprintf(stderr, "xsession use PAM: %s\n", s->conf_use_pam ? "yes" : "no");
+    fprintf(stderr, "xsession cleanup ~/.xsession-errors: %s\n", s->conf_cleanup_xse ? "yes" : "no");
+    fprintf(stderr, "xsession pid: %d\n", (int)s->pid);
+    fprintf(stderr, "xsession body overridden by test: %s\n", (s->child_body != NULL) ? "yes" : "no");
+}
