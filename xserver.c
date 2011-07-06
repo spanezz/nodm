@@ -234,6 +234,12 @@ static int xserver_stop(struct nodm_xserver* srv)
     // TODO: wait
     srv->pid = -1;
     unsetenv("DISPLAY");
+
+    if (srv->windowpath != NULL)
+    {
+        free(srv->windowpath);
+        srv->windowpath = NULL;
+    }
     return E_SUCCESS;
 }
 

@@ -34,6 +34,7 @@ void nodm_display_manager_init(struct nodm_display_manager* dm)
     nodm_xserver_init(&(dm->srv));
     nodm_xsession_init(&(dm->session));
     dm->_srv_split_args = NULL;
+    dm->_srv_split_argv = NULL;
 }
 
 void nodm_display_manager_cleanup(struct nodm_display_manager* dm)
@@ -45,6 +46,12 @@ void nodm_display_manager_cleanup(struct nodm_display_manager* dm)
         wordfree(we);
         free(we);
         dm->_srv_split_args = NULL;
+    }
+
+    if (dm->_srv_split_argv)
+    {
+        free(dm->_srv_split_argv);
+        dm->_srv_split_argv = NULL;
     }
 }
 
@@ -156,6 +163,7 @@ int nodm_display_manager_parse_xcmdline(struct nodm_display_manager* s, const ch
     argv[argc] = NULL;
 
     s->srv.argv = (const char**)argv;
+    s->_srv_split_argv = argv;
     s->_srv_split_args = toks;
     argv = NULL;
     toks = NULL;

@@ -34,6 +34,7 @@ struct nodm_display_manager
 
 
     /// Storage for split server arguments used by nodm_x_cmdline_split
+    char** _srv_split_argv;
     void* _srv_split_args;
 };
 

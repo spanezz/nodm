@@ -54,7 +54,16 @@ void test_bad_x_server()
     dm.session.conf_cleanup_xse = false;
     dm.session.conf_run_as[0] = 0;
     dm.session.child_body = test_session;
+
     ensure_equali(nodm_display_manager_start(&dm), E_X_SERVER_DIED);
+
+    // If xserver died before being ready for connections, it should reflect on
+    // the tracked pid
+    ensure_equali(dm.srv.pid, -1);
+
+    // Session must not have been started
+    ensure_equali(dm.session.pid, -1);
+
     ensure_succeeds(nodm_display_manager_stop(&dm));
     nodm_display_manager_cleanup(&dm);
 }
