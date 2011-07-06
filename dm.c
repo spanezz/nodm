@@ -28,6 +28,7 @@
 #include <sys/wait.h>
 #include <errno.h>
 #include <stdio.h>
+#include <unistd.h>
 
 
 void nodm_display_manager_init(struct nodm_display_manager* dm)
@@ -35,12 +36,15 @@ void nodm_display_manager_init(struct nodm_display_manager* dm)
     nodm_xserver_init(&dm->srv);
     nodm_xsession_init(&dm->session);
     nodm_vt_init(&dm->vt);
+    dm->conf_minimum_session_time = atoi(getenv_with_default("NODM_MIN_SESSION_TIME", "60"));
     dm->_srv_split_args = NULL;
     dm->_srv_split_argv = NULL;
 }
 
 void nodm_display_manager_cleanup(struct nodm_display_manager* dm)
 {
+    nodm_vt_stop(&dm->vt);
+
     // Deallocate parsed arguments, if used
     if (dm->_srv_split_args)
     {
@@ -73,7 +77,17 @@ int nodm_display_manager_start(struct nodm_display_manager* dm)
         *s = NULL;
     }
 
-    res = nodm_xserver_start(&dm->srv);
+    dm->last_session_start = time(NULL);
+
+    res = nodm_display_manager_restart(dm);
+    if (res != E_SUCCESS) return res;
+
+    return E_SUCCESS;
+}
+
+int nodm_display_manager_restart(struct nodm_display_manager* dm)
+{
+    int res = nodm_xserver_start(&dm->srv);
     if (res != E_SUCCESS) return res;
 
     res = nodm_xsession_start(&dm->session, &dm->srv);
@@ -89,8 +103,6 @@ int nodm_display_manager_stop(struct nodm_display_manager* dm)
 
     res = nodm_xserver_stop(&dm->srv);
     if (res != E_SUCCESS) return res;
-
-    nodm_vt_stop(&dm->vt);
 
     return E_SUCCESS;
 }
@@ -213,4 +225,51 @@ void nodm_display_manager_dump_status(struct nodm_display_manager* dm)
 {
     nodm_xserver_dump_status(&dm->srv);
     nodm_xsession_dump_status(&dm->session);
+}
+
+int nodm_display_manager_wait_restart_loop(struct nodm_display_manager* dm)
+{
+    static int retry_times[] = { 0, 0, 30, 30, 60, 60, -1 };
+    int restart_count = 0;
+    int res;
+
+    while (1)
+    {
+        int sstatus;
+        res = nodm_display_manager_wait(dm, &sstatus);
+        time_t end = time(NULL);
+        nodm_display_manager_stop(dm);
+
+        switch (res)
+        {
+            case E_X_SERVER_DIED:
+                break;
+            case E_SESSION_DIED:
+                log_info("X session quit with status %d", sstatus);
+                break;
+            default:
+                return res;
+        }
+
+        /* Check if the session was too short */
+        if (end - dm->last_session_start < dm->conf_minimum_session_time)
+        {
+            if (retry_times[restart_count+1] != -1)
+                ++restart_count;
+        }
+        else
+            restart_count = 0;
+
+        /* Sleep a bit if the session was too short */
+        if (retry_times[restart_count] > 0)
+        {
+            log_warn("session lasted less than %d seconds: sleeping %d seconds before restarting it",
+                    dm->conf_minimum_session_time, retry_times[restart_count]);
+            sleep(retry_times[restart_count]);
+        }
+
+        log_info("restarting session");
+        res = nodm_display_manager_restart(dm);
+        if (res != E_SUCCESS) return res;
+    }
 }

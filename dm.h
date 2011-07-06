@@ -24,6 +24,7 @@
 #include "xserver.h"
 #include "xsession.h"
 #include "vt.h"
+#include <time.h>
 
 struct nodm_display_manager
 {
@@ -35,6 +36,15 @@ struct nodm_display_manager
 
     /// VT allocation
     struct nodm_vt vt;
+
+    /** 
+     * The minimum time (in seconds) that a session should last to be
+     * considered successful
+     */
+    int conf_minimum_session_time;
+
+    /// Time the last session started
+    time_t last_session_start;
 
     /// Storage for split server arguments used by nodm_x_cmdline_split
     char** _srv_split_argv;
@@ -53,13 +63,24 @@ void nodm_display_manager_cleanup(struct nodm_display_manager* dm);
 /// Start X and the X session
 int nodm_display_manager_start(struct nodm_display_manager* dm);
 
+/// Restart X and the X session after they died
+int nodm_display_manager_restart(struct nodm_display_manager* dm);
+
 /// Wait for X or the X session to end
 int nodm_display_manager_wait(struct nodm_display_manager* dm, int* session_status);
 
-// TODO: int nodm_display_manager_restart(struct nodm_display_manager* dm);
-
 /// Stop X and the X session
 int nodm_display_manager_stop(struct nodm_display_manager* dm);
+
+/**
+ * nodm wait/restart loop.
+ *
+ * Wait for the X server or session to terminate and restart them.
+ *
+ * If the session was very short-lived, it wants for an incremental amount of
+ * time before restarting it.
+ */
+int nodm_display_manager_wait_restart_loop(struct nodm_display_manager* dm);
 
 /**
  * Split xcmdline using wordexp shell-like expansion and set dm->srv.argv.

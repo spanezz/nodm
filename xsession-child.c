@@ -327,7 +327,6 @@ int nodm_xsession_child_common_env(struct nodm_xsession_child* s)
     unsetenv("NODM_XSESSION");
     unsetenv("NODM_X_OPTIONS");
     unsetenv("NODM_MIN_SESSION_TIME");
-    unsetenv("NODM_RUN_SESSION");
 
     // Move to home directory
     if (chdir(s->pwent.pw_dir) == 0)
