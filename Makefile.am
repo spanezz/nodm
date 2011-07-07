@@ -32,6 +32,6 @@ test_xsession_SOURCES = $(testlibsources) test-xsession.c
 
 test_internals_SOURCES = $(testlibsources) test-internals.c
 
-EXTRA_DIST = test_nodm TODO nodm-man-extras autogen.sh
+EXTRA_DIST = test_nodm nodm-man-extras autogen.sh
 
 CLEANFILES = nodm.8
