@@ -1,8 +1,7 @@
-nodm (8.0-1) UNRELEASED; urgency=low
+nodm (8.0-1) unstable; urgency=low
 
   [ Marco Amadori ]
   * Update Standards-Version to 3.9.1 (no changes required).
-  * Check if plymouth is available before using it.
 
   [ Enrico Zini ]
   * Redesigned like a proper display manager.
