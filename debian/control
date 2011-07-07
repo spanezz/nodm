@@ -3,7 +3,7 @@ Section: misc
 Priority: extra
 Maintainer: Debian FreeSmartphone.Org Team <pkg-fso-maint@lists.alioth.debian.org>
 Uploaders: Joachim Breitner <nomeata@debian.org>, Enrico Zini <enrico@debian.org>
-Build-Depends: debhelper (>= 7.0.50~), po-debconf, libx11-dev, libpam0g-dev, help2man
+Build-Depends: debhelper (>= 7.0.50~), po-debconf, pkg-config, libx11-dev, libpam0g-dev, help2man
 Standards-Version: 3.9.1
 Vcs-Git: http://git.debian.org/git/pkg-fso/nodm.git
 Vcs-Browser: http://git.debian.org/?p=pkg-fso/nodm.git;a=summary
