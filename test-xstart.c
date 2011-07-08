@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
     struct nodm_xserver srv;
     nodm_xserver_init(&srv);
 
-    const char* server_argv[] = { "/usr/bin/Xnest", ":1", "-geometry", "1x1+0+0", NULL };
+    const char* server_argv[] = { "/usr/bin/X", ":1", NULL };
     srv.argv = server_argv;
     srv.name = ":1";
 

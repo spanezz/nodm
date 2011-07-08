@@ -67,22 +67,12 @@ int test_session_x_killer(struct nodm_xsession_child* s)
     return E_SUCCESS;
 }
 
-void setup_dm(struct nodm_display_manager* dm, const char* xcmdline)
-{
-    nodm_display_manager_init(dm);
-    ensure_succeeds(nodm_display_manager_parse_xcmdline(dm, xcmdline));
-    dm->session.conf_use_pam = false;
-    dm->session.conf_cleanup_xse = false;
-    dm->session.conf_run_as[0] = 0;
-    dm->vt.conf_initial_vt = -1;
-}
-
 // X server starts, X session quits with success
 void test_trivial_session()
 {
     log_verbose("test_trivial_session");
     struct nodm_display_manager dm;
-    setup_dm(&dm, "/usr/bin/Xnest :1 -geometry 1x1+0+0");
+    test_setup_dm(&dm, NULL);
     dm.session.child_body = test_session;
 
     ensure_succeeds(nodm_display_manager_start(&dm));
@@ -98,7 +88,7 @@ void test_bad_x_server()
 {
     log_verbose("test_bad_x_server");
     struct nodm_display_manager dm;
-    setup_dm(&dm, "/bin/false :1 -geometry 1x1+0+0");
+    test_setup_dm(&dm, "/bin/false");
     dm.session.child_body = test_session;
 
     ensure_equali(nodm_display_manager_start(&dm), E_X_SERVER_DIED);
@@ -119,7 +109,7 @@ void test_failing_x_session()
 {
     log_verbose("test_failing_x_session");
     struct nodm_display_manager dm;
-    setup_dm(&dm, "/usr/bin/Xnest :1 -geometry 1x1+0+0");
+    test_setup_dm(&dm, NULL);
     dm.session.child_body = test_session_bad;
 
     ensure_succeeds(nodm_display_manager_start(&dm));
@@ -138,7 +128,7 @@ void test_dying_x_server()
 {
     log_verbose("test_dying_x_server");
     struct nodm_display_manager dm;
-    setup_dm(&dm, "/usr/bin/Xnest :1 -geometry 1x1+0+0");
+    test_setup_dm(&dm, NULL);
     dm.session.child_body = test_session_x_killer;
 
     ensure_succeeds(nodm_display_manager_start(&dm));

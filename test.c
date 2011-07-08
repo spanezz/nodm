@@ -20,8 +20,37 @@
 
 #include "test.h"
 #include "common.h"
+#include "dm.h"
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <stdlib.h>
+
+void test_setup_dm(struct nodm_display_manager* dm, const char* xcmdline)
+{
+    bool run_nested = getenv("DISPLAY") != NULL;
+    bool is_root = getuid() == 0 || getenv("DISPLAY") != NULL;
+
+    nodm_display_manager_init(dm);
+    if (xcmdline == NULL)
+    {
+        if (run_nested)
+            xcmdline = "/usr/bin/Xnest :1 -geometry 1x1+0+0";
+        else
+            xcmdline = "";
+    }
+    ensure_succeeds(nodm_display_manager_parse_xcmdline(dm, xcmdline));
+    if (is_root)
+        strcpy(dm->session.conf_run_as, "root");
+    else
+    {
+        dm->session.conf_use_pam = false;
+        dm->session.conf_cleanup_xse = false;
+        dm->session.conf_run_as[0] = 0;
+        dm->vt.conf_initial_vt = -1;
+    }
+}
 
 void test_start(const char* testname, bool verbose)
 {

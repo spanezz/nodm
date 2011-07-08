@@ -25,6 +25,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+struct nodm_display_manager;
+
 /// Setup the logging system for a test script
 void test_start(const char* testname, bool verbose);
 
@@ -33,6 +35,17 @@ void test_fail() __attribute__((noreturn));
 
 /// exit() the program reporting a success
 void test_ok() __attribute__((noreturn));
+
+/**
+ * Setup DM for tests
+ *
+ * If running as root and no $DISPLAY is set, tries to start X, else tries to
+ * start xnest.
+ *
+ * @param xcmdline
+ *   Can be NULL for the appropriate default.
+ */
+void test_setup_dm(struct nodm_display_manager* dm, const char* xcmdline);
 
 /// Ensure that two strings are the same
 void ensure_equals(const char* a, const char* b);
