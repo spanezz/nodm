@@ -229,6 +229,7 @@ cleanup:
 int nodm_display_manager_parse_xcmdline(struct nodm_display_manager* s, const char* xcmdline)
 {
     int return_code = E_SUCCESS;
+    char **argv = NULL;
 
     // tokenize xoptions
     wordexp_t* toks = (wordexp_t*)calloc(1, sizeof(wordexp_t));
@@ -248,7 +249,7 @@ int nodm_display_manager_parse_xcmdline(struct nodm_display_manager* s, const ch
     unsigned argc = 0;
     // +1 for the X server pathname, +1 for the display name,
     // +1 for the VT number, +1 for the trailing NULL
-    char **argv = (char**)malloc((toks->we_wordc + 4) * sizeof(char*));
+    argv =(char**)malloc((toks->we_wordc + 4) * sizeof(char*));
     if (argv == NULL)
     {
         return_code = E_OS_ERROR;
