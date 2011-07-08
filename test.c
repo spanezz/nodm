@@ -30,7 +30,7 @@
 void test_setup_dm(struct nodm_display_manager* dm, const char* xcmdline)
 {
     bool run_nested = getenv("DISPLAY") != NULL;
-    bool is_root = getuid() == 0 || getenv("DISPLAY") != NULL;
+    bool is_root = getuid() == 0;
 
     nodm_display_manager_init(dm);
     if (xcmdline == NULL)
