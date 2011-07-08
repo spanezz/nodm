@@ -73,7 +73,7 @@ void log_start(const struct log_config* conf);
 void log_end();
 
 /// Log a message about the trivial normal progress of things
-void log_verbose(const char* fmt, ...);
+void log_verb(const char* fmt, ...);
 
 /// Log a message about the relevant normal progress of things
 void log_info(const char* fmt, ...);

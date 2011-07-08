@@ -68,7 +68,7 @@ static void log_common(int prio, const char* fmt, va_list ap)
     }
 }
 
-void log_verbose(const char* fmt, ...)
+void log_verb(const char* fmt, ...)
 {
     if (!config->log_level < NODM_LL_VERB) return;
 

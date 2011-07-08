@@ -217,7 +217,7 @@ int nodm_xserver_start(struct nodm_xserver* srv)
         }
     }
 
-    log_verbose("X is ready to accept connections");
+    log_verb("X is ready to accept connections");
 
 cleanup:
     // Restore signal mask

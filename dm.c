@@ -86,7 +86,9 @@ int nodm_display_manager_start(struct nodm_display_manager* dm)
         while (*s) ++s;
         *s++ = dm->_vtarg;
         *s = NULL;
-    }
+        log_verb("allocated VT %d", dm->vt.num);
+    } else
+        log_verb("skipped VT allocation");
 
     // Block all signals
     sigset_t blockmask;
@@ -113,9 +115,11 @@ int nodm_display_manager_restart(struct nodm_display_manager* dm)
 
     int res = nodm_xserver_start(&dm->srv);
     if (res != E_SUCCESS) return res;
+    log_verb("X server is ready for connections");
 
     res = nodm_xsession_start(&dm->session, &dm->srv);
     if (res != E_SUCCESS) return res;
+    log_verb("X session has started");
 
     return E_SUCCESS;
 }
@@ -352,7 +356,7 @@ static int interruptible_sleep(int seconds)
 
 int nodm_display_manager_wait_restart_loop(struct nodm_display_manager* dm)
 {
-    static int retry_times[] = { 0, 0, 30, 30, 60, 60, -1 };
+    static int retry_times[] = { -1, 0, 0, 30, 30, 60, 60, -1 };
     int restart_count = 0;
     int res;
 
@@ -372,6 +376,8 @@ int nodm_display_manager_wait_restart_loop(struct nodm_display_manager* dm)
             default:
                 return res;
         }
+
+        return res;
 
         /* Check if the session was too short */
         if (end - dm->last_session_start < dm->conf_minimum_session_time)
