@@ -170,7 +170,6 @@ static void shutdown_quit_notification(const sigset_t* origset)
         log_err("sigprocmask error: %m");
 }
 
-
 int nodm_display_manager_wait(struct nodm_display_manager* dm, int* session_status)
 {
     int res = E_SUCCESS;
@@ -210,12 +209,12 @@ int nodm_display_manager_wait(struct nodm_display_manager* dm, int* session_stat
         if (child == dm->srv.pid)
         {
             // Server died
-            log_warn("X server died with status %d", status);
+            nodm_xserver_report_exit(&dm->srv, status);
             res = E_X_SERVER_DIED;
             goto cleanup;
         } else if (child == dm->session.pid) {
             // Session died
-            log_warn("X session died with status %d", status);
+            nodm_xsession_report_exit(&dm->session, status);
             *session_status = status;
             res = E_SESSION_DIED;
             goto cleanup;

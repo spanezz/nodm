@@ -96,4 +96,7 @@ int nodm_xserver_disconnect(struct nodm_xserver* srv);
  */
 int nodm_xserver_read_window_path(struct nodm_xserver* srv);
 
+/// Report that the X session has quit
+void nodm_xserver_report_exit(struct nodm_xserver* s, int status);
+
 #endif

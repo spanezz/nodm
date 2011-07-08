@@ -192,14 +192,7 @@ int nodm_xserver_start(struct nodm_xserver* srv)
         }
         if (res == srv->pid)
         {
-            if (WIFEXITED(status))
-                log_err("X server exited with status=%d", WEXITSTATUS(status));
-            else if (WIFSIGNALED(status))
-                log_err("X server killed by signal %d", WTERMSIG(status));
-            else 
-                // This should never happen, but it's better to have a message
-                // than to fail silently through an open code path
-                log_err("X server quit, waitpid gave unrecognised status=%d", status);
+            nodm_xserver_report_exit(srv, status);
             srv->pid = -1;
             return_code = E_X_SERVER_DIED;
             goto cleanup;
@@ -392,4 +385,14 @@ void nodm_xserver_dump_status(struct nodm_xserver* srv)
     fprintf(stderr, "xserver window path: %s\n", srv->windowpath);
     fprintf(stderr, "xserver PID: %d\n", (int)srv->pid);
     fprintf(stderr, "xserver connected: %s\n", (srv->dpy != NULL) ? "yes" : "no");
+}
+
+void nodm_xserver_report_exit(struct nodm_xserver* s, int status)
+{
+    if (WIFEXITED(status))
+        log_warn("X session quit with status %d", WEXITSTATUS(status));
+    else if (WIFSIGNALED(status))
+        log_err("X session was killed with signal %d", WTERMSIG(status));
+    else
+        log_err("X session terminated with unknown status %d", status);
 }

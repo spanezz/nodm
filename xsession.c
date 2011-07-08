@@ -149,3 +149,13 @@ void nodm_xsession_dump_status(struct nodm_xsession* s)
     fprintf(stderr, "xsession pid: %d\n", (int)s->pid);
     fprintf(stderr, "xsession body overridden by test: %s\n", (s->child_body != NULL) ? "yes" : "no");
 }
+
+void nodm_xsession_report_exit(struct nodm_xsession* s, int status)
+{
+    if (WIFEXITED(status))
+        log_warn("X session quit with status %d", WEXITSTATUS(status));
+    else if (WIFSIGNALED(status))
+        log_warn("X session was killed with signal %d", WTERMSIG(status));
+    else
+        log_warn("X session terminated with unknown status %d", status);
+}

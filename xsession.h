@@ -68,4 +68,7 @@ int nodm_xsession_stop(struct nodm_xsession* s);
 /// Dump all internal status to stderr
 void nodm_xsession_dump_status(struct nodm_xsession* s);
 
+/// Report that the X session has quit
+void nodm_xsession_report_exit(struct nodm_xsession* s, int status);
+
 #endif
