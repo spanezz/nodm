@@ -23,6 +23,8 @@
 #include "test.h"
 #include "common.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 int main(int argc, char* argv[])
 {
@@ -31,7 +33,11 @@ int main(int argc, char* argv[])
     struct nodm_xserver srv;
     nodm_xserver_init(&srv);
 
-    const char* server_argv[] = { "/usr/bin/X", ":1", NULL };
+    const char* server_argv[] = {
+        getenv("DISPLAY") == NULL ? "/usr/bin/X" : "/usr/bin/Xnest",
+        ":1",
+        NULL
+    };
     srv.argv = server_argv;
     srv.name = ":1";
 
