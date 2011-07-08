@@ -192,6 +192,7 @@ int nodm_display_manager_wait(struct nodm_display_manager* dm, int* session_stat
             {
                 if (quit_signal_caught)
                 {
+                    log_info("shutdown signal received");
                     res = E_USER_QUIT;
                     goto cleanup;
                 }
