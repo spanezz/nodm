@@ -58,8 +58,8 @@ void test_start(const char* testname, bool verbose)
     cfg.program_name = testname,
     cfg.log_to_syslog = false,
     cfg.log_to_stderr = true,
-    cfg.info_to_stderr = verbose,
-    cfg.verbose = verbose,
+    cfg.log_level = NODM_LL_INFO;
+    cfg.log_level = NODM_LL_VERB;
     log_start(&cfg);
 }
 

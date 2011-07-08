@@ -30,8 +30,7 @@ void log_config_init(struct log_config* conf)
     conf->program_name = 0;
     conf->log_to_syslog = true;
     conf->log_to_stderr = true;
-    conf->info_to_stderr = false;
-    conf->verbose = false;
+    conf->log_level = LOG_INFO;
 }
 
 void log_start(const struct log_config* conf)
@@ -48,88 +47,63 @@ void log_end()
         closelog();
 }
 
-void log_verbose(const char* fmt, ...)
+static void log_common(int prio, const char* fmt, va_list ap)
 {
-    if (!config->verbose) return;
-
-    va_list ap;
-
-    if (config->info_to_stderr)
+    if (config->log_to_stderr)
     {
+        va_list loc;
+        va_copy(loc, ap);
         fprintf(stderr, "%s:", config->program_name);
-        va_start(ap, fmt);
-        vfprintf(stderr, fmt, ap);
-        va_end(ap);
+        vfprintf(stderr, fmt, loc);
+        va_end(loc);
         fputc('\n', stderr);
     }
 
     if (config->log_to_syslog)
     {
-        va_start(ap, fmt);
-        vsyslog(LOG_WARNING, fmt, ap);
-        va_end(ap);
+        va_list loc;
+        va_copy(loc, ap);
+        vsyslog(prio, fmt, loc);
+        va_end(loc);
     }
+}
+
+void log_verbose(const char* fmt, ...)
+{
+    if (!config->log_level < NODM_LL_VERB) return;
+
+    va_list ap;
+    va_start(ap, fmt);
+    log_common(LOG_INFO, fmt, ap);
+    va_end(ap);
 }
 
 void log_info(const char* fmt, ...)
 {
+    if (!config->log_level < NODM_LL_INFO) return;
+
     va_list ap;
-
-    if (config->info_to_stderr)
-    {
-        fprintf(stderr, "%s:", config->program_name);
-        va_start(ap, fmt);
-        vfprintf(stderr, fmt, ap);
-        va_end(ap);
-        fputc('\n', stderr);
-    }
-
-    if (config->log_to_syslog)
-    {
-        va_start(ap, fmt);
-        vsyslog(LOG_WARNING, fmt, ap);
-        va_end(ap);
-    }
+    va_start(ap, fmt);
+    log_common(LOG_NOTICE, fmt, ap);
+    va_end(ap);
 }
 
 void log_warn(const char* fmt, ...)
 {
+    if (!config->log_level < NODM_LL_WARN) return;
+
     va_list ap;
-
-    if (config->log_to_stderr)
-    {
-        fprintf(stderr, "%s:", config->program_name);
-        va_start(ap, fmt);
-        vfprintf(stderr, fmt, ap);
-        va_end(ap);
-        fputc('\n', stderr);
-    }
-
-    if (config->log_to_syslog)
-    {
-        va_start(ap, fmt);
-        vsyslog(LOG_WARNING, fmt, ap);
-        va_end(ap);
-    }
+    va_start(ap, fmt);
+    log_common(LOG_WARNING, fmt, ap);
+    va_end(ap);
 }
 
 void log_err(const char* fmt, ...)
 {
+    if (!config->log_level < NODM_LL_ERR) return;
+
     va_list ap;
-
-    if (config->log_to_stderr)
-    {
-        fprintf(stderr, "%s:", config->program_name);
-        va_start(ap, fmt);
-        vfprintf(stderr, fmt, ap);
-        va_end(ap);
-        fputc('\n', stderr);
-    }
-
-    if (config->log_to_syslog)
-    {
-        va_start(ap, fmt);
-        vsyslog(LOG_ERR, fmt, ap);
-        va_end(ap);
-    }
+    va_start(ap, fmt);
+    log_common(LOG_ERR, fmt, ap);
+    va_end(ap);
 }

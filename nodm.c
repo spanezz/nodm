@@ -44,12 +44,15 @@ static void do_help(int argc, char** argv, FILE* out)
 {
     fprintf(out, "Usage: %s [options]\n\n", argv[0]);
     fprintf(out, "Options:\n");
-    fprintf(out, " --help      print this help message\n");
-    fprintf(out, " --version   print %s's version number\n", NAME);
-    fprintf(out, " --verbose   verbose outpout or logging\n");
-    fprintf(out, " --nested    run a nested X server, does not require root.");
-    fprintf(out, "             The server defaults to \"/usr/bin/Xnest :1\",");
-    fprintf(out, "             override with NODM_X_OPTIONS\n");
+    fprintf(out, " --help         print this help message\n");
+    fprintf(out, " --version      print %s's version number\n", NAME);
+    fprintf(out, " --verbose      verbose outpout or logging\n");
+    fprintf(out, " --quiet        only log warnings and errors\n");
+    fprintf(out, " --nested       run a nested X server, does not require root.");
+    fprintf(out, "                The server defaults to \"/usr/bin/Xnest :1\",");
+    fprintf(out, "                override with NODM_X_OPTIONS\n");
+    fprintf(out, " --[no-]syslog  enable/disable logging to syslog\n");
+    fprintf(out, " --[no-]stderr  enable/disable logging to stderr\n");
 }
 
 
@@ -66,17 +69,24 @@ int main (int argc, char **argv)
     static int opt_help = 0;
     static int opt_version = 0;
     static int opt_verbose = 0;
+    static int opt_quiet = 0;
     static int opt_nested = 0;
+    static int opt_log_syslog = -1; // -1 for 'default'
+    static int opt_log_stderr = -1; // -1 for 'default'
     static struct option options[] =
     {
         /* These options set a flag. */
         {"help",    no_argument,       &opt_help, 1},
         {"version", no_argument,       &opt_version, 1},
         {"verbose", no_argument,       &opt_verbose, 1},
+        {"quiet",   no_argument,       &opt_quiet, 1},
         {"nested",  no_argument,       &opt_nested, 1},
+        {"syslog",  no_argument,       &opt_log_syslog, 1},
+        {"stderr",  no_argument,       &opt_log_stderr, 1},
+        {"no-syslog", no_argument,     &opt_log_syslog, 0},
+        {"no-stderr", no_argument,     &opt_log_stderr, 0},
         {0, 0, 0, 0}
     };
-    // TODO: more output control, such as something like --quiet, --no-syslog, --no-stderr
 
     // Parse command line options
     while (1)
@@ -114,18 +124,23 @@ int main (int argc, char **argv)
     // Setup logging
     struct log_config cfg = {
         .program_name = basename(argv[0]),
-        .verbose = opt_verbose
     };
+    if (opt_quiet)
+        cfg.log_level = NODM_LL_WARN;
+    else if (opt_verbose)
+        cfg.log_level = NODM_LL_VERB;
+    else
+        cfg.log_level = NODM_LL_INFO;
     if (opt_nested)
     {
-        cfg.log_to_syslog = false;
-        cfg.log_to_stderr = true;
-        cfg.info_to_stderr = opt_verbose;
+        if (opt_log_syslog == -1) opt_log_syslog = 0;
+        if (opt_log_stderr == -1) opt_log_stderr = 1;
     } else {
-        cfg.log_to_syslog = true;
-        cfg.log_to_stderr = false;
-        cfg.info_to_stderr = false;
+        if (opt_log_syslog == -1) opt_log_syslog = 1;
+        if (opt_log_stderr == -1) opt_log_stderr = 0;
     }
+    cfg.log_to_syslog = opt_log_syslog ? true : false;
+    cfg.log_to_stderr = opt_log_stderr ? true : false;
     log_start(&cfg);
 
     log_info("starting nodm");

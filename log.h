@@ -29,17 +29,25 @@ struct log_config
     /// The program name to use in error messages
     const char* program_name;
 
-    /// Log all messages to syslog
+    /// Log to syslog
     bool log_to_syslog;
 
-    /// Log warnings and errors to stderr
+    /// Log to stderr
     bool log_to_stderr;
 
-    /// Also log info messages to stderr
-    bool info_to_stderr;
-
-    /// Log verbose messages
-    bool verbose;
+    /**
+     * Log level:
+     *  1. errors
+     *  2. warnings
+     *  3. info
+     *  4. verbose
+     */
+    enum {
+        NODM_LL_ERR = 1,
+        NODM_LL_WARN = 2,
+        NODM_LL_INFO = 3,
+        NODM_LL_VERB = 4
+    }  log_level;
 };
 
 /**
