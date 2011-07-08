@@ -70,7 +70,7 @@ int test_session_x_killer(struct nodm_xsession_child* s)
 // X server starts, X session quits with success
 void test_trivial_session()
 {
-    log_verbose("test_trivial_session");
+    log_verb("test_trivial_session");
     struct nodm_display_manager dm;
     test_setup_dm(&dm, NULL);
     dm.session.child_body = test_session;
@@ -86,7 +86,7 @@ void test_trivial_session()
 // X server does not start
 void test_bad_x_server()
 {
-    log_verbose("test_bad_x_server");
+    log_verb("test_bad_x_server");
     struct nodm_display_manager dm;
     test_setup_dm(&dm, "/bin/false");
     dm.session.child_body = test_session;
@@ -107,7 +107,7 @@ void test_bad_x_server()
 // X server starts, X session quits with error
 void test_failing_x_session()
 {
-    log_verbose("test_failing_x_session");
+    log_verb("test_failing_x_session");
     struct nodm_display_manager dm;
     test_setup_dm(&dm, NULL);
     dm.session.child_body = test_session_bad;
@@ -126,7 +126,7 @@ void test_failing_x_session()
 // X server starts, X session starts, then server dies
 void test_dying_x_server()
 {
-    log_verbose("test_dying_x_server");
+    log_verb("test_dying_x_server");
     struct nodm_display_manager dm;
     test_setup_dm(&dm, NULL);
     dm.session.child_body = test_session_x_killer;

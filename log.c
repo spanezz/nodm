@@ -70,7 +70,7 @@ static void log_common(int prio, const char* fmt, va_list ap)
 
 void log_verb(const char* fmt, ...)
 {
-    if (!config->log_level < NODM_LL_VERB) return;
+    if (config->log_level < NODM_LL_VERB) return;
 
     va_list ap;
     va_start(ap, fmt);
@@ -80,7 +80,7 @@ void log_verb(const char* fmt, ...)
 
 void log_info(const char* fmt, ...)
 {
-    if (!config->log_level < NODM_LL_INFO) return;
+    if (config->log_level < NODM_LL_INFO) return;
 
     va_list ap;
     va_start(ap, fmt);
@@ -90,7 +90,7 @@ void log_info(const char* fmt, ...)
 
 void log_warn(const char* fmt, ...)
 {
-    if (!config->log_level < NODM_LL_WARN) return;
+    if (config->log_level < NODM_LL_WARN) return;
 
     va_list ap;
     va_start(ap, fmt);
@@ -100,7 +100,7 @@ void log_warn(const char* fmt, ...)
 
 void log_err(const char* fmt, ...)
 {
-    if (!config->log_level < NODM_LL_ERR) return;
+    if (config->log_level < NODM_LL_ERR) return;
 
     va_list ap;
     va_start(ap, fmt);
