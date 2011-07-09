@@ -373,7 +373,7 @@ static int interruptible_sleep(int seconds)
 
 int nodm_display_manager_wait_restart_loop(struct nodm_display_manager* dm)
 {
-    static int retry_times[] = { -1, 0, 0, 30, 30, 60, 60, -1 };
+    static int retry_times[] = { 0, 0, 30, 30, 60, 60, -1 };
     int restart_count = 0;
     int res;
 
@@ -393,8 +393,6 @@ int nodm_display_manager_wait_restart_loop(struct nodm_display_manager* dm)
             default:
                 return res;
         }
-
-        return res;
 
         /* Check if the session was too short */
         if (end - dm->last_session_start < dm->conf_minimum_session_time)
