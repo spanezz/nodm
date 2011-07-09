@@ -48,8 +48,6 @@ int main(int argc, char* argv[])
         return res;
     }
 
-    sleep(3);
-
     res = nodm_xserver_stop(&srv);
     if (res != E_SUCCESS)
     {
