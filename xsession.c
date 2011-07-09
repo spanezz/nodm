@@ -119,6 +119,8 @@ int nodm_xsession_start(struct nodm_xsession* s, struct nodm_xserver* srv)
         // Restore the original signal mask
         if (sigprocmask(SIG_SETMASK, &s->orig_signal_mask, NULL) == -1)
             log_err("sigprocmask failed: %m");
+        // cargogulted from xinit
+        setpgid(0, getpid());
 
         // child shell */
         if (s->child_body)

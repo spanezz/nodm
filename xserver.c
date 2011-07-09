@@ -143,9 +143,16 @@ int nodm_xserver_start(struct nodm_xserver* srv)
         // Stop the logging subsystem before we quit via exec
         log_end();
 
+        // don't hang on read/write to control tty (from xinit)
+        signal(SIGTTIN, SIG_IGN);
+        signal(SIGTTOU, SIG_IGN);
+
         // Ignore SIGUSR1 to signal the X server that it should send us SIGUSR1
         // when ready
         signal(SIGUSR1, SIG_IGN);
+
+        // prevent the server from getting sighup from vhangup() (from xinit)
+        setpgid(0, getpid());
 
         execv(srv->argv[0], (char *const*)srv->argv);
         log_err("cannot start %s: %m", srv->argv[0]);
