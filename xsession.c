@@ -155,9 +155,12 @@ void nodm_xsession_dump_status(struct nodm_xsession* s)
 void nodm_xsession_report_exit(struct nodm_xsession* s, int status)
 {
     if (WIFEXITED(status))
-        log_warn("X session quit with status %d", WEXITSTATUS(status));
+        log_warn("X session %d quit with status %d",
+               (int)s->pid, WEXITSTATUS(status));
     else if (WIFSIGNALED(status))
-        log_warn("X session was killed with signal %d", WTERMSIG(status));
+        log_warn("X session %d was killed with signal %d",
+               (int)s->pid, WTERMSIG(status));
     else
-        log_warn("X session terminated with unknown status %d", status);
+        log_warn("X session %d terminated with unknown status %d",
+               (int)s->pid, status);
 }

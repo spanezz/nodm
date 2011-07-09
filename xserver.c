@@ -409,9 +409,12 @@ void nodm_xserver_dump_status(struct nodm_xserver* srv)
 void nodm_xserver_report_exit(struct nodm_xserver* s, int status)
 {
     if (WIFEXITED(status))
-        log_warn("X session quit with status %d", WEXITSTATUS(status));
+        log_warn("X server %d quit with status %d",
+               (int)s->pid, WEXITSTATUS(status));
     else if (WIFSIGNALED(status))
-        log_err("X session was killed with signal %d", WTERMSIG(status));
+        log_err("X server %d was killed with signal %d",
+               (int)s->pid, WTERMSIG(status));
     else
-        log_err("X session terminated with unknown status %d", status);
+        log_err("X server %d terminated with unknown status %d",
+               (int)s->pid, status);
 }
