@@ -62,6 +62,7 @@
 #include <X11/Xatom.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <setjmp.h>
 
 
 // Signal handlers
@@ -233,6 +234,9 @@ int nodm_xserver_start(struct nodm_xserver* srv)
 
     log_verb("X is ready to accept connections");
 
+    return_code = nodm_xserver_connect(srv);
+    if (return_code != E_SUCCESS) goto cleanup;
+
 cleanup:
     // Restore signal mask
     if (signal_mask_altered)
@@ -251,6 +255,8 @@ cleanup:
 
 int nodm_xserver_stop(struct nodm_xserver* srv)
 {
+    nodm_xserver_disconnect(srv);
+
     int res = child_must_exit(srv->pid, "X server");
     srv->pid = -1;
 
@@ -304,13 +310,26 @@ int nodm_xserver_connect(struct nodm_xserver* srv)
     return srv->dpy == NULL ? E_X_SERVER_CONNECT : E_SUCCESS;
 }
 
+static jmp_buf close_env;
+static int ignorexio(Display *dpy)
+{
+    longjmp(close_env, 1);
+    // Not reached
+    return 0;
+}
+
 int nodm_xserver_disconnect(struct nodm_xserver* srv)
 {
     log_verb("disconnecting from X server");
     // TODO: get/check pending errors (how?)
     if (srv->dpy != NULL)
     {
-        XCloseDisplay(srv->dpy);
+        XSetIOErrorHandler(ignorexio);
+        if (! setjmp(close_env))
+            XCloseDisplay(srv->dpy);
+        else
+            log_warn("I/O error on display close");
+        XSetIOErrorHandler(NULL);
         srv->dpy = NULL;
     }
     return E_SUCCESS;
