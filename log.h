@@ -72,16 +72,20 @@ void log_start(const struct log_config* conf);
  */
 void log_end();
 
+// Note: all log functions return true if the message was logged, false
+// otherwise. This can be used to test for log levels: if (log_verb(NULL)) { /*
+// complex debugging code */ }
+
 /// Log a message about the trivial normal progress of things
-void log_verb(const char* fmt, ...);
+bool log_verb(const char* fmt, ...);
 
 /// Log a message about the relevant normal progress of things
-void log_info(const char* fmt, ...);
+bool log_info(const char* fmt, ...);
 
 /// Log a warning message
-void log_warn(const char* fmt, ...);
+bool log_warn(const char* fmt, ...);
 
 /// Log an error message
-void log_err(const char* fmt, ...);
+bool log_err(const char* fmt, ...);
 
 #endif

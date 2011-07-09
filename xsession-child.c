@@ -302,14 +302,6 @@ int nodm_xsession_child_common_env(struct nodm_xsession_child* s)
 {
     int return_code = E_SUCCESS;
 
-    // Read the WINDOWPATH value from the X server
-    return_code = nodm_xserver_connect(s->srv);
-    if (return_code != E_SUCCESS) goto cleanup;
-    return_code = nodm_xserver_read_window_path(s->srv);
-    if (return_code != E_SUCCESS) goto cleanup;
-    return_code = nodm_xserver_disconnect(s->srv);
-    if (return_code != E_SUCCESS) goto cleanup;
-
     // Setup environment
     setenv("HOME", s->pwent.pw_dir, 1);
     setenv("USER", s->pwent.pw_name, 1);
@@ -318,6 +310,15 @@ int nodm_xsession_child_common_env(struct nodm_xsession_child* s)
     setenv("PWD", s->pwent.pw_dir, 1);
     setenv("SHELL", s->pwent.pw_shell, 1);
     setenv("DISPLAY", s->srv->name, 1);
+
+    // Read the WINDOWPATH value from the X server
+    return_code = nodm_xserver_connect(s->srv);
+    if (return_code != E_SUCCESS) goto cleanup;
+    return_code = nodm_xserver_read_window_path(s->srv);
+    if (return_code != E_SUCCESS) goto cleanup;
+    return_code = nodm_xserver_disconnect(s->srv);
+    if (return_code != E_SUCCESS) goto cleanup;
+
     setenv("WINDOWPATH", s->srv->windowpath, 1);
 
 

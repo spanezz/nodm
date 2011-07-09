@@ -74,42 +74,50 @@ static void log_common(int prio, const char* fmt, va_list ap)
     }
 }
 
-void log_verb(const char* fmt, ...)
+bool log_verb(const char* fmt, ...)
 {
-    if (config->log_level < NODM_LL_VERB) return;
+    if (config->log_level < NODM_LL_VERB) return false;
+    if (fmt == NULL) return true;
 
     va_list ap;
     va_start(ap, fmt);
     log_common(LOG_INFO, fmt, ap);
     va_end(ap);
+    return true;
 }
 
-void log_info(const char* fmt, ...)
+bool log_info(const char* fmt, ...)
 {
-    if (config->log_level < NODM_LL_INFO) return;
+    if (config->log_level < NODM_LL_INFO) return false;
+    if (fmt == NULL) return true;
 
     va_list ap;
     va_start(ap, fmt);
     log_common(LOG_NOTICE, fmt, ap);
     va_end(ap);
+    return true;
 }
 
-void log_warn(const char* fmt, ...)
+bool log_warn(const char* fmt, ...)
 {
-    if (config->log_level < NODM_LL_WARN) return;
+    if (config->log_level < NODM_LL_WARN) return false;
+    if (fmt == NULL) return true;
 
     va_list ap;
     va_start(ap, fmt);
     log_common(LOG_WARNING, fmt, ap);
     va_end(ap);
+    return true;
 }
 
-void log_err(const char* fmt, ...)
+bool log_err(const char* fmt, ...)
 {
-    if (config->log_level < NODM_LL_ERR) return;
+    if (config->log_level < NODM_LL_ERR) return false;
+    if (fmt == NULL) return true;
 
     va_list ap;
     va_start(ap, fmt);
     log_common(LOG_ERR, fmt, ap);
     va_end(ap);
+    return true;
 }

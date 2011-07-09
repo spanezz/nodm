@@ -83,6 +83,8 @@ int nodm_xsession_start(struct nodm_xsession* s, struct nodm_xserver* srv)
     args[4] = NULL;
     child.argv = args;
 
+    log_verb("starting X session \"%s\"", s->conf_session_command);
+
     // Variables that gdm sets but we do not:
     //
     // This is something that we should see how to handle.

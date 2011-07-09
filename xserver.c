@@ -116,6 +116,20 @@ int nodm_xserver_start(struct nodm_xserver* srv)
     }
     // From now on we need to perform cleanup before returning
 
+    if (log_verb(NULL))
+    {
+        // Log the concatenated command line
+        char buf[4096];
+        int pos = 0;
+        const char** s = srv->argv;
+        for ( ; *s && pos < 4096; ++s)
+        {
+            int r = snprintf(buf + pos, 4096 - pos, " %s", *s);
+            if (r < 0) break;
+            pos += r;
+        }
+        log_verb("starting X server %s", buf);
+    }
     // fork/exec the X server
     srv->pid = fork ();
     if (srv->pid == 0)
@@ -265,6 +279,7 @@ static int x_error_handler(Display* dpy, XErrorEvent* e)
 
 int nodm_xserver_connect(struct nodm_xserver* srv)
 {
+    log_verb("connecting to X server");
     //XSetErrorHandler(x_error_handler);
 
     for (int i = 0; i < 5; ++i)
@@ -291,6 +306,7 @@ int nodm_xserver_connect(struct nodm_xserver* srv)
 
 int nodm_xserver_disconnect(struct nodm_xserver* srv)
 {
+    log_verb("disconnecting from X server");
     // TODO: get/check pending errors (how?)
     if (srv->dpy != NULL)
     {
@@ -312,6 +328,8 @@ int nodm_xserver_read_window_path(struct nodm_xserver* srv)
     const char *windowpath;
     char *newwindowpath;
     unsigned long num;
+
+    log_verb("reading WINDOWPATH value from server");
 
     prop = XInternAtom(srv->dpy, "XFree86_VT", False);
     if (prop == None)
@@ -370,6 +388,7 @@ int nodm_xserver_read_window_path(struct nodm_xserver* srv)
         asprintf(&newwindowpath, "%s:%lu", windowpath, num);
     if (srv->windowpath) free(srv->windowpath);
     srv->windowpath = newwindowpath;
+    log_verb("WINDOWPATH: %s", srv->windowpath);
 
     return E_SUCCESS;
 }
