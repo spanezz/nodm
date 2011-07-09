@@ -22,6 +22,7 @@
 #include <syslog.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <sys/time.h>
 
 static const struct log_config* config = 0;
 
@@ -53,7 +54,12 @@ static void log_common(int prio, const char* fmt, va_list ap)
     {
         va_list loc;
         va_copy(loc, ap);
-        fprintf(stderr, "%s:", config->program_name);
+        struct timeval now;
+        gettimeofday(&now, NULL);
+        fprintf(stderr, "%u.%u %s:",
+               (unsigned)now.tv_sec,
+               (unsigned)now.tv_usec,
+               config->program_name);
         vfprintf(stderr, fmt, loc);
         va_end(loc);
         fputc('\n', stderr);
