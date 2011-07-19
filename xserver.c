@@ -72,7 +72,8 @@ static void on_sigchld(int sig) {}
 
 void nodm_xserver_init(struct nodm_xserver* srv)
 {
-    srv->conf_timeout = 5;
+    // Get the user we should run the session for
+    srv->conf_timeout = atoi(getenv_with_default("NODM_X_TIMEOUT", "30"));
     srv->argv = 0;
     srv->name = 0;
     srv->pid = -1;

@@ -84,3 +84,7 @@ NODM_XSESSION
 NODM_XINIT
   Was used by older versions of nodm as the path to the xinit program, but it
   is now ignored.
+
+NODM_X_TIMEOUT
+  Timeout (in seconds) to wait for X to be ready to accept connections. If X is
+  not ready before this timeout, it is killed and restarted.
