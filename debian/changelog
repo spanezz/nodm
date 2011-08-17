@@ -3,7 +3,7 @@ nodm (0.11-1) unstable; urgency=low
   * New upstream version
      - do not force "-nolisten tcp". Closes: #635992
   * Do not require $NODM_XINIT to exist in order to start: that env var is now
-    ignored. Closes: #634901
+    ignored. Closes: #634901, #638168
   * Do not require that $NODM_XSESSION points to a valid script now: nodm can
     start without it
   * Removed nodm/xinit form debconf and updated debconf templates
