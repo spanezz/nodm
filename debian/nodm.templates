@@ -38,14 +38,12 @@ _Description: Lowest numbered vt on which X may start:
 
 Template: nodm/x_options
 Type: string
-Default: vt7 -nolisten tcp
+Default: -nolisten tcp
 #flag:translate!:3
 _Description: Options for the X server:
- Please enter the options to pass to the X server when starting the session.
- These options will be used in the NODM_X_OPTIONS variable in the command line used
- by nodm to start the X session:
+ Please enter the options to pass to the X server when starting it.
  .
- $NODM_XINIT $NODM_XSESSION -- $NODM_X_OPTIONS
+ If no vtN option is used, nodm will perform automatic vt allocation.
 
 Template: nodm/min_session_time
 Type: string
@@ -55,25 +53,10 @@ _Description: Minimum time (in seconds) for a session to be considered OK:
  amount of time before restarting the session. The waiting time will grow
  until a session lasts longer than this amount.
 
-Template: nodm/xinit
-Type: string
-Default: /usr/bin/xinit
-#flag:translate!:3
-_Description: xinit program to use:
- Please choose the name of the "xinit" program to use with nodm. This
- name will be stored in the NODM_XINIT variable in the command line used
- by nodm to start the X session:
- .
- $NODM_XINIT $NODM_XSESSION -- $NODM_X_OPTIONS
-
 Template: nodm/xsession
 Type: string
 Default: /etc/X11/Xsession
 #flag:translate!:3
 _Description: X session to use:
- Please choose the name of the X session script to use with nodm. This
- name will be stored in the NODM_XSESSION variable in the command line used
- by nodm to start the X session:
- .
- $NODM_XINIT $NODM_XSESSION -- $NODM_X_OPTIONS
+ Please choose the name of the X session script to use with nodm.
 
