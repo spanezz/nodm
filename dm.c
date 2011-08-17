@@ -254,8 +254,7 @@ int nodm_display_manager_parse_xcmdline(struct nodm_display_manager* s, const ch
     unsigned argc = 0;
     // +1 for the X server pathname, +1 for the display name,
     // +1 for the VT number, +1 for the trailing NULL
-    // +2 for '-nolisten tcp'
-    argv =(char**)malloc((toks->we_wordc + 6) * sizeof(char*));
+    argv =(char**)malloc((toks->we_wordc + 4) * sizeof(char*));
     if (argv == NULL)
     {
         return_code = E_OS_ERROR;
@@ -284,9 +283,6 @@ int nodm_display_manager_parse_xcmdline(struct nodm_display_manager* s, const ch
         ++argc;
     }
 
-    int nolisten_idx = -2;
-    bool has_nolisten_tcp = false;
-
     // Copy other args
     while (in_arg < toks->we_wordc)
     {
@@ -294,19 +290,8 @@ int nodm_display_manager_parse_xcmdline(struct nodm_display_manager* s, const ch
         if (sscanf(toks->we_wordv[in_arg], "vt%d", &vtn) == 1)
             // if vtN has been provided by the caller, disable VT allocation
             s->vt.conf_initial_vt = -1;
-        else if (strcmp(toks->we_wordv[in_arg], "-nolisten") == 0)
-            nolisten_idx = in_arg;
-        else if (strcmp(toks->we_wordv[in_arg], "tcp") == 0 && nolisten_idx == in_arg - 1)
-            has_nolisten_tcp = true;
-
 
         argv[argc++] = toks->we_wordv[in_arg++];
-    }
-    // Append -nolisten tcp if it wasn't in the command line
-    if (!has_nolisten_tcp)
-    {
-        argv[argc++] = "-nolisten";
-        argv[argc++] = "tcp";
     }
     argv[argc] = NULL;
 
