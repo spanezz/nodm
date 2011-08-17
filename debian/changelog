@@ -1,3 +1,13 @@
+nodm (0.11-1) unstable; urgency=low
+
+  * New upstream version
+  * Do not require $NODM_XINIT to exist in order to start: that env var is now
+    ignored. Closes: #634901
+  * Do not require that $NODM_XSESSION points to a valid script now: nodm can
+    start without it
+
+ -- Enrico Zini <enrico@debian.org>  Wed, 17 Aug 2011 13:35:43 +0200
+
 nodm (0.10-1) unstable; urgency=low
 
   * New upstream version
