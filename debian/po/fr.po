@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nodm 0.3-1\n"
 "Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
-"POT-Creation-Date: 2009-07-24 01:51+0200\n"
+"POT-Creation-Date: 2011-08-17 13:58+0200\n"
 "PO-Revision-Date: 2009-08-04 01:10+0200\n"
 "Last-Translator: Christian Perrier <bubulle@debian.org>\n"
 "Language-Team: French <debian-l10n-french@lists.debian.org>\n"
@@ -108,14 +108,8 @@ msgstr "Options pour le serveur X :"
 #. Type: string
 #. Description
 #: ../nodm.templates:5001
-msgid ""
-"Please enter the options to pass to the X server when starting the session. "
-"These options will be used in the NODM_X_OPTIONS variable in the command "
-"line used by nodm to start the X session:"
+msgid "Please enter the options to pass to the X server when starting it."
 msgstr ""
-"Veuillez indiquer les options à passer au serveur X lorsqu'il démarre la "
-"session. Ces options seront utilisées avec la variable NODM_X_OPTIONS dans "
-"la commande utilisée par nodm pour démarrer la session X :"
 
 #. Type: string
 #. Description
@@ -139,35 +133,41 @@ msgstr ""
 #. Type: string
 #. Description
 #: ../nodm.templates:7001
-msgid "xinit program to use:"
-msgstr "Programme xinit à utiliser :"
-
-#. Type: string
-#. Description
-#: ../nodm.templates:7001
-msgid ""
-"Please choose the name of the \"xinit\" program to use with nodm. This name "
-"will be stored in the NODM_XINIT variable in the command line used by nodm "
-"to start the X session:"
-msgstr ""
-"Veuillez choisir le nom du programme « xinit » à utiliser avec nodm. Ce nom "
-"sera enregistré dans la variable NODM_XINIT dans la ligne de commande "
-"utilisée par nodm pour démarrer la session X :"
-
-#. Type: string
-#. Description
-#: ../nodm.templates:8001
 msgid "X session to use:"
 msgstr "Session X à utiliser :"
 
 #. Type: string
 #. Description
-#: ../nodm.templates:8001
-msgid ""
-"Please choose the name of the X session script to use with nodm. This name "
-"will be stored in the NODM_XSESSION variable in the command line used by "
-"nodm to start the X session:"
+#: ../nodm.templates:7001
+msgid "Please choose the name of the X session script to use with nodm."
 msgstr ""
-"Veuillez choisir le nom du script de session X à utiliser avec nodm. Ce nom "
-"sera enregistré dans la variable NODM_XSESSION dans la ligne de commande "
-"utilisée par nodm pour démarrer la session X :"
+
+#~ msgid ""
+#~ "Please enter the options to pass to the X server when starting the "
+#~ "session. These options will be used in the NODM_X_OPTIONS variable in the "
+#~ "command line used by nodm to start the X session:"
+#~ msgstr ""
+#~ "Veuillez indiquer les options à passer au serveur X lorsqu'il démarre la "
+#~ "session. Ces options seront utilisées avec la variable NODM_X_OPTIONS "
+#~ "dans la commande utilisée par nodm pour démarrer la session X :"
+
+#~ msgid "xinit program to use:"
+#~ msgstr "Programme xinit à utiliser :"
+
+#~ msgid ""
+#~ "Please choose the name of the \"xinit\" program to use with nodm. This "
+#~ "name will be stored in the NODM_XINIT variable in the command line used "
+#~ "by nodm to start the X session:"
+#~ msgstr ""
+#~ "Veuillez choisir le nom du programme « xinit » à utiliser avec nodm. Ce "
+#~ "nom sera enregistré dans la variable NODM_XINIT dans la ligne de commande "
+#~ "utilisée par nodm pour démarrer la session X :"
+
+#~ msgid ""
+#~ "Please choose the name of the X session script to use with nodm. This "
+#~ "name will be stored in the NODM_XSESSION variable in the command line "
+#~ "used by nodm to start the X session:"
+#~ msgstr ""
+#~ "Veuillez choisir le nom du script de session X à utiliser avec nodm. Ce "
+#~ "nom sera enregistré dans la variable NODM_XSESSION dans la ligne de "
+#~ "commande utilisée par nodm pour démarrer la session X :"

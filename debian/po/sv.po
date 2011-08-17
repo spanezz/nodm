@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nodm\n"
 "Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
-"POT-Creation-Date: 2009-07-24 01:51+0200\n"
+"POT-Creation-Date: 2011-08-17 13:58+0200\n"
 "PO-Revision-Date: 2009-07-28 23:01+0100\n"
 "Last-Translator: Martin Bagge <brother@bsnet.se>\n"
 "Language-Team: swedish <debian-l10n-swedish@lists.debian.org>\n"
@@ -103,14 +103,8 @@ msgstr "Alternativ för X-servern:"
 #. Type: string
 #. Description
 #: ../nodm.templates:5001
-msgid ""
-"Please enter the options to pass to the X server when starting the session. "
-"These options will be used in the NODM_X_OPTIONS variable in the command "
-"line used by nodm to start the X session:"
+msgid "Please enter the options to pass to the X server when starting it."
 msgstr ""
-"Ange vilka alternativ som ska skickas till X-servern när sessionen startar. "
-"Dessa alternativ kommer att användas i variablen NODM_X_OPTIONS på "
-"kommandoraden som används för att starta X-sessionen."
 
 #. Type: string
 #. Description
@@ -133,35 +127,41 @@ msgstr ""
 #. Type: string
 #. Description
 #: ../nodm.templates:7001
-msgid "xinit program to use:"
-msgstr "xinit-program som ska användas:"
-
-#. Type: string
-#. Description
-#: ../nodm.templates:7001
-msgid ""
-"Please choose the name of the \"xinit\" program to use with nodm. This name "
-"will be stored in the NODM_XINIT variable in the command line used by nodm "
-"to start the X session:"
-msgstr ""
-"Ange namnet på \"xinit\"-programmet som ska användas tillsammans med nodm. "
-"Namnet kommer att sparas i variabeln NODM_XINIT på kommandoraden som används "
-"av nodm för att starta X-sessionen."
-
-#. Type: string
-#. Description
-#: ../nodm.templates:8001
 msgid "X session to use:"
 msgstr "X-session som ska användas:"
 
 #. Type: string
 #. Description
-#: ../nodm.templates:8001
-msgid ""
-"Please choose the name of the X session script to use with nodm. This name "
-"will be stored in the NODM_XSESSION variable in the command line used by "
-"nodm to start the X session:"
+#: ../nodm.templates:7001
+msgid "Please choose the name of the X session script to use with nodm."
 msgstr ""
-"Ange namnet på sessionsskriptet för X som ska användas med nodm. Detta namn "
-"kommer att sparas i variablen NODM_XSESSION på kommandoraden som används av "
-"nodm för att starta X-sessionen."
+
+#~ msgid ""
+#~ "Please enter the options to pass to the X server when starting the "
+#~ "session. These options will be used in the NODM_X_OPTIONS variable in the "
+#~ "command line used by nodm to start the X session:"
+#~ msgstr ""
+#~ "Ange vilka alternativ som ska skickas till X-servern när sessionen "
+#~ "startar. Dessa alternativ kommer att användas i variablen NODM_X_OPTIONS "
+#~ "på kommandoraden som används för att starta X-sessionen."
+
+#~ msgid "xinit program to use:"
+#~ msgstr "xinit-program som ska användas:"
+
+#~ msgid ""
+#~ "Please choose the name of the \"xinit\" program to use with nodm. This "
+#~ "name will be stored in the NODM_XINIT variable in the command line used "
+#~ "by nodm to start the X session:"
+#~ msgstr ""
+#~ "Ange namnet på \"xinit\"-programmet som ska användas tillsammans med "
+#~ "nodm. Namnet kommer att sparas i variabeln NODM_XINIT på kommandoraden "
+#~ "som används av nodm för att starta X-sessionen."
+
+#~ msgid ""
+#~ "Please choose the name of the X session script to use with nodm. This "
+#~ "name will be stored in the NODM_XSESSION variable in the command line "
+#~ "used by nodm to start the X session:"
+#~ msgstr ""
+#~ "Ange namnet på sessionsskriptet för X som ska användas med nodm. Detta "
+#~ "namn kommer att sparas i variablen NODM_XSESSION på kommandoraden som "
+#~ "används av nodm för att starta X-sessionen."

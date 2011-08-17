@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nodm 0.7-1\n"
 "Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
-"POT-Creation-Date: 2009-07-24 01:51+0200\n"
+"POT-Creation-Date: 2011-08-17 13:58+0200\n"
 "PO-Revision-Date: 2010-07-16 15:09+0200\n"
 "Last-Translator: Martin Sin <martin.sin@zshk.cz>\n"
 "Language-Team: Czech <debian-l10n-czech@lists.debian.org>\n"
@@ -101,14 +101,8 @@ msgstr "Volby X serveru:"
 #. Type: string
 #. Description
 #: ../nodm.templates:5001
-msgid ""
-"Please enter the options to pass to the X server when starting the session. "
-"These options will be used in the NODM_X_OPTIONS variable in the command "
-"line used by nodm to start the X session:"
+msgid "Please enter the options to pass to the X server when starting it."
 msgstr ""
-"Zadejte prosím volby předávané X serveru při spuštění sezení. Tyto volby "
-"budou uloženy do proměnné NODM_X_OPTIONS používané nodm při spuštění sezení "
-"X:"
 
 #. Type: string
 #. Description
@@ -131,34 +125,41 @@ msgstr ""
 #. Type: string
 #. Description
 #: ../nodm.templates:7001
-msgid "xinit program to use:"
-msgstr "Používaný program xinit:"
-
-#. Type: string
-#. Description
-#: ../nodm.templates:7001
-msgid ""
-"Please choose the name of the \"xinit\" program to use with nodm. This name "
-"will be stored in the NODM_XINIT variable in the command line used by nodm "
-"to start the X session:"
-msgstr ""
-"Zvolte prosím jméno programu „xinit“, který se bude používat s nodm. Toto "
-"jméno bude uloženo v proměnné NODM_XINIT a použito nodm při startu sezení X:"
-
-#. Type: string
-#. Description
-#: ../nodm.templates:8001
 msgid "X session to use:"
 msgstr "Používané sezení X:"
 
 #. Type: string
 #. Description
-#: ../nodm.templates:8001
-msgid ""
-"Please choose the name of the X session script to use with nodm. This name "
-"will be stored in the NODM_XSESSION variable in the command line used by "
-"nodm to start the X session:"
+#: ../nodm.templates:7001
+msgid "Please choose the name of the X session script to use with nodm."
 msgstr ""
-"Zadejte prosím jméno skriptu sezení X, který bude použit spolu s nodm. Toto "
-"jméno bude uloženo v proměnné NODM_XSESSION a použito nodm při startu sezení "
-"X:"
+
+#~ msgid ""
+#~ "Please enter the options to pass to the X server when starting the "
+#~ "session. These options will be used in the NODM_X_OPTIONS variable in the "
+#~ "command line used by nodm to start the X session:"
+#~ msgstr ""
+#~ "Zadejte prosím volby předávané X serveru při spuštění sezení. Tyto volby "
+#~ "budou uloženy do proměnné NODM_X_OPTIONS používané nodm při spuštění "
+#~ "sezení X:"
+
+#~ msgid "xinit program to use:"
+#~ msgstr "Používaný program xinit:"
+
+#~ msgid ""
+#~ "Please choose the name of the \"xinit\" program to use with nodm. This "
+#~ "name will be stored in the NODM_XINIT variable in the command line used "
+#~ "by nodm to start the X session:"
+#~ msgstr ""
+#~ "Zvolte prosím jméno programu „xinit“, který se bude používat s nodm. Toto "
+#~ "jméno bude uloženo v proměnné NODM_XINIT a použito nodm při startu sezení "
+#~ "X:"
+
+#~ msgid ""
+#~ "Please choose the name of the X session script to use with nodm. This "
+#~ "name will be stored in the NODM_XSESSION variable in the command line "
+#~ "used by nodm to start the X session:"
+#~ msgstr ""
+#~ "Zadejte prosím jméno skriptu sezení X, který bude použit spolu s nodm. "
+#~ "Toto jméno bude uloženo v proměnné NODM_XSESSION a použito nodm při "
+#~ "startu sezení X:"

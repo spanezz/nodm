@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nodm 0.5-1\n"
 "Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
-"POT-Creation-Date: 2009-07-24 01:51+0200\n"
+"POT-Creation-Date: 2011-08-17 13:58+0200\n"
 "PO-Revision-Date: 2009-07-25 12:41+0400\n"
 "Last-Translator: Yuri Kozlov <yuray@komyakino.ru>\n"
 "Language-Team: Russian <debian-l10n-russian@lists.debian.org>\n"
@@ -104,14 +104,8 @@ msgstr "Параметры для X-сервера:"
 #. Type: string
 #. Description
 #: ../nodm.templates:5001
-msgid ""
-"Please enter the options to pass to the X server when starting the session. "
-"These options will be used in the NODM_X_OPTIONS variable in the command "
-"line used by nodm to start the X session:"
+msgid "Please enter the options to pass to the X server when starting it."
 msgstr ""
-"Введите параметры, которые нужно передать X-серверу при запуске сеанса. Эти "
-"параметры будут подставлены в переменную NODM_X_OPTIONS в командной строке, "
-"используемой nodm для запуска X-сеанса:"
 
 #. Type: string
 #. Description
@@ -135,35 +129,41 @@ msgstr ""
 #. Type: string
 #. Description
 #: ../nodm.templates:7001
-msgid "xinit program to use:"
-msgstr "Используемая программа xinit:"
-
-#. Type: string
-#. Description
-#: ../nodm.templates:7001
-msgid ""
-"Please choose the name of the \"xinit\" program to use with nodm. This name "
-"will be stored in the NODM_XINIT variable in the command line used by nodm "
-"to start the X session:"
-msgstr ""
-"Укажите имя программы \"xinit\" для использования с nodm. Это имя будет "
-"сохранено в переменной NODM_XINIT в командной строке, используемой nodm для "
-"запуска X-сеанса:"
-
-#. Type: string
-#. Description
-#: ../nodm.templates:8001
 msgid "X session to use:"
 msgstr "Используемый X-сеанс:"
 
 #. Type: string
 #. Description
-#: ../nodm.templates:8001
-msgid ""
-"Please choose the name of the X session script to use with nodm. This name "
-"will be stored in the NODM_XSESSION variable in the command line used by "
-"nodm to start the X session:"
+#: ../nodm.templates:7001
+msgid "Please choose the name of the X session script to use with nodm."
 msgstr ""
-"Укажите имя сценария X-сеанса для использования с nodm. Это имя будет "
-"сохранено в переменной NODM_XSESSION в командной строке, используемой nodm "
-"для запуска X-сеанса:"
+
+#~ msgid ""
+#~ "Please enter the options to pass to the X server when starting the "
+#~ "session. These options will be used in the NODM_X_OPTIONS variable in the "
+#~ "command line used by nodm to start the X session:"
+#~ msgstr ""
+#~ "Введите параметры, которые нужно передать X-серверу при запуске сеанса. "
+#~ "Эти параметры будут подставлены в переменную NODM_X_OPTIONS в командной "
+#~ "строке, используемой nodm для запуска X-сеанса:"
+
+#~ msgid "xinit program to use:"
+#~ msgstr "Используемая программа xinit:"
+
+#~ msgid ""
+#~ "Please choose the name of the \"xinit\" program to use with nodm. This "
+#~ "name will be stored in the NODM_XINIT variable in the command line used "
+#~ "by nodm to start the X session:"
+#~ msgstr ""
+#~ "Укажите имя программы \"xinit\" для использования с nodm. Это имя будет "
+#~ "сохранено в переменной NODM_XINIT в командной строке, используемой nodm "
+#~ "для запуска X-сеанса:"
+
+#~ msgid ""
+#~ "Please choose the name of the X session script to use with nodm. This "
+#~ "name will be stored in the NODM_XSESSION variable in the command line "
+#~ "used by nodm to start the X session:"
+#~ msgstr ""
+#~ "Укажите имя сценария X-сеанса для использования с nodm. Это имя будет "
+#~ "сохранено в переменной NODM_XSESSION в командной строке, используемой "
+#~ "nodm для запуска X-сеанса:"

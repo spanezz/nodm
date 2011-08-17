@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nodm\n"
 "Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
-"POT-Creation-Date: 2009-07-24 01:51+0200\n"
+"POT-Creation-Date: 2011-08-17 13:58+0200\n"
 "PO-Revision-Date: 2010-10-18 22:13+0300\n"
 "Last-Translator: Esko Arajärvi <edu@iki.fi>\n"
 "Language-Team: Finnish <debian-l10n-finnish@lists.debian.org>\n"
@@ -101,14 +101,8 @@ msgstr "X-palvelimen valitsimet:"
 #. Type: string
 #. Description
 #: ../nodm.templates:5001
-msgid ""
-"Please enter the options to pass to the X server when starting the session. "
-"These options will be used in the NODM_X_OPTIONS variable in the command "
-"line used by nodm to start the X session:"
+msgid "Please enter the options to pass to the X server when starting it."
 msgstr ""
-"Syötä X-palvelimelle istunnon käynnistyksen yhteydessä annettavat "
-"valitsimet. Nämä valitsimet annetaan muuttujassa NODM_X_OPTIONS nodm:n "
-"suorittamassa X-istunnon käynnistävässä komennossa."
 
 #. Type: string
 #. Description
@@ -131,35 +125,41 @@ msgstr ""
 #. Type: string
 #. Description
 #: ../nodm.templates:7001
-msgid "xinit program to use:"
-msgstr "Käytettävä xinit-ohjelma:"
-
-#. Type: string
-#. Description
-#: ../nodm.templates:7001
-msgid ""
-"Please choose the name of the \"xinit\" program to use with nodm. This name "
-"will be stored in the NODM_XINIT variable in the command line used by nodm "
-"to start the X session:"
-msgstr ""
-"Valitse nodm:n kanssa käytettävä ”xinit”-ohjelma. Ohjelman nimi annetaan "
-"muuttujassa NODM_XINIT nodm:n suorittamassa X-istunnon käynnistävässä "
-"komennossa."
-
-#. Type: string
-#. Description
-#: ../nodm.templates:8001
 msgid "X session to use:"
 msgstr "Käytettävä X-istunto:"
 
 #. Type: string
 #. Description
-#: ../nodm.templates:8001
-msgid ""
-"Please choose the name of the X session script to use with nodm. This name "
-"will be stored in the NODM_XSESSION variable in the command line used by "
-"nodm to start the X session:"
+#: ../nodm.templates:7001
+msgid "Please choose the name of the X session script to use with nodm."
 msgstr ""
-"Valitse nodm:n kanssa käytettävän X-istunnon komentosarjan nimi. Tämä nimi "
-"annetaan muuttujassa NODM_XSESSION nodm:n suorittamassa X-istunnon "
-"käynnistävässä komennossa."
+
+#~ msgid ""
+#~ "Please enter the options to pass to the X server when starting the "
+#~ "session. These options will be used in the NODM_X_OPTIONS variable in the "
+#~ "command line used by nodm to start the X session:"
+#~ msgstr ""
+#~ "Syötä X-palvelimelle istunnon käynnistyksen yhteydessä annettavat "
+#~ "valitsimet. Nämä valitsimet annetaan muuttujassa NODM_X_OPTIONS nodm:n "
+#~ "suorittamassa X-istunnon käynnistävässä komennossa."
+
+#~ msgid "xinit program to use:"
+#~ msgstr "Käytettävä xinit-ohjelma:"
+
+#~ msgid ""
+#~ "Please choose the name of the \"xinit\" program to use with nodm. This "
+#~ "name will be stored in the NODM_XINIT variable in the command line used "
+#~ "by nodm to start the X session:"
+#~ msgstr ""
+#~ "Valitse nodm:n kanssa käytettävä ”xinit”-ohjelma. Ohjelman nimi annetaan "
+#~ "muuttujassa NODM_XINIT nodm:n suorittamassa X-istunnon käynnistävässä "
+#~ "komennossa."
+
+#~ msgid ""
+#~ "Please choose the name of the X session script to use with nodm. This "
+#~ "name will be stored in the NODM_XSESSION variable in the command line "
+#~ "used by nodm to start the X session:"
+#~ msgstr ""
+#~ "Valitse nodm:n kanssa käytettävän X-istunnon komentosarjan nimi. Tämä "
+#~ "nimi annetaan muuttujassa NODM_XSESSION nodm:n suorittamassa X-istunnon "
+#~ "käynnistävässä komennossa."
