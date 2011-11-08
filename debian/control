@@ -12,6 +12,7 @@ Package: nodm
 Architecture: linux-any
 Depends: x11-common, x11-xserver-utils, ${shlibs:Depends}, ${misc:Depends}
 Conflicts: zhone-session
+Provides: x-display-manager
 Description: automatic display manager
  This package prepares the system to automatically start an X session at
  system boot. It is meant for devices like smartphones, but can be used on
