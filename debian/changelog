@@ -4,6 +4,15 @@ nodm (0.11-2) unstable; urgency=low
 
  -- Enrico Zini <enrico@debian.org>  Tue, 08 Nov 2011 17:09:38 +0100
 
+nodm (0.11-1.3) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix "subprocess installed post-installation script returned error exit
+    status 10": nodm.config: don't fail if the nodm/xinit debconf value was
+    already unregistered. (Closes: #642903)
+
+ -- gregor herrmann <gregoa@debian.org>  Sat, 15 Sep 2012 16:47:18 +0200
+
 nodm (0.11-1.2) unstable; urgency=low
 
   * Non-maintainer upload.
