@@ -1,26 +1,26 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Danish translation nodm.
+# Copyright (C) 2011 nodm & nedenstående oversættere.
 # This file is distributed under the same license as the nodm package.
-# Martin Sin <martin.sin@zshk.cz>, 2009.
+# Joe Hansen <joedalton2@yahoo.dk>, 2010, 2011.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: nodm 0.11-1.1\n"
+"Project-Id-Version: nodm\n"
 "Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
 "POT-Creation-Date: 2011-08-17 13:58+0200\n"
-"PO-Revision-Date: 2011-10-17 09:50+0200\n"
-"Last-Translator: Martin Sin <martin.sin@zshk.cz>\n"
-"Language-Team: Czech <debian-l10n-czech@lists.debian.org>\n"
-"Language: cs\n"
+"PO-Revision-Date: 2011-10-17 19:21+0100\n"
+"Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
+"Language-Team: Danish <debian-l10n-danish@lists.debian.org>\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #. Type: boolean
 #. Description
 #: ../nodm.templates:2001
 msgid "Start nodm on boot?"
-msgstr "Spustit nodm při startu počítače?"
+msgstr "Start nodm ved opstart?"
 
 #. Type: boolean
 #. Description
@@ -30,22 +30,23 @@ msgid ""
 "without asking for authentication. On regular machines, this has security "
 "implications and is therefore disabled by default."
 msgstr ""
-"nodm může spustit sezení X nějakého uživatele bez nutnosti zadání "
-"přihlašovacích údajů, to se může hodit především na vestavěných a kiosk "
-"počítačích. Na ostatních zařízeních to může být bezpečnostním rizikem a tak "
-"je to ve výchozím nastavení vypnuto."
+"Designet til indlejrede eller kiosksystemer, nodm starter en X-session for "
+"en bruger uden at spørge efter bekræftelse for ægthed. På normale maskiner "
+"har dette sikkerhedsimplikationer og er derfor deaktiveret som standard."
 
 #. Type: boolean
 #. Description
 #: ../nodm.templates:2001
 msgid "You should enable nodm only if you need autologin on this machine."
-msgstr "Chcete-li používat automatické přihlášení, zvolte pouze nodm."
+msgstr ""
+"Du bør kun aktivere nodm, hvis du har brug for automatisk logind på denne "
+"maskine."
 
 #. Type: string
 #. Description
 #: ../nodm.templates:3001
 msgid "User to start a session for:"
-msgstr "Uživatel, pod kterým se spustí sezení:"
+msgstr "Bruger at starte en session for:"
 
 #. Type: string
 #. Description
@@ -54,14 +55,14 @@ msgid ""
 "Please enter the login name of the user that will automatically be logged "
 "into X by nodm."
 msgstr ""
-"Zadejte prosím přihlašovací jméno uživatele, který bude automaticky "
-"přihlášen do X pomocí nodm."
+"Indtast venligst logindnavnet for brugeren som automatisk vil blive logget "
+"ind i X af nodm."
 
 #. Type: string
 #. Description
 #: ../nodm.templates:4001
 msgid "Lowest numbered vt on which X may start:"
-msgstr "Nejnižší číslo vt, na kterém je možno spustit X:"
+msgstr "Lavest nummereret vt hvorpå X må starte:"
 
 #. Type: string
 #. Description
@@ -69,8 +70,8 @@ msgstr "Nejnižší číslo vt, na kterém je možno spustit X:"
 msgid ""
 "nodm needs to find a free virtual terminal on which to start the X server."
 msgstr ""
-"nodm potřebuje najít volný virtuální terminál, na kterém může spustit server "
-"X."
+"nodm har brug for at finde en ledig virtuel terminal, hvorpå den kan starte "
+"X-serveren."
 
 #. Type: string
 #. Description
@@ -79,8 +80,8 @@ msgid ""
 "Since X and getty get to conflict, this parameter will specify the lowest "
 "numbered virtual terminal on which to start the search."
 msgstr ""
-"Protože si X a getty navzájem odporují, tento parametr určí nejnižší číslo "
-"virtuálního terminálu, na kterém bude zahájeno hledání."
+"Da X og getty er i konflikt, vil denne parameter angive den lavest nummerede "
+"virtuelle terminal, hvorpå søgningen skal starte."
 
 #. Type: string
 #. Description
@@ -89,26 +90,28 @@ msgid ""
 "This value should be set to one higher than the highest numbered virtual "
 "terminal on which a getty may start."
 msgstr ""
-"Tato hodnota by měla být o jedničku vyšší než nejvyšší číslovaný virtuální "
-"terminál, na kterém může být getty spuštěn."
+"Denne værdi bør angives til en højere end den højest nummerede virtuelle "
+"terminal, hvorpå en getty må starte."
 
 #. Type: string
 #. Description
 #: ../nodm.templates:5001
 msgid "Options for the X server:"
-msgstr "Volby X serveru:"
+msgstr "Indstillinger for X-serveren:"
 
 #. Type: string
 #. Description
 #: ../nodm.templates:5001
 msgid "Please enter the options to pass to the X server when starting it."
-msgstr "Zadejte prosím volby předávané X serveru při jeho spuštění."
+msgstr ""
+"Indtast venligst indstillingerne der skal videresendes til X-serveren, når "
+"den startes."
 
 #. Type: string
 #. Description
 #: ../nodm.templates:6001
 msgid "Minimum time (in seconds) for a session to be considered OK:"
-msgstr "Minimální čas (v sekundách), který bude považován za OK:"
+msgstr "Minimum tid (i sekunder) for at en session anses for at være o.k.:"
 
 #. Type: string
 #. Description
@@ -118,48 +121,48 @@ msgid ""
 "an amount of time before restarting the session. The waiting time will grow "
 "until a session lasts longer than this amount."
 msgstr ""
-"Pokud bude sezení X spuštěno po dobu menší než je tento čas, nodm "
-"automaticky restartuje sezení. To se bude opakovat dokud vše nenaskočí v "
-"pořádku."
+"Hvis en X-session vil køre i mindre end dette tidspunkt i sekunder, vil nodm "
+"vente et tidsrum før genstart af sessionen. Ventetiden vil øges indtil en "
+"session varer længere end dette tidsrum."
 
 #. Type: string
 #. Description
 #: ../nodm.templates:7001
 msgid "X session to use:"
-msgstr "Používané sezení X:"
+msgstr "X-session at bruge:"
 
 #. Type: string
 #. Description
 #: ../nodm.templates:7001
 msgid "Please choose the name of the X session script to use with nodm."
-msgstr "Zadejte prosím jméno skriptu sezení X používaného spolu s nodm."
+msgstr "Vælg venligst navnet på X-sessionsskriptet der skal bruges med nodm."
 
 #~ msgid ""
 #~ "Please enter the options to pass to the X server when starting the "
 #~ "session. These options will be used in the NODM_X_OPTIONS variable in the "
 #~ "command line used by nodm to start the X session:"
 #~ msgstr ""
-#~ "Zadejte prosím volby předávané X serveru při spuštění sezení. Tyto volby "
-#~ "budou uloženy do proměnné NODM_X_OPTIONS používané nodm při spuštění "
-#~ "sezení X:"
+#~ "Indtast venligst indstillingerne der skal videresendes til X-serveren, "
+#~ "når sessionen startes. Disse indstillinger vil blive brugt i variablen "
+#~ "NODM_X_OPTIONS i kommandolinjen brugt af nodm til at starte X-sessionen:"
 
 #~ msgid "xinit program to use:"
-#~ msgstr "Používaný program xinit:"
+#~ msgstr "xinit-program at bruge:"
 
 #~ msgid ""
 #~ "Please choose the name of the \"xinit\" program to use with nodm. This "
 #~ "name will be stored in the NODM_XINIT variable in the command line used "
 #~ "by nodm to start the X session:"
 #~ msgstr ""
-#~ "Zvolte prosím jméno programu „xinit“, který se bude používat s nodm. Toto "
-#~ "jméno bude uloženo v proměnné NODM_XINIT a použito nodm při startu sezení "
-#~ "X:"
+#~ "Vælg venligst navnet på »xinit-programmet« at bruge med nodm. Dette navn "
+#~ "vil blive gemt i variablen NODM_XINIT i kommandolinjen brugt af nodm til "
+#~ "at starte X-sessionen:"
 
 #~ msgid ""
 #~ "Please choose the name of the X session script to use with nodm. This "
 #~ "name will be stored in the NODM_XSESSION variable in the command line "
 #~ "used by nodm to start the X session:"
 #~ msgstr ""
-#~ "Zadejte prosím jméno skriptu sezení X, který bude použit spolu s nodm. "
-#~ "Toto jméno bude uloženo v proměnné NODM_XSESSION a použito nodm při "
-#~ "startu sezení X:"
+#~ "Vælg venligst navnet på X-sessionsskriptet der skal bruges med nodm. "
+#~ "Dette navn vil blive gemt i variablen NODM_XSESSION i kommandolinjen "
+#~ "brugt af nodm til at starte X-sessionen:"

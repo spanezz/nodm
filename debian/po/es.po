@@ -1,5 +1,5 @@
 # nodm po-debconf translation to Spanish.
-# Copyright (C) 2009 Software in the Public Interest.
+# Copyright (C) 2009 - 2011 Software in the Public Interest.
 # This file is distributed under the same license as the nodm package.
 #
 #  Changes:
@@ -7,7 +7,7 @@
 #       Fernando González de Requena <fgrequena@gmail.com>, 2009.
 #
 # - Updates
-#       Omar Campagne <ocampagne@gmail.com>, 2010
+#       Omar Campagne <ocampagne@gmail.com>, 2010, 2011
 #
 #  Traductores, si no conoce el formato PO, merece la pena leer la
 #  documentación de gettext, especialmente las secciones dedicadas a este
@@ -33,10 +33,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: nodm \n"
+"Project-Id-Version: nodm 0.11-1.1\n"
 "Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
 "POT-Creation-Date: 2011-08-17 13:58+0200\n"
-"PO-Revision-Date: 2010-07-25 19:40+0200\n"
+"PO-Revision-Date: 2011-10-24 18:03+0200\n"
 "Last-Translator: Omar Campagne <ocampagne@gmail.com>\n"
 "Language-Team: Spanish <debian-l10n-spanish@lists.debian.org>\n"
 "Language: es\n"
@@ -133,7 +133,7 @@ msgstr "Opciones para el servidor de X:"
 #. Description
 #: ../nodm.templates:5001
 msgid "Please enter the options to pass to the X server when starting it."
-msgstr ""
+msgstr "Introduzca las opciones que entregar al servidor X durante su inicio."
 
 #. Type: string
 #. Description
@@ -163,7 +163,7 @@ msgstr "Sesión de X a usar:"
 #. Description
 #: ../nodm.templates:7001
 msgid "Please choose the name of the X session script to use with nodm."
-msgstr ""
+msgstr "Seleccione el nombre del script de sesión de X a utilizar con nodm."
 
 #~ msgid ""
 #~ "Please enter the options to pass to the X server when starting the "

@@ -1,16 +1,15 @@
-# translation of nodm to swedish
 # Translation of nodm debconf template to Swedish
-# Copyright (C) 2009 Martin Bagge <brother@bsnet.se>
+# Copyright (C) 2011 Martin Bagge <brother@bsnet.se>
 # This file is distributed under the same license as the nodm package.
 #
-# Martin Bagge <brother@bsnet.se>, 2009.
+# Martin Bagge <brother@bsnet.se>, 2009, 2011
 msgid ""
 msgstr ""
 "Project-Id-Version: nodm\n"
 "Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
 "POT-Creation-Date: 2011-08-17 13:58+0200\n"
-"PO-Revision-Date: 2009-07-28 23:01+0100\n"
-"Last-Translator: Martin Bagge <brother@bsnet.se>\n"
+"PO-Revision-Date: 2011-09-01 20:47+0100\n"
+"Last-Translator: Martin Bagge / brother <brother@bsnet.se>\n"
 "Language-Team: swedish <debian-l10n-swedish@lists.debian.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -104,7 +103,7 @@ msgstr "Alternativ för X-servern:"
 #. Description
 #: ../nodm.templates:5001
 msgid "Please enter the options to pass to the X server when starting it."
-msgstr ""
+msgstr "Ange flaggor som ska skickas till X-servern när den startas."
 
 #. Type: string
 #. Description
@@ -135,6 +134,7 @@ msgstr "X-session som ska användas:"
 #: ../nodm.templates:7001
 msgid "Please choose the name of the X session script to use with nodm."
 msgstr ""
+"Ange namnet på det X-session-skript som ska användas tillsammans med nodm."
 
 #~ msgid ""
 #~ "Please enter the options to pass to the X server when starting the "

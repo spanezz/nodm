@@ -4,6 +4,23 @@ nodm (0.11-2) unstable; urgency=low
 
  -- Enrico Zini <enrico@debian.org>  Tue, 08 Nov 2011 17:09:38 +0100
 
+nodm (0.11-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix pending l10n issues. Debconf translations:
+  * Danish (Joe Hansen).  Closes: #600741
+  * French (Christian Perrier).  Closes: #638432
+  * Russian (Yuri Kozlov).  Closes: #639428
+  * Swedish (Martin Bagge / brother).  Closes: #640048
+  * Czech (Martin Sin).  Closes: #645590
+  * Slovak (Slavko).  Closes: #645597
+  * Danish (Joe Hansen).  Closes: #645690
+  * Brazilian Portuguese (Adriano Rafael Gomes).  Closes: #646185
+  * Spanish; (# traductor (campo Last-Translator) y ponga en copia a la
+    lista de Omar Campagne).  Closes: #646506
+
+ -- Christian Perrier <bubulle@debian.org>  Tue, 25 Oct 2011 02:13:08 +0200
+
 nodm (0.11-1) unstable; urgency=low
 
   * New upstream version

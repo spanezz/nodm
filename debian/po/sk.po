@@ -1,0 +1,139 @@
+# Slovak translations for nodm package
+# Slovenské preklady pre balík nodm.
+# Copyright (C) 2011 THE nodm'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the nodm package.
+# Slavko <linux@slavino.sk>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: nodm\n"
+"Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
+"POT-Creation-Date: 2011-08-17 13:58+0200\n"
+"PO-Revision-Date: 2011-10-17 11:22+0200\n"
+"Last-Translator: Slavko <linux@slavino.sk>\n"
+"Language-Team: Slovak <debian-l10n-slovak@lists.debian.org>\n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-POFile-SpellExtra: embedded nodm getty kioskové VT reštartovaním\n"
+
+#. Type: boolean
+#. Description
+#: ../nodm.templates:2001
+msgid "Start nodm on boot?"
+msgstr "Spúšťať nodm pri zavedení?"
+
+#. Type: boolean
+#. Description
+#: ../nodm.templates:2001
+msgid ""
+"Designed for embedded or kiosk systems, nodm starts an X session for a user "
+"without asking for authentication. On regular machines, this has security "
+"implications and is therefore disabled by default."
+msgstr ""
+"Navrhnutý pre zahrnuté (embedded) alebo kioskové systémy, nodm spúšťa "
+"reláciu X používateľa bez výzvy na autentifikáciu. Na bežných strojoch to je "
+"bezpečnostné riziko a preto je predvolene vypnutý."
+
+#. Type: boolean
+#. Description
+#: ../nodm.templates:2001
+msgid "You should enable nodm only if you need autologin on this machine."
+msgstr ""
+"nodm by ste mali zapnúť, len ak potrebujte na tomto stroji automatické "
+"prihlásenie."
+
+#. Type: string
+#. Description
+#: ../nodm.templates:3001
+msgid "User to start a session for:"
+msgstr "Používateľ, ktorého relácia má byť spustená:"
+
+#. Type: string
+#. Description
+#: ../nodm.templates:3001
+msgid ""
+"Please enter the login name of the user that will automatically be logged "
+"into X by nodm."
+msgstr ""
+"Prosím, zadajte prihlasovacie meno používateľa, ktorý bude pomocou nodm "
+"automaticky prihlásený do X."
+
+#. Type: string
+#. Description
+#: ../nodm.templates:4001
+msgid "Lowest numbered vt on which X may start:"
+msgstr "Najmenšie číslo VT, na ktorom môže byť spustené X:"
+
+#. Type: string
+#. Description
+#: ../nodm.templates:4001
+msgid ""
+"nodm needs to find a free virtual terminal on which to start the X server."
+msgstr ""
+"nodm potrebuje nájsť voľný virtuálny terminál, na ktorom môže spustiť X "
+"server."
+
+#. Type: string
+#. Description
+#: ../nodm.templates:4001
+msgid ""
+"Since X and getty get to conflict, this parameter will specify the lowest "
+"numbered virtual terminal on which to start the search."
+msgstr ""
+"Keďže X a getty sa dostávajú do konfliktu, tento parameter udáva najmenšie "
+"číslo virtuálneho terminálu, na ktorom má začať hľadanie."
+
+#. Type: string
+#. Description
+#: ../nodm.templates:4001
+msgid ""
+"This value should be set to one higher than the highest numbered virtual "
+"terminal on which a getty may start."
+msgstr ""
+"Táto hodnota by mala byť vyššia ako je najvyššie číslo virtuálneho "
+"terminálu, na ktorom môže byť spustené getty."
+
+#. Type: string
+#. Description
+#: ../nodm.templates:5001
+msgid "Options for the X server:"
+msgstr "Voľby pre server X:"
+
+#. Type: string
+#. Description
+#: ../nodm.templates:5001
+msgid "Please enter the options to pass to the X server when starting it."
+msgstr "Prosím, zadajte voľby, ktoré budú poslané serveru X pri jeho spustení."
+
+#. Type: string
+#. Description
+#: ../nodm.templates:6001
+msgid "Minimum time (in seconds) for a session to be considered OK:"
+msgstr "Minimálny čas (v sekundách) relácie, aby bola považovaná za OK:"
+
+#. Type: string
+#. Description
+#: ../nodm.templates:6001
+msgid ""
+"If an X session will run for less than this time in seconds, nodm will wait "
+"an amount of time before restarting the session. The waiting time will grow "
+"until a session lasts longer than this amount."
+msgstr ""
+"Ak bude relácia X spustená kratšie ako tento čas, nodm určitý čas počká pred "
+"reštartovaním relácie. Čas čakania bude narastať, až kým nebude relácia "
+"trvať dlhšie ako je zadaný čas."
+
+#. Type: string
+#. Description
+#: ../nodm.templates:7001
+msgid "X session to use:"
+msgstr "Relácia X:"
+
+#. Type: string
+#. Description
+#: ../nodm.templates:7001
+msgid "Please choose the name of the X session script to use with nodm."
+msgstr "Prosím, vyberte meno skriptu relácie X, ktorý má nodm použiť."
