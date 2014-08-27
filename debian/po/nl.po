@@ -1,29 +1,26 @@
-# Translation of nodm debconf templates to German
-# Copyright (C) Thomas Mueller <thomas.mueller@tmit.eu>, 2009.
+# Dutch translation of nodm debconf templates.
+# Copyright (C) 2012 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the nodm package.
+# Jeroen Schot <schot@a-eskwadraat.nl>, 2012.
 #
-# Thomas Mueller <thomas.mueller@tmit.eu>, 2009.
-# Thomas Mueller <thomas.mueller@tmit.eu>, 2011.
 msgid ""
 msgstr ""
-"Project-Id-Version: nodm_0.6-1_de\n"
+"Project-Id-Version: nodm 0.11-1.1\n"
 "Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
 "POT-Creation-Date: 2011-08-17 13:58+0200\n"
-"PO-Revision-Date: 2011-10-17 23:27+0200\n"
-"Last-Translator: Thomas Müller <thomas.mueller@tmit.eu>\n"
-"Language-Team: de <debian-l10n-german@lists.debian.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2012-01-02 15:14+0100\n"
+"Last-Translator: Jeroen Schot <schot@a-eskwadraat.nl>\n"
+"Language-Team: Debian l10n Dutch <debian-l10n-dutch@lists.debian.org>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.2\n"
-"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
 #. Type: boolean
 #. Description
 #: ../nodm.templates:2001
 msgid "Start nodm on boot?"
-msgstr "Soll Nodm beim Booten gestartet werden?"
+msgstr "Nodm opstarten bij de systeemstart?"
 
 #. Type: boolean
 #. Description
@@ -33,23 +30,24 @@ msgid ""
 "without asking for authentication. On regular machines, this has security "
 "implications and is therefore disabled by default."
 msgstr ""
-"Nodm startet ein X-Sitzung ohne Authentisierung für den Benutzer, da es für "
-"Embedded- bzw. Kiosk-Systeme entwickelt wurde. Auf normalen Systemen hat das "
-"Auswirkungen auf die Sicherheit und ist deshalb standardmäßig deaktiviert."
+"Nodm is ontworpen voor embedded of kioskomgevingen en start daarom een X-"
+"sessie voor een gebruiker zonder om inloggegevens te vragen. Op normale "
+"computers heeft dit gevolgen voor de beveiliging en is daarom standaard "
+"uitgeschakeld."
 
 #. Type: boolean
 #. Description
 #: ../nodm.templates:2001
 msgid "You should enable nodm only if you need autologin on this machine."
 msgstr ""
-"Sie sollten Nodm nur aktivieren, falls Sie automatisiertes Anmelden auf "
-"diesem System benötigen."
+"U moet nodm alleen activeren als u automatisch inloggen wilt inschakelen op "
+"deze computer."
 
 #. Type: string
 #. Description
 #: ../nodm.templates:3001
 msgid "User to start a session for:"
-msgstr "Benutzer für den die Sitzung gestartet werden soll:"
+msgstr "Gebruiker waarvoor een sessie moet worden gestart:"
 
 #. Type: string
 #. Description
@@ -58,14 +56,14 @@ msgid ""
 "Please enter the login name of the user that will automatically be logged "
 "into X by nodm."
 msgstr ""
-"Bitte geben Sie den Anmeldenamen des Benutzers an, der automatisch durch "
-"Nodm an X angemeldet werden soll."
+"Wat is de inlognaam van de gebruiker die door nodm automatisch moet worden "
+"aangemeld in X?"
 
 #. Type: string
 #. Description
 #: ../nodm.templates:4001
 msgid "Lowest numbered vt on which X may start:"
-msgstr "Virtuelles Terminal mit der niedrigsten Nummer, in dem X starten darf:"
+msgstr "Laagst-genummerde vt waarop X mag opstarten:"
 
 #. Type: string
 #. Description
@@ -73,8 +71,7 @@ msgstr "Virtuelles Terminal mit der niedrigsten Nummer, in dem X starten darf:"
 msgid ""
 "nodm needs to find a free virtual terminal on which to start the X server."
 msgstr ""
-"Nodm muss ein freies, virtuelles Terminal (vt) finden, auf dem der X-Server "
-"gestartet werden kann."
+"Nodm heeft een vrije virtuele terminal nodig om de X-server op te starten."
 
 #. Type: string
 #. Description
@@ -83,9 +80,8 @@ msgid ""
 "Since X and getty get to conflict, this parameter will specify the lowest "
 "numbered virtual terminal on which to start the search."
 msgstr ""
-"Wegen des Konflikts zwischen X und Getty gibt dieser Parameter die "
-"niedrigste Nummer des virtuellen Terminals an, ab dem mit der Suche begonnen "
-"wird."
+"Aangezien X en getty elkaar in de weg zitten, bepaalt deze parameter de "
+"laagst-genummerde virtuele terminal waarvanaf wordt gezocht."
 
 #. Type: string
 #. Description
@@ -94,29 +90,28 @@ msgid ""
 "This value should be set to one higher than the highest numbered virtual "
 "terminal on which a getty may start."
 msgstr ""
-"Dieser Wert sollte um eins höher sein als die höchste Nummer des virtuellen "
-"Terminals, in dem Getty starten darf."
+"Deze waarde dient één hoger te zijn dan de hoogst-genummerde virtuele "
+"terminal waarop mogelijk een getty wordt opgestart."
 
 #. Type: string
 #. Description
 #: ../nodm.templates:5001
 msgid "Options for the X server:"
-msgstr "Optionen für den X-Server:"
+msgstr "Opties voor de X-server:"
 
 #. Type: string
 #. Description
 #: ../nodm.templates:5001
 msgid "Please enter the options to pass to the X server when starting it."
 msgstr ""
-"Bitte geben Sie die Optionen an, die an den X-Server zum Starten übergeben "
-"werden."
+"Welke opties moeten er aan de X-server worden meegegeven wanneer deze wordt "
+"opgestart?"
 
 #. Type: string
 #. Description
 #: ../nodm.templates:6001
 msgid "Minimum time (in seconds) for a session to be considered OK:"
-msgstr ""
-"Mindestzeit (in Sekunden) für eine Sitzung, um als »In Ordnung« zu gelten:"
+msgstr "Kortste tijd (in seconden) voor een sessie die nog in orde is:"
 
 #. Type: string
 #. Description
@@ -126,19 +121,18 @@ msgid ""
 "an amount of time before restarting the session. The waiting time will grow "
 "until a session lasts longer than this amount."
 msgstr ""
-"Falls eine X-Sitzung kürzer als diese Zeit in Sekunden existiert, wird Nodm "
-"eine gewisse Zeit warten, bevor die Sitzung erneut gestartet wird. Die "
-"Wartezeit verlängert sich bis eine Sitzung länger als dieser Wert existiert."
+"Als een X-sessie korter duurt dan deze tijd in seconden, dan zal nodm enige "
+"tijd wachten voordat de sessie wordt herstart. De wachttijd zal toenemen "
+"totdat er een sessie is die langer duurt."
 
 #. Type: string
 #. Description
 #: ../nodm.templates:7001
 msgid "X session to use:"
-msgstr "Zu benutzende X-Sitzung:"
+msgstr "Te gebruiken X-sessie:"
 
 #. Type: string
 #. Description
 #: ../nodm.templates:7001
 msgid "Please choose the name of the X session script to use with nodm."
-msgstr ""
-"Bitte wählen Sie den Namen des X-Sitzung-Skripts, welches Nodm nutzen soll."
+msgstr "Wat is de naam van het X-sessie-script op dat nodm moet gebruiken?"

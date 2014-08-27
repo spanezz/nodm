@@ -4,6 +4,16 @@ nodm (0.11-2) unstable; urgency=low
 
  -- Enrico Zini <enrico@debian.org>  Tue, 08 Nov 2011 17:09:38 +0100
 
+nodm (0.11-1.2) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix pending l10n issues. Debconf translations:
+    - German (Thomas Müller).  Closes: #646630
+    - Portuguese (Miguel Figueiredo).  Closes: #646846
+    - Dutch; (Jeroen Schot).  Closes: #654371
+
+ -- Christian Perrier <bubulle@debian.org>  Wed, 11 Jan 2012 07:13:42 +0100
+
 nodm (0.11-1.1) unstable; urgency=low
 
   * Non-maintainer upload.
