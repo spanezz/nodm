@@ -1,4 +1,4 @@
-nodm (0.12-1) UNRELEASED; urgency=low
+nodm (0.12-1) unstable; urgency=low
 
   [ Enrico Zini ]
   * Upstream code:
@@ -85,7 +85,7 @@ nodm (0.12-1) UNRELEASED; urgency=low
     + Wait for nodm to exit. (Closes: #638290).
     + Make initscript less chatty. (Closes: #638293).
 
- -- Mike Gabriel <sunweaver@debian.org>  Wed, 23 Mar 2016 12:59:38 +0100
+ -- Mike Gabriel <sunweaver@debian.org>  Wed, 23 Mar 2016 16:13:22 +0100
 
 nodm (0.11-1.3) unstable; urgency=low
 
