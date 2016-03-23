@@ -10,4 +10,4 @@ override_dh_auto_test:
 	#make check
 
 override_dh_installinit:
-	dh_installinit -r -u "defaults 30 01"
+	dh_installinit -r -- defaults

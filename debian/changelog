@@ -30,6 +30,8 @@ nodm (0.12-1) UNRELEASED; urgency=low
   [ Simon McVittie ]
   * debian/control:
     + Add D (nodm): xserver-xorg. (Closes: #689703).
+  * debian/rules:
+    + Rely on LSB headers for dependency/sequence info. (Closes: #584179).
 
   [ Emanuele Aina ]
   * debian/control:
