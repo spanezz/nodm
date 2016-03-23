@@ -38,7 +38,7 @@ struct nodm_display_manager
     /// VT allocation
     struct nodm_vt vt;
 
-    /** 
+    /**
      * The minimum time (in seconds) that a session should last to be
      * considered successful
      */

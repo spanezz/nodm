@@ -11,7 +11,7 @@ file as nodm.preseed:
 
   # Activate nodm
   nodm nodm/enabled boolean true
-  
+
   # Login the session as user 'kiosk'
   nodm nodm/user string kiosk
 
