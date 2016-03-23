@@ -28,6 +28,8 @@ nodm (0.12-1) UNRELEASED; urgency=low
     + Add B-D: autoreconf.
     + Add B-D: automake.
     + Update versioned B-D for debhelper: (>= 9).
+    + Add versioned B-D: dpkg-dev (>= 1.16.1.1). Helps us with hardening the
+      build of nodm.
   * debian/compat:
     + Bump to dh version 9.
   * debian/po:
@@ -42,6 +44,7 @@ nodm (0.12-1) UNRELEASED; urgency=low
     + README is now README.md.
   * debian/rules:
     + Correctly evoke ./autogen.sh script at build time.
+    + Harden the build of nodm using dpkg's buildflags.mk include.
 
   [ Sjoerd Simons ]
   * debian/<debconf>:

@@ -8,6 +8,7 @@ Uploaders:
  Mike Gabriel <sunweaver@debian.org>,
 Build-Depends:
  debhelper (>= 9),
+ dpkg-dev (>= 1.16.1.1),
  autoconf,
  automake,
  help2man,
