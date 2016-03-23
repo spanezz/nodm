@@ -17,8 +17,8 @@ Build-Depends:
  pkg-config,
  po-debconf,
 Standards-Version: 3.9.7
-Vcs-Git: http://git.debian.org/git/pkg-fso/nodm.git
-Vcs-Browser: http://git.debian.org/?p=pkg-fso/nodm.git;a=summary
+Vcs-Git: https://anonscm.debian.org/cgit/pkg-fso/nodm.git
+Vcs-Browser: https://anonscm.debian.org/cgit/pkg-fso/nodm.git/
 
 Package: nodm
 Architecture: linux-any

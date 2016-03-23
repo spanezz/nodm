@@ -30,6 +30,7 @@ nodm (0.12-1) UNRELEASED; urgency=low
     + Update versioned B-D for debhelper: (>= 9).
     + Add versioned B-D: dpkg-dev (>= 1.16.1.1). Helps us with hardening the
       build of nodm.
+    + Use encrypted URLs for Vcs-*: fields.
   * debian/compat:
     + Bump to dh version 9.
   * debian/po:
