@@ -16,6 +16,7 @@ nodm (0.12-1) UNRELEASED; urgency=low
       Ilya Barygin <barygin@gmail.com> for providing the fix in Ubuntu.
     - README.md: Fix miscounting of amount of environment variables. (Closes:
       #746700). Thanks to Dan Jacobson for pointing this out.
+    - Drop .gitignore file. Let's rather provide a working make (dist)clean.
   * debian/control:
     + Process with wrap-and-sort.
     + Bump Standards: to 3.9.7. Required change: DEP-5 compliant copyright file.
