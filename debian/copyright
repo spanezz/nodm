@@ -1,21 +1,83 @@
-This package is
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: nodm
+Upstream-Contact: Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
+Source: https://github.com/spanezz/nodm/
 
- * Copyright © 2008 Joachim Breitner <nomeata@debian.org>
- * Copyright © 2009 Enrico Zini <enrico@debian.org>
+Files: common.c
+ common.h
+ dm.c
+ dm.h
+ log.c
+ log.h
+ nodm.c
+ test-internals.c
+ test-xsession.c
+ test-xstart.c
+ test.c
+ test.h
+ vt.c
+ vt.h
+ xserver.h
+ xsession-child.h
+ xsession.c
+ xsession.h
+Copyright: 2009--2011, Enrico Zini <enrico@enricozini.org>
+  2011, Enrico Zini <enrico@enricozini.org>
+License: GPL-2+
 
-The rewrite in C was sponsored by Truelite srl (http://www.truelite.it/).
+Files: xsession-child.c
+Copyright: 1989, - 1994, Julianne Frances Haugh
+  1992-2003, Free Software Foundation, Inc
+  2009-2011, Enrico Zini <enrico@enricozini.org>
+License: GPL-2+
 
-and licensed under the following license:
+Files: xserver.c
+Copyright: 1988, 1998 The Open Group
+  2011, Enrico Zini <enrico@enricozini.org>
+License: GPL-2+
 
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2, or (at your option)
-	any later version.
+Files: autogen.sh
+Copyright: 2009-2011, Enrico Zini <enrico@enricozini.org>
+License: GPL-2+
+Comment:
+ Assuming license and copyright holder from upstream C files.
 
-	This program is distributed in the hope that it will be useful, but
-	WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	General Public License for more details.
+Files: AUTHORS
+ COPYING
+ ChangeLog
+ INSTALL
+ Makefile.am
+ README.md
+ configure.ac
+ m4/pkg.m4
+ nodm-man-extras
+ test_nodm
+Copyright: 2009-2011, Enrico Zini <enrico@debian.org>
+License: GPL-2+
+Comment:
+ Assuming license and copyright holder from upstream C files.
 
-On Debian systems, the complete text of the GNU General Public License can
-be found in /usr/share/common-licenses/GPL file.
+Files: debian/*
+Copyright: 2008, Joachim Breitner <nomeata@debian.org>
+           2009-2011, Enrico Zini <enrico@debian.org>
+           2016, Mike Gabriel <sunweaver@debian.org>
+License: GPL-2+
+
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License along
+ with this program; if not, write to the Free Software Foundation, Inc.,
+ 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ `/usr/share/common-licenses/GPL-2'.
