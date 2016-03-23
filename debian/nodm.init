@@ -68,8 +68,11 @@ case "$1" in
 		$0 stop
 		$0 start
 		;;
+	status)
+		status_of_proc -p ${PIDFILE} /usr/sbin/nodm nodm && exit 0 || exit $?
+		;;
 	*)
-		log_success_msg "Usage: $0 {start|stop|restart|force-reload}" >&2
+		echo "Usage: $0 {start|stop|restart|force-reload|status}" >&2
 		exit 1
 		;;
 esac
