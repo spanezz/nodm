@@ -25,6 +25,8 @@ nodm (0.12-1) UNRELEASED; urgency=low
     - xserver.c: Don't FTBFS when built with -Werror=unused-result. (Closes:
       #638600).
     - Whitespace clean-up at EOL.
+    - Add EOL chars for help output of the --nested cmdline option.
+      (Closes: #766123).
   * debian/control:
     + Process with wrap-and-sort.
     + Bump Standards: to 3.9.7. Required change: DEP-5 compliant copyright file.

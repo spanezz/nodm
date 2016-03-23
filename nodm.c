@@ -48,8 +48,8 @@ static void do_help(int argc, char** argv, FILE* out)
     fprintf(out, " --version      print %s's version number\n", NAME);
     fprintf(out, " --verbose      verbose outpout or logging\n");
     fprintf(out, " --quiet        only log warnings and errors\n");
-    fprintf(out, " --nested       run a nested X server, does not require root.");
-    fprintf(out, "                The server defaults to \"/usr/bin/Xnest :1\",");
+    fprintf(out, " --nested       run a nested X server, does not require root.\n");
+    fprintf(out, "                The server defaults to \"/usr/bin/Xnest :1\",\n");
     fprintf(out, "                override with NODM_X_OPTIONS\n");
     fprintf(out, " --[no-]syslog  enable/disable logging to syslog\n");
     fprintf(out, " --[no-]stderr  enable/disable logging to stderr\n");
