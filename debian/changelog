@@ -14,6 +14,9 @@ nodm (0.12-1) UNRELEASED; urgency=low
       Sjoerd Simons for providing the patch.
   * debian/control:
     + Process with wrap-and-sort.
+  * debian/po:
+    + Add Japanese DebConf translation file. Thanks to "victory" for providing
+      it. (Closes: #718920).
 
   [ Simon McVittie ]
   * debian/control:
