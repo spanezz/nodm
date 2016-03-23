@@ -409,13 +409,17 @@ int nodm_xserver_read_window_path(struct nodm_xserver* srv)
     }
     XFree(buf);
     windowpath = getenv("WINDOWPATH");
+
+    int path_size;
     if (!windowpath)
-        asprintf(&newwindowpath, "%lu", num);
+        path_size = asprintf(&newwindowpath, "%lu", num);
     else
-        asprintf(&newwindowpath, "%s:%lu", windowpath, num);
-    if (srv->windowpath) free(srv->windowpath);
-    srv->windowpath = newwindowpath;
-    log_verb("WINDOWPATH: %s", srv->windowpath);
+        path_size = asprintf(&newwindowpath, "%s:%lu", windowpath, num);
+    if (path_size > 0) {
+        if (srv->windowpath) free(srv->windowpath);
+        srv->windowpath = newwindowpath;
+        log_verb("WINDOWPATH: %s", srv->windowpath);
+    }
 
     return E_SUCCESS;
 }

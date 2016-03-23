@@ -22,6 +22,8 @@ nodm (0.12-1) UNRELEASED; urgency=low
     - Drop .gitignore file. Let's rather provide a working make (dist)clean.
     - Makefile.am: line-wrap variable assignments with file lists.
     - Makefile.am: Add various build cruft files to DISTCLEANFILES.
+    - xserver.c: Don't FTBFS when built with -Werror=unused-result. (Closes:
+      #638600).
   * debian/control:
     + Process with wrap-and-sort.
     + Bump Standards: to 3.9.7. Required change: DEP-5 compliant copyright file.
