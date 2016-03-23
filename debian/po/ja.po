@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nodm\n"
 "Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
-"POT-Creation-Date: 2012-09-21 14:37+0000\n"
+"POT-Creation-Date: 2016-03-23 14:44+0100\n"
 "PO-Revision-Date: 2012-09-21 23:37+0900\n"
 "Last-Translator: victory <victory.deb@gmail.com>\n"
 "Language-Team: Japanese <debian-japanese@lists.debian.org>\n"
@@ -85,8 +85,8 @@ msgid ""
 "This value should be set to one higher than the highest numbered virtual "
 "terminal on which a getty may start."
 msgstr ""
-"これには getty の開始を許可する仮想ターミナル番号の最大値よりも1大きな値をセッ"
-"トします。"
+"これには getty の開始を許可する仮想ターミナル番号の最大値よりも1大きな値を"
+"セットします。"
 
 #. Type: string
 #. Description
@@ -115,17 +115,34 @@ msgid ""
 "until a session lasts longer than this amount."
 msgstr ""
 "X セッションの実行時間がこの秒数以下のとき、nodm はセッションを再起動するまで"
-"にこの時間待ちます。待ち時間はセッションがこれ以上に長くかかって終了するまで増"
-"えます。"
+"にこの時間待ちます。待ち時間はセッションがこれ以上に長くかかって終了するまで"
+"増えます。"
 
 #. Type: string
 #. Description
 #: ../nodm.templates:7001
+#, fuzzy
+#| msgid "Minimum time (in seconds) for a session to be considered OK:"
+msgid "Maximum time (in seconds) to wait for X to start:"
+msgstr "セッションを OK だと判断するまでの最小時間 (秒):"
+
+#. Type: string
+#. Description
+#: ../nodm.templates:7001
+msgid ""
+" Timeout (in seconds) to wait for X to be ready to accept connections. If X "
+"is\n"
+" not ready before this timeout, it is killed and restarted."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../nodm.templates:8001
 msgid "X session to use:"
 msgstr "利用する X セッション:"
 
 #. Type: string
 #. Description
-#: ../nodm.templates:7001
+#: ../nodm.templates:8001
 msgid "Please choose the name of the X session script to use with nodm."
 msgstr "nodm で利用する X セッションスクリプトの名前を選択してください。"

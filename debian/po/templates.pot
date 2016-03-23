@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: nodm\n"
 "Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
-"POT-Creation-Date: 2011-08-17 13:58+0200\n"
+"POT-Creation-Date: 2016-03-23 14:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -111,11 +111,26 @@ msgstr ""
 #. Type: string
 #. Description
 #: ../nodm.templates:7001
-msgid "X session to use:"
+msgid "Maximum time (in seconds) to wait for X to start:"
 msgstr ""
 
 #. Type: string
 #. Description
 #: ../nodm.templates:7001
+msgid ""
+" Timeout (in seconds) to wait for X to be ready to accept connections. If X "
+"is\n"
+" not ready before this timeout, it is killed and restarted."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../nodm.templates:8001
+msgid "X session to use:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../nodm.templates:8001
 msgid "Please choose the name of the X session script to use with nodm."
 msgstr ""

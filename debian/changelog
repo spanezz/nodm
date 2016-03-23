@@ -23,6 +23,8 @@ nodm (0.12-1) UNRELEASED; urgency=low
   * debian/po:
     + Add Japanese DebConf translation file. Thanks to "victory" for providing
       it. (Closes: #718920).
+    + Update debconf translations files after we have added a new configuration
+      item.
   * debian/copyright{,.in}:
     + Provide auto-generated draft of a DEP-5 compliant copyright file.
     + Make copyright file DEP-5 compliant.

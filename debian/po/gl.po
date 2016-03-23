@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nodm 0.3\n"
 "Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
-"POT-Creation-Date: 2011-08-17 13:58+0200\n"
+"POT-Creation-Date: 2016-03-23 14:44+0100\n"
 "PO-Revision-Date: 2009-05-06 23:13+0200\n"
 "Last-Translator: marce villarino <mvillarino@users.sourceforge.net>\n"
 "Language-Team: Galician <proxecto@trasno.ent>\n"
@@ -119,12 +119,29 @@ msgstr ""
 #. Type: string
 #. Description
 #: ../nodm.templates:7001
+#, fuzzy
+#| msgid "Minimum time (in seconds) for a session to be considered OK:"
+msgid "Maximum time (in seconds) to wait for X to start:"
+msgstr "Tempo mínimo (en segundos) para que unha sesión se considere OK:"
+
+#. Type: string
+#. Description
+#: ../nodm.templates:7001
+msgid ""
+" Timeout (in seconds) to wait for X to be ready to accept connections. If X "
+"is\n"
+" not ready before this timeout, it is killed and restarted."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../nodm.templates:8001
 msgid "X session to use:"
 msgstr "Sesión X a empregar:"
 
 #. Type: string
 #. Description
-#: ../nodm.templates:7001
+#: ../nodm.templates:8001
 msgid "Please choose the name of the X session script to use with nodm."
 msgstr ""
 
