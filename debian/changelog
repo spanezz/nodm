@@ -33,6 +33,8 @@ nodm (0.12-1) UNRELEASED; urgency=low
     + Use encrypted URLs for Vcs-*: fields.
   * debian/compat:
     + Bump to dh version 9.
+  * debian/source/format:
+    + Add this file and set it to "1.0" for now.
   * debian/po:
     + Add Japanese DebConf translation file. Thanks to "victory" for providing
       it. (Closes: #718920).
