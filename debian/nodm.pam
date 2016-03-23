@@ -18,7 +18,13 @@ session       required   pam_env.so readenv=1 envfile=/etc/default/locale
 # # (Replaces the use of /etc/limits in old login)
 session    required   pam_limits.so
 
-# Standard Un*x account and session
+# Standard Un*x account
 @include common-account
 @include common-password
+
+# Enable ConsoleKit integration
+session optional pam_loginuid.so
+session optional pam_ck_connector.so
+
+# Standard Un*x session
 @include common-session

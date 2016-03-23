@@ -29,6 +29,8 @@ nodm (0.12-1) UNRELEASED; urgency=low
   [ Emanuele Aina ]
   * debian/control:
     + Drop x11-xserver-utils dependency. (Closes: #680269).
+  * debian/nodm.pam:
+    + Fix PAM based consolekit integration of sessions. (Closes: #680264).
 
   [ Niklas Fiekas ]
   * debian/nodm.init:
