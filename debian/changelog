@@ -10,6 +10,8 @@ nodm (0.12-1) UNRELEASED; urgency=low
   * Upstream code:
     - Bump upstream version to 0.12. Become new co-maintainer of nodm in Debian.
       (Closes: #813210).
+  * debian/control:
+    + Process with wrap-and-sort.
 
  -- Mike Gabriel <sunweaver@debian.org>  Wed, 23 Mar 2016 12:59:38 +0100
 

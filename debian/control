@@ -2,17 +2,32 @@ Source: nodm
 Section: misc
 Priority: extra
 Maintainer: Debian FreeSmartphone.Org Team <pkg-fso-maint@lists.alioth.debian.org>
-Uploaders: Joachim Breitner <nomeata@debian.org>, Enrico Zini <enrico@debian.org>, Mike Gabriel <sunweaver@debian.org>
-Build-Depends: debhelper (>= 7.0.50~), po-debconf, pkg-config, libx11-dev, libpam0g-dev, help2man
+Uploaders:
+ Joachim Breitner <nomeata@debian.org>,
+ Enrico Zini <enrico@debian.org>,
+ Mike Gabriel <sunweaver@debian.org>,
+Build-Depends:
+ debhelper (>= 7.0.50~),
+ help2man,
+ libpam0g-dev,
+ libx11-dev,
+ pkg-config,
+ po-debconf,
 Standards-Version: 3.9.1
 Vcs-Git: http://git.debian.org/git/pkg-fso/nodm.git
 Vcs-Browser: http://git.debian.org/?p=pkg-fso/nodm.git;a=summary
 
 Package: nodm
 Architecture: linux-any
-Depends: x11-common, x11-xserver-utils, ${shlibs:Depends}, ${misc:Depends}
-Conflicts: zhone-session
-Provides: x-display-manager
+Depends:
+ x11-common,
+ x11-xserver-utils,
+ ${misc:Depends},
+ ${shlibs:Depends},
+Conflicts:
+ zhone-session,
+Provides:
+ x-display-manager,
 Description: automatic display manager
  This package prepares the system to automatically start an X session at
  system boot. It is meant for devices like smartphones, but can be used on
