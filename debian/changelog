@@ -44,6 +44,7 @@ nodm (0.12-1) UNRELEASED; urgency=low
   [ Chris Lamb ]
   * debian/nodm.init:
     + Wait for nodm to exit. (Closes: #638290).
+    + Make initscript less chatty. (Closes: #638293).
 
  -- Mike Gabriel <sunweaver@debian.org>  Wed, 23 Mar 2016 12:59:38 +0100
 

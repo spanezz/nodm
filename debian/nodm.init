@@ -55,13 +55,13 @@ case "$1" in
 		then
 			log_warning_msg "Not starting $NAME because NODM_ENABLED is '$NODM_ENABLED' in /etc/default/$NAME"
 		else
-			start-stop-daemon --start --oknodo --pidfile ${PIDFILE} --make-pidfile --background --exec /usr/sbin/nodm
+			start-stop-daemon --start --quiet --oknodo --pidfile ${PIDFILE} --make-pidfile --background --exec /usr/sbin/nodm
 		fi
 		[ "$VERBOSE" != no ] && log_end_msg $?
 		;;
 	stop)
 		[ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
-		start-stop-daemon --stop --retry 10 --pidfile ${PIDFILE} --oknodo
+		start-stop-daemon --stop --quiet --retry 10 --pidfile ${PIDFILE} --oknodo
 		rm -f ${PIDFILE}
 		[ "$VERBOSE" != no ] && log_end_msg $?
 		;;
