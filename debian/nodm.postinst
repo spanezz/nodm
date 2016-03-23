@@ -39,6 +39,8 @@ EOF
 	NODM_MIN_SESSION_TIME="$RET"
 	db_get nodm/xsession
 	NODM_XSESSION="$RET"
+	db_get nodm/x_timeout
+	NODM_X_TIMEOUT="$RET"
 
 	if [ -s /etc/default/nodm ] ; then
 		sed -i -r -e "s,^NODM_ENABLED=.*,NODM_ENABLED=$NODM_ENABLED," \
@@ -47,6 +49,7 @@ EOF
 			-e "s,^NODM_X_OPTIONS=.*,NODM_X_OPTIONS='$NODM_X_OPTIONS'," \
 			-e "s,^NODM_MIN_SESSION_TIME=.*,NODM_MIN_SESSION_TIME=$NODM_MIN_SESSION_TIME," \
 			-e "s,^NODM_XSESSION=.*,NODM_XSESSION=$NODM_XSESSION," \
+			-e "s,^NODM_X_TIMEOUT=.*,NODM_X_TIMEOUT=$NODM_X_TIMEOUT," \
 			/etc/default/nodm
 	else
 		cat <<EOF > /etc/default/nodm
@@ -70,6 +73,10 @@ NODM_X_OPTIONS='$NODM_X_OPTIONS'
 # If an X session will run for less than this time in seconds, nodm will wait an
 # increasing bit of time before restarting the session.
 NODM_MIN_SESSION_TIME=$NODM_MIN_SESSION_TIME
+
+# Timeout (in seconds) to wait for X to be ready to accept connections. If X is
+# not ready before this timeout, it is killed and restarted.
+NODM_X_TIMEOUT=$NODM_X_TIMEOUT
 EOF
 	fi
 fi

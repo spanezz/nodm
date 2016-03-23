@@ -53,6 +53,13 @@ _Description: Minimum time (in seconds) for a session to be considered OK:
  amount of time before restarting the session. The waiting time will grow
  until a session lasts longer than this amount.
 
+Template: nodm/x_timeout
+Type: string
+Default: 300
+_Description: Maximum time (in seconds) to wait for X to start:
+  Timeout (in seconds) to wait for X to be ready to accept connections. If X is
+  not ready before this timeout, it is killed and restarted.
+
 Template: nodm/xsession
 Type: string
 Default: /etc/X11/Xsession

@@ -25,13 +25,14 @@ NODM_XSESSION=/etc/X11/Xsession
 NODM_X_OPTIONS="-nolisten tcp"
 NODM_USER=root
 NODM_MIN_SESSION_TIME=60
+NODM_X_TIMEOUT=300
 
 if [ -f /etc/default/$NAME ]
 then
 	. /etc/default/$NAME
 fi
 
-export NODM_XINIT NODM_XSESSION NODM_X_OPTIONS NODM_USER NODM_MIN_SESSION_TIME NODM_FIRST_VT
+export NODM_XINIT NODM_XSESSION NODM_X_OPTIONS NODM_USER NODM_MIN_SESSION_TIME NODM_FIRST_VT NODM_X_TIMEOUT
 
 # If you change the user to a non-root user, make sure you
 # set allowed_users=anybody in /etc/X11/Xwrapper.config

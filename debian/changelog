@@ -22,6 +22,11 @@ nodm (0.12-1) UNRELEASED; urgency=low
     + Add Japanese DebConf translation file. Thanks to "victory" for providing
       it. (Closes: #718920).
 
+  [ Sjoerd Simons ]
+  * debian/<debconf>:
+    + Add support for NOXM_X_TIMEOUT via debconf. (Closes: #704128). Based on
+      work by Hector Oron.
+
   [ Simon McVittie ]
   * debian/control:
     + Add D (nodm): xserver-xorg. (Closes: #689703).
