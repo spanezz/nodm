@@ -3,8 +3,10 @@
 %:
 	dh $@
 
-configure:
-	./autogen.sh
+override_dh_auto_configure:
+	# upstream tarball is without configure. autogen.sh will create it
+	NOCONFIGURE=1 ./autogen.sh
+	dh_auto_configure $(DHFLAGS)
 
 override_dh_auto_test:
 	#make check
