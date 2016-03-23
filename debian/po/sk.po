@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nodm\n"
 "Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
-"POT-Creation-Date: 2016-03-23 14:44+0100\n"
+"POT-Creation-Date: 2016-03-23 15:58+0100\n"
 "PO-Revision-Date: 2011-10-17 11:22+0200\n"
 "Last-Translator: Slavko <linux@slavino.sk>\n"
 "Language-Team: Slovak <debian-l10n-slovak@lists.debian.org>\n"
@@ -22,8 +22,8 @@ msgstr ""
 #. Type: boolean
 #. Description
 #: ../nodm.templates:2001
-msgid "Start nodm on boot?"
-msgstr "Spúšťať nodm pri zavedení?"
+msgid "Enable nodm?"
+msgstr ""
 
 #. Type: boolean
 #. Description
@@ -154,3 +154,6 @@ msgstr "Relácia X:"
 #: ../nodm.templates:8001
 msgid "Please choose the name of the X session script to use with nodm."
 msgstr "Prosím, vyberte meno skriptu relácie X, ktorý má nodm použiť."
+
+#~ msgid "Start nodm on boot?"
+#~ msgstr "Spúšťať nodm pri zavedení?"

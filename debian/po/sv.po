@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nodm\n"
 "Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
-"POT-Creation-Date: 2016-03-23 14:44+0100\n"
+"POT-Creation-Date: 2016-03-23 15:58+0100\n"
 "PO-Revision-Date: 2011-09-01 20:47+0100\n"
 "Last-Translator: Martin Bagge / brother <brother@bsnet.se>\n"
 "Language-Team: swedish <debian-l10n-swedish@lists.debian.org>\n"
@@ -22,8 +22,8 @@ msgstr ""
 #. Type: boolean
 #. Description
 #: ../nodm.templates:2001
-msgid "Start nodm on boot?"
-msgstr "Ska nodm startas under systemets uppstart?"
+msgid "Enable nodm?"
+msgstr ""
 
 #. Type: boolean
 #. Description
@@ -152,6 +152,9 @@ msgstr "X-session som ska användas:"
 msgid "Please choose the name of the X session script to use with nodm."
 msgstr ""
 "Ange namnet på det X-session-skript som ska användas tillsammans med nodm."
+
+#~ msgid "Start nodm on boot?"
+#~ msgstr "Ska nodm startas under systemets uppstart?"
 
 #~ msgid ""
 #~ "Please enter the options to pass to the X server when starting the "
