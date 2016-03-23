@@ -12,6 +12,8 @@ nodm (0.12-1) UNRELEASED; urgency=low
       (Closes: #813210).
     - xsession-child.c: Set PAM_XDISPLAY pam item. (Closes: #713960). Thanks to
       Sjoerd Simons for providing the patch.
+    - Makefile.*: Place libraries in LIBS, not LDFLAGS. (LP:#771123). Thanks to
+      Ilya Barygin <barygin@gmail.com> for providing the fix in Ubuntu.
   * debian/control:
     + Process with wrap-and-sort.
   * debian/po:

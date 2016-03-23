@@ -12,7 +12,7 @@ libsources = common.c log.c vt.c xsession-child.c xserver.c xsession.c dm.c
 testlibsources = $(libsources) test.c
 
 AM_CPPFLAGS = $(X11_CFLAGS)
-AM_LDFLAGS = $(PAM_LIBS) $(X11_LIBS)
+LIBS = $(PAM_LIBS) $(X11_LIBS)
 
 nodm_SOURCES = $(libsources) nodm.c
 nodm_CFLAGS = -DNODM_SESSION='"$(sbindir)/nodm"'
