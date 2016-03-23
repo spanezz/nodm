@@ -1,8 +1,17 @@
-nodm (0.11-2) unstable; urgency=low
+nodm (0.12-1) UNRELEASED; urgency=low
 
-  * Provides x-display-manager
+  [ Enrico Zini ]
+  * Upstream code:
+    - Reformat README as markdown.
+  * debian/control:
+    + Provides x-display-manager.
 
- -- Enrico Zini <enrico@debian.org>  Tue, 08 Nov 2011 17:09:38 +0100
+  [ Mike Gabriel ]
+  * Upstream code:
+    - Bump upstream version to 0.12. Become new co-maintainer of nodm in Debian.
+      (Closes: #813210).
+
+ -- Mike Gabriel <sunweaver@debian.org>  Wed, 23 Mar 2016 12:59:38 +0100
 
 nodm (0.11-1.3) unstable; urgency=low
 

@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(nodm, 0.11, [enrico@enricozini.org, nomeata@debian.org])
+AC_INIT(nodm, 0.12, [enrico@enricozini.org, nomeata@debian.org, sunweaver@debian.org])
 AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_AUX_DIR([config])
 AM_INIT_AUTOMAKE([-Wall std-options foreign])
