@@ -44,7 +44,7 @@ the need to implement it.
 
 ## Configuration
 
-Configuration is made via 5 environment variables:
+Configuration is made via these environment variables:
 
  * `NODM_USER`:
     Controls the user that is used to automatically log in.
