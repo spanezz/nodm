@@ -24,6 +24,8 @@ nodm (0.12-1) UNRELEASED; urgency=low
       it. (Closes: #718920).
   * debian/copyright{,.in}:
     + Provide auto-generated draft of a DEP-5 compliant copyright file.
+  * debian/nodm.docs:
+    + README is now README.md.
 
   [ Sjoerd Simons ]
   * debian/<debconf>:
