@@ -7,7 +7,7 @@ Uploaders:
  Enrico Zini <enrico@debian.org>,
  Mike Gabriel <sunweaver@debian.org>,
 Build-Depends:
- debhelper (>= 7.0.50~),
+ debhelper (>= 9),
  autoconf,
  automake,
  help2man,

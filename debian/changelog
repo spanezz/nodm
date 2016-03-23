@@ -27,6 +27,9 @@ nodm (0.12-1) UNRELEASED; urgency=low
     + Bump Standards: to 3.9.7. Required change: DEP-5 compliant copyright file.
     + Add B-D: autoreconf.
     + Add B-D: automake.
+    + Update versioned B-D for debhelper: (>= 9).
+  * debian/compat:
+    + Bump to dh version 9.
   * debian/po:
     + Add Japanese DebConf translation file. Thanks to "victory" for providing
       it. (Closes: #718920).
