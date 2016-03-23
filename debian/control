@@ -22,6 +22,7 @@ Architecture: linux-any
 Depends:
  x11-common,
  x11-xserver-utils,
+ xserver-xorg,
  ${misc:Depends},
  ${shlibs:Depends},
 Conflicts:
