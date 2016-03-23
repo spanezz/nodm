@@ -30,6 +30,10 @@ nodm (0.12-1) UNRELEASED; urgency=low
   * debian/nodm.init:
     + Support "status" argument in nodm init script. (Closes: #753304).
 
+  [ Chris Lamb ]
+  * debian/nodm.init:
+    + Wait for nodm to exit. (Closes: #638290).
+
  -- Mike Gabriel <sunweaver@debian.org>  Wed, 23 Mar 2016 12:59:38 +0100
 
 nodm (0.11-1.3) unstable; urgency=low
