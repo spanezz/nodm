@@ -8,6 +8,7 @@ Uploaders:
  Mike Gabriel <sunweaver@debian.org>,
 Build-Depends:
  debhelper (>= 7.0.50~),
+ autoconf,
  help2man,
  libpam0g-dev,
  libx11-dev,
