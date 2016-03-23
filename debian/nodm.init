@@ -6,6 +6,7 @@
 # Required-Stop:
 # Default-Start:  2 3 4 5
 # Default-Stop:
+# Description: Display Manager for automatic session logins
 # Short-Description: No Display Manager
 ### END INIT INFO
 

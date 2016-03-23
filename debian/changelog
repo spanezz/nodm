@@ -43,6 +43,8 @@ nodm (0.12-1) UNRELEASED; urgency=low
     + Make copyright file DEP-5 compliant.
   * debian/nodm.docs:
     + README is now README.md.
+  * debian/nodm.init:
+    + Provide LSB description header.
   * debian/rules:
     + Correctly evoke ./autogen.sh script at build time.
     + Harden the build of nodm using dpkg's buildflags.mk include.
