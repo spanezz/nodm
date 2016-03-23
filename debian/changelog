@@ -10,6 +10,8 @@ nodm (0.12-1) UNRELEASED; urgency=low
   * Upstream code:
     - Bump upstream version to 0.12. Become new co-maintainer of nodm in Debian.
       (Closes: #813210).
+    - xsession-child.c: Set PAM_XDISPLAY pam item. (Closes: #713960). Thanks to
+      Sjoerd Simons for providing the patch.
   * debian/control:
     + Process with wrap-and-sort.
 

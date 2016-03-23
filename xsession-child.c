@@ -219,6 +219,9 @@ static int setup_pam(struct nodm_xsession_child* s)
     s->pam_status = pam_set_item(s->pamh, PAM_TTY, (const void *) tty);
     if (s->pam_status == PAM_SUCCESS)
         s->pam_status = pam_set_item(s->pamh, PAM_RUSER, (const void *) "root");
+    if (s->pam_status == PAM_SUCCESS)
+        s->pam_status = pam_set_item(s->pamh, PAM_XDISPLAY, (const void *)
+          s->srv->name);
     if (s->pam_status != PAM_SUCCESS) {
         log_err("pam_set_item: %s", pam_strerror(s->pamh, s->pam_status));
         return E_PAM_ERROR;
