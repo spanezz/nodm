@@ -38,6 +38,8 @@ nodm (0.12-1) UNRELEASED; urgency=low
   * debian/source/format:
     + Add this file and set it to "1.0" for now.
   * debian/po:
+    + Reword debconf question "Start nodm at boot" to "Enable nodm". (Closes:
+      #633498).
     + Add Japanese DebConf translation file. Thanks to "victory" for providing
       it. (Closes: #718920).
     + Update debconf translations files after we have added a new configuration

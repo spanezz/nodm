@@ -10,7 +10,7 @@
 Template: nodm/enabled
 Type: boolean
 Default: false
-_Description: Start nodm on boot?
+_Description: Enable nodm?
  Designed for embedded or kiosk systems, nodm starts an X session
  for a user without asking for authentication. On regular
  machines, this has security implications and is therefore disabled
