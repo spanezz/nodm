@@ -67,6 +67,9 @@ NODM_FIRST_VT=$NODM_FIRST_VT
 # X session
 NODM_XSESSION=$NODM_XSESSION
 
+# Options for nodm itself
+NODM_OPTIONS=
+
 # Options for the X server
 NODM_X_OPTIONS='$NODM_X_OPTIONS'
 

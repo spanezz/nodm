@@ -49,6 +49,7 @@ nodm (0.12-1) UNRELEASED; urgency=low
     + README is now README.md.
   * debian/nodm.init:
     + Provide LSB description header.
+    + Make NODM_OPTIONS configurable via /etc/default/nodm. (Closes: #766124).
   * debian/rules:
     + Correctly evoke ./autogen.sh script at build time.
     + Harden the build of nodm using dpkg's buildflags.mk include.

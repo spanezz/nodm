@@ -23,6 +23,7 @@ NODM_ENABLED=no
 NODM_XINIT=/usr/bin/xinit
 NODM_FIRST_VT=7
 NODM_XSESSION=/etc/X11/Xsession
+NODM_OPTIONS=
 NODM_X_OPTIONS="-nolisten tcp"
 NODM_USER=root
 NODM_MIN_SESSION_TIME=60
@@ -56,7 +57,7 @@ case "$1" in
 		then
 			log_warning_msg "Not starting $NAME because NODM_ENABLED is '$NODM_ENABLED' in /etc/default/$NAME"
 		else
-			start-stop-daemon --start --quiet --oknodo --pidfile ${PIDFILE} --make-pidfile --background --exec /usr/sbin/nodm
+			start-stop-daemon --start --quiet --oknodo --pidfile ${PIDFILE} --make-pidfile --background --exec /usr/sbin/nodm -- ${NODM_OPTIONS}
 		fi
 		[ "$VERBOSE" != no ] && log_end_msg $?
 		;;
