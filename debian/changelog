@@ -26,6 +26,7 @@ nodm (0.12-1) UNRELEASED; urgency=low
     + Process with wrap-and-sort.
     + Bump Standards: to 3.9.7. Required change: DEP-5 compliant copyright file.
     + Add B-D: autoreconf.
+    + Add B-D: automake.
   * debian/po:
     + Add Japanese DebConf translation file. Thanks to "victory" for providing
       it. (Closes: #718920).

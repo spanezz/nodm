@@ -9,6 +9,7 @@ Uploaders:
 Build-Depends:
  debhelper (>= 7.0.50~),
  autoconf,
+ automake,
  help2man,
  libpam0g-dev,
  libx11-dev,
