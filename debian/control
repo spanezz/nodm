@@ -13,7 +13,7 @@ Build-Depends:
  libx11-dev,
  pkg-config,
  po-debconf,
-Standards-Version: 3.9.1
+Standards-Version: 3.9.7
 Vcs-Git: http://git.debian.org/git/pkg-fso/nodm.git
 Vcs-Browser: http://git.debian.org/?p=pkg-fso/nodm.git;a=summary
 
