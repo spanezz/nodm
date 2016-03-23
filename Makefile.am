@@ -67,3 +67,10 @@ EXTRA_DIST = test_nodm		\
              $(NULL)
 
 CLEANFILES = nodm.8
+
+DISTCLEANFILES = Makefile.in   \
+                 aclocal.m4    \
+                 config.h.in   \
+                 config/*      \
+                 configure     \
+                 $(NULL)
