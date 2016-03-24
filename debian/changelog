@@ -1,8 +1,10 @@
 nodm (0.12-2) UNRELEASED; urgency=medium
 
-  * Continue development...
+  * debian/changelog:
+    + Add post-upload closure for #638601. Bug has been closed manually
+      meanwhile (on Thu 24th Mar 2016).
 
- -- Mike Gabriel <sunweaver@debian.org>  Thu, 24 Mar 2016 14:42:51 +0100
+ -- Mike Gabriel <sunweaver@debian.org>  Thu, 24 Mar 2016 14:43:36 +0100
 
 nodm (0.12-1) unstable; urgency=low
 
@@ -23,6 +25,7 @@ nodm (0.12-1) unstable; urgency=low
       Sjoerd Simons for providing the patch.
     - Makefile.*: Place libraries in LIBS, not LDFLAGS. (LP:#771123). Thanks to
       Ilya Barygin <barygin@gmail.com> for providing the fix in Ubuntu.
+      (Closes: #638601).
     - README.md: Fix miscounting of amount of environment variables. (Closes:
       #746700, #633089). Thanks to Dan Jacobson for pointing this out.
     - Drop .gitignore file. Let's rather provide a working make (dist)clean.
