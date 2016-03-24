@@ -26,7 +26,7 @@
 #include <errno.h>
 
 
-const char* basename (const char* str)
+const char* nodm_basename (const char* str)
 {
     const char *cp = strrchr (str, '/');
     return cp ? cp + 1 : str;

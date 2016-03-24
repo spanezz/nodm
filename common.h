@@ -48,7 +48,7 @@
 #define E_USER_QUIT           221   ///< Quit requested
 
 /// Return the basename of a path, as a pointer inside \a str
-const char* basename (const char* str);
+const char* nodm_basename (const char* str);
 
 /**
  * Like getenv, but if the variable is not defined it returns \a def

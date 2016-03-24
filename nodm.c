@@ -117,13 +117,13 @@ int main (int argc, char **argv)
     // We only run if we are root
     if (!opt_nested && getuid() != 0)
     {
-        fprintf(stderr, "%s: can only be run by root\n", basename(argv[0]));
+        fprintf(stderr, "%s: can only be run by root\n", nodm_basename(argv[0]));
         return E_NOPERM;
     }
 
     // Setup logging
     struct log_config cfg = {
-        .program_name = basename(argv[0]),
+        .program_name = nodm_basename(argv[0]),
     };
     if (opt_quiet)
         cfg.log_level = NODM_LL_WARN;

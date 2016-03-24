@@ -1,5 +1,8 @@
 nodm (0.12-2) UNRELEASED; urgency=medium
 
+  * Upstream code:
+    - Rename symbol "basename" to "nodm_basename". This is to avoid
+      naming conflicts with the basename() function from <string.h>.
   * debian/changelog:
     + Add post-upload closure for #638601. Bug has been closed manually
       meanwhile (on Thu 24th Mar 2016).
