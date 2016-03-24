@@ -43,6 +43,11 @@ Default: -nolisten tcp
 _Description: Options for the X server:
  Please enter the options to pass to the X server when starting it.
  .
+ Format: [/usr/bin/<Xserver>] [:<disp>] <Xserver-options>
+ .
+ The Xserver executable and the display name can be omitted, but should
+ be placed in front, if nodm's defaults shall be overridden.
+ .
  If no vtN option is used, nodm will perform automatic vt allocation.
 
 Template: nodm/min_session_time

@@ -70,7 +70,12 @@ NODM_XSESSION=$NODM_XSESSION
 # Options for nodm itself
 NODM_OPTIONS=
 
-# Options for the X server
+# Options for the X server.
+#
+# Format: [/usr/bin/<Xserver>] [:<disp>] <Xserver-options>
+#
+# The Xserver executable and the display name can be omitted, but should
+# be placed in front, if nodm's defaults shall be overridden.
 NODM_X_OPTIONS='$NODM_X_OPTIONS'
 
 # If an X session will run for less than this time in seconds, nodm will wait an
