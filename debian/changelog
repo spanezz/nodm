@@ -8,6 +8,7 @@ nodm (0.12-2) UNRELEASED; urgency=medium
       meanwhile (on Thu 24th Mar 2016).
   * debian/<debconf>:
     + Explain about how the NODM_X_OPTIONS env var has to be populated.
+    + Update .po files and template.pot.
 
  -- Mike Gabriel <sunweaver@debian.org>  Thu, 24 Mar 2016 14:43:36 +0100
 

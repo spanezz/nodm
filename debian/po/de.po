@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nodm_0.6-1_de\n"
 "Report-Msgid-Bugs-To: nodm@packages.debian.org\n"
-"POT-Creation-Date: 2016-03-23 15:58+0100\n"
+"POT-Creation-Date: 2016-03-24 18:44+0100\n"
 "PO-Revision-Date: 2011-10-17 23:27+0200\n"
 "Last-Translator: Thomas Müller <thomas.mueller@tmit.eu>\n"
 "Language-Team: de <debian-l10n-german@lists.debian.org>\n"
@@ -110,6 +110,20 @@ msgid "Please enter the options to pass to the X server when starting it."
 msgstr ""
 "Bitte geben Sie die Optionen an, die an den X-Server zum Starten übergeben "
 "werden."
+
+#. Type: string
+#. Description
+#: ../nodm.templates:5001
+msgid ""
+"The Xserver executable and the display name can be omitted, but should be "
+"placed in front, if nodm's defaults shall be overridden."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../nodm.templates:5001
+msgid "If no vtN option is used, nodm will perform automatic vt allocation."
+msgstr ""
 
 #. Type: string
 #. Description
