@@ -1,5 +1,1138 @@
-2009-02-23  enrico@enricozini.org
+2017-01-23 17:29:34 +0100 Mike Gabriel (1633964)
+
+	* release 0.13 (HEAD, master)
+
+2017-01-23 17:04:49 +0100 Mike Gabriel (1523d43)
+
+	* de-Debianize nodm upstream project (origin/master)
+
+2017-01-23 13:12:41 +0100 Simon McVittie (52f7f07)
+
+	* Add systemd support, via NMU to unstable (debian/0.12-1.1).
+
+2016-03-24 18:46:16 +0100 Mike Gabriel (228cf9d)
+
+	* debian/<debconf>: Update .po files and template.pot.
+
+2016-03-24 18:44:15 +0100 Mike Gabriel (31a6819)
+
+	* debian/<debconf>: Explain about how the NODM_X_OPTIONS env var has
+          to be populated.
+
+2016-03-24 17:12:32 +0100 Mike Gabriel (046f3c4)
+
+	* upstream: Rename symbol "basename" to "nodm_basename". This is to
+          avoid naming conflicts with the basename() function from
+          <string.h>.
+
+2016-03-24 14:44:55 +0100 Mike Gabriel (29da1f6)
+
+	* debian/changelog: Add post-upload closure for #638601. Bug has been
+          closed manually meanwhile (on Thu 24th Mar 2016). (Closes:
+          #638601).
+
+2016-03-24 14:42:57 +0100 Mike Gabriel (683b6cb)
+
+	* Continue development...
+
+2016-03-23 16:27:13 +0100 Mike Gabriel (6f0b4c0)
+
+	* upload to unstable (debian/0.12-1) (tag: debian/0.12-1)
+
+2016-03-23 16:13:05 +0100 Mike Gabriel (f196c4f)
+
+	* debian/changelog: add bug closure for #633089
+
+2016-03-23 15:58:30 +0100 Mike Gabriel (deb67fa)
+
+	* another debconf-updatepo run...
+
+2016-03-23 15:57:30 +0100 Mike Gabriel (56d55e2)
+
+	* Add EOL chars for help output of the --nested cmdline option.
+          (Closes: #766123).
+
+2016-03-23 15:55:10 +0100 Mike Gabriel (2c8f866)
+
+	* upstream: Whitespace clean-up at EOL.
+
+2016-03-23 15:52:23 +0100 Mike Gabriel (6dbdeb0)
+
+	* Reword debconf question "Start nodm at boot" to "Enable nodm".
+          (Closes: #633498).
+
+2016-03-23 15:50:44 +0100 Mike Gabriel (1f960fd)
+
+	* debian/nodm.init: Make NODM_OPTIONS configurable via
+          /etc/default/nodm. (Closes: #766124).
+
+2016-03-23 15:32:17 +0100 Mike Gabriel (71acb3a)
+
+	* xserver.c: Don't FTBFS when built with  -Werror=unused-result.
+          (Closes: #638600).
+
+2016-03-23 15:23:19 +0100 Mike Gabriel (cd598ea)
+
+	* debian/source/format: Add this file and set it to "1.0" for now.
+
+2016-03-23 15:21:46 +0100 Mike Gabriel (8766795)
+
+	* debian/nodm.init: Provide LSB description header.
+
+2016-03-23 15:20:21 +0100 Mike Gabriel (cecf69d)
+
+	* debian/control: Use encrypted URLs for Vcs-*: fields.
+
+2016-03-23 15:18:21 +0100 Mike Gabriel (4732321)
+
+	* Harden the build of nodm using dpkg's buildflags.mk include.
+
+2016-03-23 15:14:53 +0100 Mike Gabriel (be3dfde)
+
+	* Bump to debhelper version level 9.
+
+2016-03-23 15:12:07 +0100 Mike Gabriel (06738e3)
+
+	* debian/control: Add B-D: automake.
+
+2016-03-23 15:10:36 +0100 Mike Gabriel (b39b7ae)
+
+	* debian/control: Add B-D: autoreconf.
+
+2016-03-23 15:07:21 +0100 Mike Gabriel (909c41f)
+
+	* Makefile.am: Add various build cruft files to DISTCLEANFILES.
+
+2016-03-23 15:06:23 +0100 Mike Gabriel (96ac160)
+
+	* upstream: Makefile.am: line-wrap variable assignments with file
+          lists.
+
+2016-03-23 14:55:54 +0100 Mike Gabriel (f50030c)
+
+	* Acknowledge previous NMUs and work-in their changes (0.11-1.1,
+          0.11-1.2 and 0.11-1.3). Also work through all open bugs
+          with patches and apply them if appropriate; see below for
+          details. (Closes: #747077).
+
+2016-03-23 14:46:02 +0100 Mike Gabriel (4edbde8)
+
+	* Update debconf translations files after we have added a new
+          configuration item.
+
+2016-03-23 14:39:58 +0100 Mike Gabriel (1abd007)
+
+	* Drop .gitignore file. Let's rather provide a working make
+          (dist)clean.
+
+2016-03-23 14:33:13 +0100 Mike Gabriel (8e93257)
+
+	* debian/rules: Correctly evoke ./autogen.sh script at build time.
+
+2016-03-23 14:29:33 +0100 Mike Gabriel (1f2cb0b)
+
+	* debian/copyright: Make copyright file DEP-5 compliant.
+
+2016-03-23 14:23:47 +0100 Mike Gabriel (d27477d)
+
+	* debian/nodm.docs: README is now README.md.
+
+2016-03-23 14:19:25 +0100 Mike Gabriel (f24be1f)
+
+	* debian/copyright{,.in}: Provide auto-generated draft of a DEP-5
+          compliant copyright file.
+
+2016-03-23 14:15:59 +0100 Mike Gabriel (fa594cd)
+
+	* debian/control: Bump Standards: to 3.9.7. Required change: DEP-5
+          compliant copyright file.
+
+2016-03-23 14:13:12 +0100 Simon McVittie (6cdd17f)
+
+	* debian/rules: Rely on LSB headers for dependency/sequence info.
+          (Closes: #584179).
+
+2016-03-23 14:08:29 +0100 Chris Lamb (0387c7b)
+
+	* Make initscript less chatty. (Closes: #638293).
+
+2016-03-23 14:00:33 +0100 Sjoerd Simons (28db839)
+
+	* debian/<debconf>: Add support for NOXM_X_TIMEOUT via debconf.
+          (Closes: #704128).
+
+2016-03-23 13:57:17 +0100 Emanuele Aina (7419b08)
+
+	* debian/nodm.pam: Fix PAM based consolekit integration of sessions.
+          (Closes: #680264).
+
+2016-03-23 13:53:17 +0100 Mike Gabriel (5b01f20)
+
+	* README.md: Fix miscounting of amount of environment variables.
+          (Closes: #746700). Thanks to Dan Jacobson for pointing
+          this out.
+
+2016-03-23 13:50:07 +0100 Mike Gabriel (bfaaee6)
+
+	* Makefile.*: Place libraries in LIBS, no LDFLAGS. (LP:#771123).
+          Thanks to Ilya Barygin <barygin@gmail.com> for providing
+          the fix in Ubuntu.
+
+2016-03-23 13:45:12 +0100 Chris Lamb (d212290)
+
+	* debian/nodm.init: Wait for nodm to exit. (Closes: #638290).
+
+2016-03-23 13:37:52 +0100 Mike Gabriel (a15a23f)
+
+	* debian/po: Add Japanese DebConf translation file. Thanks to
+          "victory" for providing it. (Closes: #718920).
+
+2016-03-23 13:25:20 +0100 Niklas Fiekas (4292731)
+
+	* debian/nodm.init: Support "status" argument in nodm init script.
+          (Closes: #753304).
+
+2016-03-23 13:22:17 +0100 Mike Gabriel (2d2e8c4)
+
+	* xsession-child.c: Set PAM_XDISPLAY pam item. (Closes: #713960).
+          Thanks to Sjoerd Simons for providing the patch.
+
+2016-03-23 13:19:00 +0100 Emanuele Aina (9b8ec1e)
+
+	* debian/control: Drop x11-xserver-utils dependency. (Closes:
+          #680269).
+
+2016-03-23 13:06:02 +0100 Simon McVittie (75bda7b)
+
+	* debian/control: Add D (nodm): xserver-xorg. (Closes: #689703).
+
+2016-03-23 13:04:26 +0100 Mike Gabriel (8cc5ee9)
+
+	* debian/control: Process with wrap-and-sort.
+
+2016-03-23 13:02:03 +0100 Mike Gabriel (b21274d)
+
+	* upstream: Bump upstream version to 0.12. Become new co-maintainer
+          of nodm in Debian. (Closes: #813210).
+
+2014-08-27 11:22:22 +0200 Mike Gabriel (2a7f721)
+
+	* import NMU upload unstable (0.11-1.3)
+
+2014-08-27 11:22:02 +0200 Mike Gabriel (1e4287e)
+
+	* import NMU upload unstable (0.11-1.2)
+
+2014-08-27 11:21:50 +0200 Mike Gabriel (a7421de)
+
+	* import NMU upload unstable (0.11-1.1)
+
+2016-02-27 16:34:23 +0100 Enrico Zini (921db7e)
+
+	* Reformatted README as markdown
+
+2011-11-08 17:09:55 +0100 Enrico Zini (cf5a58b)
+
+	* Provides x-display-manager
+
+2011-08-17 14:44:56 +0200 Enrico Zini (58fd03b)
+
+	* Close both duplicates (tag: debian/0.11-1, with-nmu)
+
+2011-08-17 14:38:24 +0200 Enrico Zini (e28adca)
+
+	* Fixed typo
+
+2011-08-17 13:59:30 +0200 Enrico Zini (6d00951)
+
+	* Updated potfiles
+
+2011-08-17 13:57:53 +0200 Enrico Zini (8ebb1d8)
+
+	* Updated version number
+
+2011-08-17 13:56:14 +0200 Enrico Zini (2f593f3)
+
+	* Removed nodm/xinit form debconf and updated debconf templates
+
+2011-08-17 13:54:46 +0200 Enrico Zini (db829a5)
+
+	* do not force "-nolisten tcp". Closes: #635992
+
+2011-08-17 13:37:27 +0200 Enrico Zini (0e78a64)
+
+	* Do not require $NODM_XINIT to exist in order to start: that env var
+          is now ignored. Closes: #634901
+
+2011-07-19 23:38:55 +0200 Enrico Zini (5417138)
+
+	* default X start timeout increased to 30 seconds. Closes: #633089; X
+          start timeout configurable via NODM_X_TIMEOUT (tag:
+          debian/0.10-1)
+
+2011-07-09 11:20:45 +0100 Enrico Zini (3ad8f4d)
+
+	* Reenabled restart previously disabled during testing and getting
+          committed by mistake (tag: debian/0.9-1)
+
+2011-07-09 10:36:09 +0100 Enrico Zini (71c15d0)
+
+	* Merge branch 'master' of git://anonscm.debian.org/pkg-fso/nodm
+
+2011-07-09 11:35:13 +0200 Enrico Zini (1e82cc3)
+
+	* Updated version number and changelog
+
+2011-07-09 10:31:55 +0100 Enrico Zini (0946e75)
+
+	* Merge branch 'master' of git://anonscm.debian.org/pkg-fso/nodm
+
+2011-07-09 10:31:35 +0100 Enrico Zini (2c4dcd3)
+
+	* Some cargoculting from xinit
+
+2011-07-09 11:30:43 +0200 Enrico Zini (2ebe57e)
+
+	* Keep a connection open when the X server is started
+
+2011-07-09 10:39:21 +0200 Enrico Zini (1e42ea5)
+
+	* Updated tests to account for '-nolisten tcp' injection
+
+2011-07-09 09:15:29 +0100 Enrico Zini (14c36fe)
+
+	* Fix exit reporting messages
+
+2011-07-09 09:15:10 +0100 Enrico Zini (bdff56b)
+
+	* Add -nolisten tcp to X options if missing
+
+2011-07-09 01:01:45 +0100 Enrico Zini (387dda5)
+
+	* More log improvements
+
+2011-07-09 01:00:36 +0100 Enrico Zini (104d4e3)
+
+	* Log timestamps on stderr
+
+2011-07-09 01:10:50 +0200 Enrico Zini (b645dd1)
+
+	* Fixed log level enforcement
+
+2011-07-09 00:09:12 +0100 Enrico Zini (27046d4)
+
+	* Verbose logging tweaks
+
+2011-07-09 00:55:21 +0200 Enrico Zini (a22b3b9)
+
+	* Cleaned up log interface and exposed more logging options on
+          command line
+
+2011-07-08 19:47:10 +0200 Enrico Zini (a30dbc0)
+
+	* Better server and session quit report
+
+2011-07-08 18:46:33 +0100 Enrico Zini (89bba9b)
+
+	* Start the right X according to $DISPLAY
+
+2011-07-08 17:40:17 +0100 Enrico Zini (77771d9)
+
+	* Removed leftovers from root check
+
+2011-07-08 17:37:35 +0100 Enrico Zini (1b49a85)
+
+	* Adapt tests according to what is possible to run
+
+2011-07-08 17:25:44 +0100 Enrico Zini (bed348e)
+
+	* Log when terminating X because we got killed
+
+2011-07-08 17:25:19 +0100 Enrico Zini (5d019bd)
+
+	* Added missing header
+
+2011-07-08 16:38:19 +0100 Enrico Zini (59711ec)
+
+	* Fixed a bogus compiler warning with older gccs
+
+2011-07-07 17:04:36 +0200 Enrico Zini (e76eaf5)
+
+	* Added pkg-config dependency (tag: debian/0.8-1)
+
+2011-07-07 16:51:55 +0200 Enrico Zini (ef10b73)
+
+	* Removed obsolete TODO
+
+2011-07-07 16:47:24 +0200 Enrico Zini (86b8037)
+
+	* Aehm, fixed version typo
+
+2011-07-07 16:44:01 +0200 Enrico Zini (97cd630)
+
+	* Read to upload
+
+2011-07-07 01:56:12 +0200 Enrico Zini (37997df)
+
+	* New version number and updated changelog
+
+2011-07-07 01:42:40 +0200 Enrico Zini (b192f37)
+
+	* Merge branch 'bug540201'
+
+2011-07-07 01:39:58 +0200 Enrico Zini (bd547c0)
+
+	* Revert "Included upstart job (Closes: #602511). Thanks to Luigi
+          Capriotti for providing it."
+
+2011-07-07 01:35:29 +0200 Enrico Zini (b93172e)
+
+	* Dropped xinit dependency: we don't need it anymore
+
+2011-07-06 21:13:28 +0200 Enrico Zini (7a268a7)
+
+	* Disable tests for now
+
+2011-07-06 20:57:21 +0200 Enrico Zini (0d097f7)
+
+	* Block all signals in the monitor process by default, unblocking
+          quit signals when we can catch it and exit
+
+2011-07-06 18:07:16 +0200 Enrico Zini (4d5ceee)
+
+	* Deal with killing signals arriving between the fork and when we set
+          up the catching machinery in the parent
+
+2011-07-06 17:57:37 +0200 Enrico Zini (fe92042)
+
+	* Wait for X server and X session after stopping them
+
+2011-07-06 17:46:15 +0200 Enrico Zini (361289e)
+
+	* Implemented --nested to be a user session manager for nested X
+          servers
+
+2011-07-06 17:20:40 +0200 Enrico Zini (df7e033)
+
+	* Updated README
+
+2011-07-06 17:20:35 +0200 Enrico Zini (bac4dd3)
+
+	* Cleaned up wait/restart loop
+
+2011-07-06 15:36:56 +0200 Enrico Zini (e1626ac)
+
+	* Moved connection to X server to child initialization code
+
+2011-07-06 15:01:27 +0200 Enrico Zini (ee24a9d)
+
+	* Do not set DISPLAY on xserver, as it inteferes with what is needed
+          by Xnest
+
+2011-07-06 13:00:56 +0200 Enrico Zini (57ac67b)
+
+	* Cleaned up VT allocation code
+
+2011-07-06 11:43:16 +0200 Enrico Zini (6c46219)
+
+	* More session test cases
+
+2011-07-06 11:32:51 +0200 Enrico Zini (a92acb4)
+
+	* Fixed two small memory leaks
+
+2011-07-06 11:25:57 +0200 Enrico Zini (b43f2d0)
+
+	* Prevent killing unstarted processed (marked by (pid_d)-1, ouch)
+
+2011-07-06 11:15:51 +0200 Enrico Zini (86710bf)
+
+	* Also set server name when parsing x server command line
+
+2011-07-06 10:38:12 +0200 Enrico Zini (11bdc2d)
+
+	* Collected common test code in a test module
+
+2011-07-06 10:18:25 +0200 Enrico Zini (8de41af)
+
+	* Added strerror-like function for nodm error codes
+
+2011-07-06 01:58:24 +0200 Enrico Zini (85bf84f)
+
+	* Run a small xnest
+
+2011-07-06 01:58:04 +0200 Enrico Zini (939d92e)
+
+	* Default to current user if conf_run_as is empty
+
+2011-07-06 01:46:38 +0200 Enrico Zini (a20ec82)
+
+	* Display manager start/stop/wait functions
+
+2011-07-05 19:45:55 +0200 Enrico Zini (f7b8979)
+
+	* Made child session body overridable for tests
+
+2011-07-05 19:42:03 +0200 Enrico Zini (6c296c1)
+
+	* Move session setup code to child process
+
+2011-07-05 19:29:25 +0200 Enrico Zini (284d64e)
+
+	* More code cleanup, split child code from server code
+
+2011-07-05 14:37:27 +0200 Enrico Zini (d799d46)
+
+	* Read session command as config
+
+2011-07-05 14:23:47 +0200 Enrico Zini (2eaffc8)
+
+	* Make parse_cmdline testable, test it and fix it
+
+2011-07-05 13:39:37 +0200 Enrico Zini (d316d6f)
+
+	* More session refactoring, unified error codes
+
+2011-07-05 10:57:49 +0200 Enrico Zini (dedf4ab)
+
+	* Started testing internals and fixed getenv_with_default
+
+2011-07-05 01:33:12 +0200 Enrico Zini (60374b8)
+
+	* Refactored as a proper display manager (testing still needed)
+
+2011-07-05 00:11:34 +0200 Enrico Zini (af0f171)
+
+	* Added functions to stop the X server
+
+2011-07-05 00:02:57 +0200 Enrico Zini (bfcbf16)
+
+	* Implement reading window path
+
+2011-07-04 22:32:38 +0200 Enrico Zini (5bf5cd0)
+
+	* renamed sstart in server
+
+2011-07-04 22:26:09 +0200 Enrico Zini (7950d98)
+
+	* Try connecting to the server and set DISPLAY
+
+2011-07-04 21:37:12 +0200 Enrico Zini (d106da6)
+
+	* Use a struct to preserve the pid of the X server
+
+2011-07-04 20:01:29 +0200 Enrico Zini (59dd50e)
+
+	* New function to start X server and wait for it to be ready
+
+2011-07-04 16:07:37 +0200 Enrico Zini (811d1fc)
+
+	* Started cleanup/rewrite towards 540201
+
+2011-02-11 11:18:54 +0100 Marco Amadori (5cc4b68)
+
+	* Check if plymouth is available before using it.
+
+2011-02-11 11:21:09 +0100 Marco Amadori (4156de2)
+
+	* Removed mixed tab and spaces in debian scripts.
+
+2011-02-11 14:58:18 +0100 Marco Amadori (b2b8d58)
+
+	* Build ./configure if missing.
+
+2011-02-11 12:36:39 +0100 Marco Amadori (489759f)
+
+	* Upgraded debian/rules to debhelper >= 7.0.50.
+
+2011-02-11 11:58:34 +0100 Marco Amadori (485a548)
+
+	* Update Standards-Version to 3.9.1 (no changes required).
+
+2011-02-08 23:27:12 +0530 Joachim Breitner (b7c982a)
+
+	* Include l10n changes from previous NMU
+
+2011-02-08 23:18:37 +0530 Joachim Breitner (8848717)
+
+	* Included upstart job (Closes: #602511). Thanks to Luigi Capriotti
+          for providing it.
+
+2010-05-23 15:17:19 +0100 Enrico Zini (7ff6a1a)
+
+	* Updated Swedish translation; thanks to Arne Anka and Martin Bagge.
+          Closes: #539075
+
+2010-05-23 15:13:31 +0100 Enrico Zini (4d35a41)
+
+	* Do not depend on a terminal emulator. Closes: #561409.
+
+2010-05-23 15:12:43 +0100 Enrico Zini (c058a98)
+
+	* Actually releasing 0.7
+
+2010-05-23 15:08:54 +0100 Enrico Zini (2df269e)
+
+	* Added dependency on x11-xserver-utils. Closes: #559173.
+
+2010-05-23 15:07:50 +0100 Enrico Zini (7cb7c0e)
+
+	* Do not build on freebsd until someone comes up with a patch (see
+          #575265).
+
+2010-05-23 15:01:51 +0100 Enrico Zini (3ec3d90)
+
+	* Fix configure.ac PAM bits. Thanks to Mathieu Bridon and Sebastian
+          Dziallas.
+
+2009-11-11 00:04:15 +0000 Enrico Zini (0af8c7a)
+
+	* Updated .gitignore
+
+2009-11-11 00:03:54 +0000 Enrico Zini (76ce13e)
+
+	* Added /etc/insserv.conf.d/nodm. Closes: #554840.
+
+2009-09-29 11:30:13 +0100 Enrico Zini (c36f1c7)
+
+	* Updated translations.
+
+2009-09-29 11:19:29 +0100 Enrico Zini (399962b)
+
+	* Added hal and bluetooth to initscript Should-Start. Closes:
+          #548776.
+
+2009-09-29 11:17:07 +0100 Enrico Zini (4b005e9)
+
+	* Added kdb to initscript Should-Start:. Closes: #548104. Thanks to
+          Michael Schutte.
+
+2009-07-26 20:40:26 +0200 Enrico Zini (672bb50)
+
+	* Try harder to open the console device. Closes: #538640. (tag:
+          debian/0.6-1)
+
+2009-07-24 01:57:06 +0200 Enrico Zini (e2224ea)
+
+	* Release to unstable (tag: debian/0.5-1)
+
+2009-07-24 01:53:08 +0200 Enrico Zini (13e570f)
+
+	* Updated standards-version
+
+2009-07-24 01:51:33 +0200 Enrico Zini (8d5ff0c)
+
+	* Ran debconf-updatepo
+
+2009-07-24 01:31:16 +0200 Enrico Zini (6b59ed6)
+
+	* Also export NODM_FIRST_VT
+
+2009-07-24 01:20:17 +0200 Enrico Zini (cb3641e)
+
+	* Add the new config file entry to /etc/default/nodm
+
+2009-07-24 01:11:15 +0200 Enrico Zini (5724c98)
+
+	* Add missing space
+
+2009-07-24 01:02:56 +0200 Enrico Zini (86e1c10)
+
+	* Merged changes from master
+
+2009-07-24 01:02:15 +0200 Enrico Zini (afd2e86)
+
+	* Removed conflicts with the other X display managers
+
+2009-07-24 01:01:32 +0200 Enrico Zini (d360c4c)
+
+	* Provide a migration path from older nodm
+
+2009-07-24 00:15:42 +0200 Enrico Zini (9e8bb51)
+
+	* Added changelog entry
+
+2009-07-24 00:14:31 +0200 Enrico Zini (c5471b1)
+
+	* Add adding first_vt to the migration path
+
+2009-07-24 00:11:06 +0200 Enrico Zini (4d6645e)
+
+	* Fixed undo artifact
+
+2009-07-24 00:08:02 +0200 Enrico Zini (e75cd83)
+
+	* Make the starting VT configurable
+
+2009-07-23 23:32:54 +0200 Enrico Zini (75a6944)
+
+	* Removed useless check
+
+2009-07-23 22:31:51 +0200 Enrico Zini (6695887)
+
+	* Do not write to strings recursively
+
+2009-07-23 21:09:25 +0200 Enrico Zini (ebb4698)
+
+	* First attempt at vt allocation
+
+2009-07-06 19:54:22 +0100 Enrico Zini (d18f5eb)
+
+	* Merged branch with cleanup of ~/.xsession-error
+
+2009-07-06 19:51:57 +0100 Enrico Zini (1f3d735)
+
+	* Stricter permissions on ~/.xsession-errors
+
+2009-07-06 10:24:47 +0200 Enrico Zini (959a759)
+
+	* Clean up ~/.xsession-errors
+
+2009-05-14 14:57:40 +0100 Enrico Zini (317a201)
+
+	* Added autogen.sh to EXTRA_DIST
+
+2009-05-14 14:41:52 +0100 Enrico Zini (4a5fe85)
+
+	* Update version number in configure.ac
+
+2009-05-14 14:41:07 +0100 Enrico Zini (e4626bc)
+
+	* Release to unstable
+
+2009-05-14 13:57:30 +0100 Enrico Zini (57d071a)
+
+	* Remove config file after the daemon is shut down
+
+2009-05-14 13:56:14 +0100 Enrico Zini (b4d25ad)
+
+	* Fixed version number
+
+2009-05-14 13:41:01 +0100 Enrico Zini (64f50bf)
+
+	* Remove /etc/default/nodm on purge. Closes: #527379.
+
+2009-05-14 13:20:57 +0100 Enrico Zini (aadb013)
+
+	* The session starter is now nodm itself: fix test script
+
+2009-05-14 13:16:10 +0100 Enrico Zini (a35e997)
+
+	* Set USERNAME, PWD and SHELL
+
+2009-05-14 10:36:26 +0100 Enrico Zini (7dd44ec)
+
+	* Merged translation changes from bubulle
+
+2009-04-29 22:04:54 +0200 Joachim Breitner (c197411)
+
+	* Tag for release (tag: nodm/0.3-2)
+
+2009-04-29 22:00:07 +0200 Joachim Breitner (9157e40)
+
+	* fix changelog entry
+
+2009-04-29 21:59:11 +0200 Martin Bagge (becbd86)
+
+	* Updated Swedish translation for debconf messages
+
+2009-04-29 21:57:29 +0200 Traduz - Portuguese Translation Team (7824f35)
+
+	* Updated Portuguese translation for debconf messages
+
+2009-04-29 21:55:31 +0200 Christian Perrier (968e121)
+
+	* Debconf templates and debian/control review
+
+2009-04-29 21:51:00 +0200 Joachim Breitner (1a6c8c4)
+
+	* Merge branch 'master'; commit 'alioth/master'
+
+2009-04-16 14:18:12 +0100 Enrico Zini (9178830)
+
+	* Set the maintainer to be the pkg-fso list
+
+2009-04-14 10:25:30 +0200 Joachim Breitner (951d195)
+
+	* Tag for release (tag: nodm/0.3-1)
+
+2009-04-14 10:20:04 +0200 Joachim Breitner (37a0e09)
+
+	* bump version number in configure.ac
+
+2009-04-10 20:37:19 +0200 Joachim Breitner (2406af8)
+
+	* Tag for release (tag: nodm/0.3)
+
+2009-04-10 20:36:27 +0200 Joachim Breitner (f131f4c)
+
+	* Bump standards version, no change
+
+2009-04-10 20:33:17 +0200 Joachim Breitner (b413551)
+
+	* Include Swedish strings for nodm debconf, thanks to Martin Bagge
+          for the translation. (Closes: #522976)
+
+2009-04-10 20:31:31 +0200 Joachim Breitner (1623ee4)
+
+	* Fix "initscript ignores NODM_ENABLED=false" by removing bashism,
+          thanks to Justin B Rye for the patch (Closes: #523004)
+
+2009-02-25 09:38:27 +0000 Enrico Zini (9b91fa4)
+
+	* Added autogen.sh
+
+2009-02-23 20:58:10 +0000 Enrico Zini (ac36099)
+
+	* Ran debconf-updatepo
+
+2009-02-23 20:56:46 +0000 Enrico Zini (99b1a95)
+
+	* Fixed template descriptions after lintian suggestions
+
+2009-02-23 20:51:45 +0000 Enrico Zini (12ee186)
+
+	* Upload to unstable
+
+2009-02-23 20:51:22 +0000 Enrico Zini (00b0660)
+
+	* Added {shlibs,misc}:Depends
+
+2009-02-23 20:45:50 +0000 Enrico Zini (11d905c)
+
+	* Build and install a manpage
+
+2009-02-23 20:44:32 +0000 Enrico Zini (3e5831b)
+
+	* Allow to run --help and --version as non-root
+
+2009-02-23 20:34:38 +0000 Enrico Zini (d5e1123)
+
+	* Added manpage
+
+2009-02-23 17:51:47 +0000 Enrico Zini (76526e2)
+
+	* Provide an upgrade path for the openmoko (tag: nodm/0.2)
+
+2009-02-23 17:31:11 +0000 Enrico Zini (da9f172)
+
+	* Added pam configuration
+
+2009-02-23 16:45:34 +0000 Enrico Zini (3795be1)
+
+	* Updated TODO
+
+2009-02-23 16:42:23 +0000 Enrico Zini (86faae2)
+
+	* Added .gitignore
+
+2009-02-23 16:40:16 +0000 Enrico Zini (fb92bff)
+
+	* Added the usual paperwork
+
+2009-02-23 16:39:12 +0000 Enrico Zini (255a133)
+
+	* Run self as session
+
+2009-02-23 16:32:25 +0000 Enrico Zini (212f2b3)
+
+	* Documented implementation details
+
+2009-02-23 16:32:01 +0000 Enrico Zini (0786442)
+
+	* Install documentation, let autotools install the rest
+
+2009-02-23 14:52:54 +0000 Enrico Zini (10b16b0)
 
 	* Autotoolized
-	* Run self as the session, using $NODM_RUN_SESSION to signal that it
-	  should behave differently
+
+2009-02-22 22:21:56 +0000 Enrico Zini (eb91e39)
+
+	* Build-depend on libpam0g-dev
+
+2009-02-22 14:03:05 +0000 Enrico Zini (75789f1)
+
+	* Make tests work with nodm using exec
+
+2009-02-22 13:54:44 +0000 Enrico Zini (0270b18)
+
+	* Exec the command in the subshell
+
+2009-02-22 13:48:46 +0000 Enrico Zini (bedb722)
+
+	* Updates to debian packaging
+
+2009-02-20 18:06:50 +0000 Enrico Zini (f8c0a98)
+
+	* More bits of #d-devel
+
+2009-02-20 17:48:11 +0000 Enrico Zini (8ab57e9)
+
+	* Complete redesign
+
+2009-02-20 15:54:20 +0000 Enrico Zini (07844ad)
+
+	* More notes on why X doesn't start for users
+
+2009-02-20 14:41:23 +0000 Enrico Zini (9aa0ed2)
+
+	* Read $NODM_COMMAND before setting up environment
+
+2009-02-20 14:40:37 +0000 Enrico Zini (a752fe4)
+
+	* Fixed path on executable check
+
+2009-02-20 14:32:42 +0000 Enrico Zini (7a26a2c)
+
+	* Adapted init script to NODM_COMMAND
+
+2009-02-20 14:24:11 +0000 Enrico Zini (6d9a615)
+
+	* Removed test examples from TODO now that we have a test script
+
+2009-02-20 14:12:44 +0000 Enrico Zini (33b29c5)
+
+	* Added a test script
+
+2009-02-20 14:10:36 +0000 Enrico Zini (e62b9bb)
+
+	* Setup the right environment
+
+2009-02-20 13:39:38 +0000 Enrico Zini (0398daf)
+
+	* unblock signals while waiting for retry time
+
+2009-02-20 13:33:11 +0000 Enrico Zini (4f58fd3)
+
+	* Run a single command, via the shell
+
+2009-02-20 11:12:56 +0000 Enrico Zini (232eb01)
+
+	* Do not clean up the environment
+
+2009-02-19 14:56:38 +0000 Enrico Zini (9163f09)
+
+	* TODO updated
+
+2009-02-19 12:04:32 +0000 Enrico Zini (ff36fff)
+
+	* Redone signal handling code
+
+2009-02-19 12:04:07 +0000 Enrico Zini (28bb839)
+
+	* Added some debugging infrastructure
+
+2009-02-19 11:43:38 +0000 Enrico Zini (3939a77)
+
+	* Compare properly
+
+2009-02-19 11:39:28 +0000 Enrico Zini (6f64d08)
+
+	* Log the command being run
+
+2009-02-17 12:33:31 +0000 Enrico Zini (f4c6c7c)
+
+	* Added a note with useful testing preseeds
+
+2009-02-17 12:26:36 +0000 Enrico Zini (2dabf52)
+
+	* Better error message
+
+2009-02-17 12:02:19 +0000 Enrico Zini (0d3be51)
+
+	* Don't ship the /etc/default file, but generate it
+
+2009-02-16 19:00:07 +0000 Enrico Zini (b5b34b4)
+
+	* Log when the session is restarted
+
+2009-02-16 18:56:36 +0000 Enrico Zini (f5cafed)
+
+	* Smarter retry times
+
+2009-02-13 15:04:32 +0000 Enrico Zini (1429a73)
+
+	* More work on debconf
+
+2009-02-13 11:32:26 +0000 Enrico Zini (683f945)
+
+	* It's /etc/default, not /etc/defaults
+
+2009-02-02 19:10:13 +0000 Enrico Zini (3d8db15)
+
+	* We are in 2009.
+
+2009-02-02 19:06:07 +0000 Enrico Zini (afc5624)
+
+	* Moved restart logic to C
+
+2009-02-02 18:37:31 +0000 Enrico Zini (088ad8d)
+
+	* Prefer xterm
+
+2009-02-02 17:59:16 +0000 Enrico Zini (b3b9523)
+
+	* Arch: any, and give a preferred x-terminal-emulator
+
+2009-02-02 17:58:59 +0000 Enrico Zini (df034c5)
+
+	* Added missing quotes
+
+2009-02-02 14:51:54 +0000 Enrico Zini (f88b032)
+
+	* Debianised using the new system
+
+2009-02-02 13:50:52 +0000 Enrico Zini (2c1f2f8)
+
+	* Added nodm script with restart logic
+
+2009-02-02 13:36:05 +0000 Enrico Zini (0a92ccf)
+
+	* Removed useless define
+
+2009-02-02 13:29:52 +0000 Enrico Zini (5698a4f)
+
+	* Collapsed a function ran only once
+
+2009-02-02 12:44:36 +0000 Enrico Zini (5ef75af)
+
+	* Simplify more since we are always run by root
+
+2009-02-02 12:38:28 +0000 Enrico Zini (437807d)
+
+	* Removed SYSLOG macro
+
+2009-02-02 12:35:10 +0000 Enrico Zini (a71dd29)
+
+	* Simplified by enforcing to be only run by root
+
+2009-02-02 12:13:24 +0000 Enrico Zini (38d6446)
+
+	* Started pam-helper as a fork of su
+
+2008-10-08 20:22:48 +0200 Joachim Breitner (2eba48d)
+
+	* Depend on x-terminal-emulator (tag: nodm/0.1)
+
+2008-10-07 22:47:41 +0200 Joachim Breitner (8717aaf)
+
+	* TODO list
+
+2008-10-07 22:45:20 +0200 Joachim Breitner (3103a55)
+
+	* Conflict with zhone-session (tag: debian/0.1)
+
+2008-10-07 22:44:09 +0200 Joachim Breitner (c1e1747)
+
+	* tag for release
+
+2008-10-07 22:43:02 +0200 Joachim Breitner (7a6e7e5)
+
+	* Do not complain at start when it’s already started
+
+2008-10-07 22:37:53 +0200 Joachim Breitner (ca4fc17)
+
+	* Install at runlevel 30/01, as gdm does
+
+2008-10-07 20:31:56 +0200 Joachim Breitner (70c5c81)
+
+	* Package change to nodm
+
+2008-10-07 20:23:17 +0200 Joachim Breitner (fe92490)
+
+	* remove matchbox-keyboard-toggle
+
+2008-09-20 23:32:23 +0200 Joachim Breitner (ac99d41)
+
+	* tag for release (tag: debian/0.4)
+
+2008-09-04 16:52:15 +0200 Joachim Breitner (78ecbe5)
+
+	* Start xinit inside su
+
+2008-09-04 16:51:53 +0200 Joachim Breitner (adb349a)
+
+	* Add comment about /etc/X11/Xwrapper.config
+
+2008-09-04 16:26:44 +0200 Joachim Breitner (f301a78)
+
+	* Remove pidfile after stopping
+
+2008-09-04 16:25:44 +0200 Joachim Breitner (1483281)
+
+	* Use su -l to start session
+
+2008-09-03 22:21:35 +0200 Joachim Breitner (34312f5)
+
+	* tag for release (tag: debian/0.3)
+
+2008-09-01 14:19:45 +0200 Luca Capello (57a987c)
+
+	* debian/control: Depends: on xinit and x11-common for the init
+          script
+
+2008-09-01 14:17:19 +0200 Luca Capello (1eecc78)
+
+	* zhone-session.init: (Closes: #496344) check for all binaries
+          available
+
+2008-09-01 14:09:24 +0200 Luca Capello (53258ad)
+
+	* zhone-session.init: fix indentation for 'case' statement
+
+2008-09-01 14:08:11 +0200 Luca Capello (e8f222d)
+
+	* Merge branch 'master' into gismo-master-fixes
+
+2008-08-20 23:14:43 +0200 Joachim Breitner (a16f3aa)
+
+	* Disable tcp listening for the X server
+
+2008-08-19 00:27:25 +0200 Luca Capello (6f9b1de)
+
+	* zhone-session: do not show cursor
+
+2008-08-19 00:26:39 +0200 Luca Capello (b39ea47)
+
+	* Merge branch 'master' into gismo-master-fixes
+
+2008-08-16 15:47:33 -0300 Joachim Breitner (6c2985c)
+
+	* Do not restat zhone-session on restart, to not kill X sessions
+
+2008-08-16 13:44:47 -0300 Joachim Breitner (f9f0dca)
+
+	* remove duplicated sentence
+
+2008-08-16 13:36:33 -0300 Joachim Breitner (2bf7641)
+
+	* copyright file
+
+2008-08-16 13:35:17 -0300 Joachim Breitner (1705b3b)
+
+	* common description footer
+
+2008-08-12 20:17:27 -0300 Joachim Breitner (efc9918)
+
+	* Depend on fso-frameworkd (tag: debian/0.2)
+
+2008-08-11 03:43:06 +0200 Luca Capello (c5fdb8f)
+
+	* debian/control: add Vcs-* fields
+
+2008-08-10 19:46:51 -0300 Joachim Breitner (aaba60a)
+
+	* tag for release
+
+2008-08-10 19:46:31 -0300 Joachim Breitner (ea4c010)
+
+	* Adjust paths
+
+2008-08-10 19:38:58 -0300 Joachim Breitner (baf1905)
+
+	* Symlink trick to make debhelper happy
+
+2008-08-10 19:22:10 -0300 Joachim Breitner (eebb441)
+
+	* initial commit
+
