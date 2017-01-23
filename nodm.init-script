@@ -40,8 +40,7 @@ export NODM_XINIT NODM_XSESSION NODM_X_OPTIONS NODM_USER NODM_MIN_SESSION_TIME N
 # set allowed_users=anybody in /etc/X11/Xwrapper.config
 
 # Gracefully exit if the package or its dependencies have been removed (but not purged).
-[ -x /usr/sbin/nodm ] || exit 0
-
+[ -x /usr/sbin/nodm -a -x "$NODM_XSESSION" -a -x "$NODM_XINIT" ] || exit 0
 
 # Load the VERBOSE setting and other rcS variables
 . /lib/init/vars.sh
