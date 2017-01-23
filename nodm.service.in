@@ -1,0 +1,10 @@
+[Unit]
+Description=Display manager for automatic session logins
+Documentation=man:nodm(8)
+After=systemd-user-sessions.service
+
+[Service]
+EnvironmentFile=-/etc/default/nodm
+ExecStartPre=/usr/bin/test ${NODM_ENABLED} != no -a ${NODM_ENABLED} != false
+ExecStart=@sbindir@/nodm $NODM_OPTIONS
+Restart=always

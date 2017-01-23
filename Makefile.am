@@ -64,9 +64,12 @@ test_internals_SOURCES = $(testlibsources)	\
 EXTRA_DIST = test_nodm		\
              nodm-man-extras	\
              autogen.sh		\
+             nodm.service.in	\
              $(NULL)
 
-CLEANFILES = nodm.8
+CLEANFILES = $(man_MANS) \
+             $(systemdsystemunit_DATA) \
+             $(NULL)
 
 DISTCLEANFILES = Makefile.in   \
                  aclocal.m4    \
@@ -74,3 +77,11 @@ DISTCLEANFILES = Makefile.in   \
                  config/*      \
                  configure     \
                  $(NULL)
+
+systemdsystemunitdir = $(prefix)/lib/systemd/system
+systemdsystemunit_DATA = nodm.service
+
+nodm.service: nodm.service.in
+	sed \
+		-e 's![@]sbindir[@]!${sbindir}!g' \
+		< $< > $@
