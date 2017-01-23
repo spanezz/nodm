@@ -1,0 +1,83 @@
+#!/bin/bash
+# Debian nodm package pre-removal script
+#
+# Based on gdm3.prerm:
+# © 2001 Branden Robinson
+#
+# Licensed under the GNU General Public License, version 2.  See the file
+# /usr/share/common-licenses/GPL-2 or <http://www.gnu.org/copyleft/gpl.txt>.
+# Acknowlegements to Stephen Early, Mark Eichin, and Manoj Srivastava.
+
+set -e
+
+THIS_PACKAGE=nodm
+DEFAULT_DISPLAY_MANAGER_FILE=/etc/X11/default-display-manager
+
+if [ "$1" = "remove" -o "$1" = "deconfigure" ]; then
+  if [ -e /usr/share/debconf/confmodule ]; then
+    . /usr/share/debconf/confmodule
+    # disown this question
+    db_unregister shared/default-x-display-manager || true
+    # does the question still exist?
+    if db_get shared/default-x-display-manager; then
+      db_metaget shared/default-x-display-manager owners
+      db_subst shared/default-x-display-manager choices "$RET"
+      db_get shared/default-x-display-manager
+      # are we removing the currently selected display manager?
+      if [ "$THIS_PACKAGE" = "$RET" ]; then
+        if [ -e "$DEFAULT_DISPLAY_MANAGER_FILE" ]; then
+          db_get "$RET"/daemon_name
+          if [ "$(cat $DEFAULT_DISPLAY_MANAGER_FILE)" = "$RET" ]; then
+            rm "$DEFAULT_DISPLAY_MANAGER_FILE"
+          fi
+        fi
+        # ask the user to choose a new default
+        db_fset shared/default-x-display-manager seen false
+        db_input critical shared/default-x-display-manager || true
+        db_go
+        # if the display manager file doesn't exist, write it with the path
+        # to the new default display manager
+        if [ ! -e $DEFAULT_DISPLAY_MANAGER_FILE ]; then
+          db_get shared/default-x-display-manager
+          echo "Please be sure to run \"dpkg-reconfigure $RET\"."
+          db_get "$RET"/daemon_name
+          echo "$RET" > "$DEFAULT_DISPLAY_MANAGER_FILE"
+        fi
+      fi
+    fi
+  fi
+
+  DEFAULT_SERVICE=/etc/systemd/system/display-manager.service
+  # set default-display-manager systemd service link according to our config
+  if [ -e "$DEFAULT_DISPLAY_MANAGER_FILE" ]; then
+    SERVICE=/lib/systemd/system/$(basename $(cat "$DEFAULT_DISPLAY_MANAGER_FILE")).service
+    if [ -h "$DEFAULT_SERVICE" ] && [ $(readlink "$DEFAULT_SERVICE") = /dev/null ]; then
+      echo "Display manager service is masked" >&2
+    elif [ -e "$SERVICE" ]; then
+      ln -sf "$SERVICE" "$DEFAULT_SERVICE"
+    else
+      echo "WARNING: $SERVICE is the selected default display manager but does not exist" >&2
+      rm -f "$DEFAULT_SERVICE"
+    fi
+  else
+    rm -f "$DEFAULT_SERVICE"
+  fi
+fi
+
+if [ "$1" = "remove" ]; then
+  if [ -x /etc/init.d/nodm ]; then
+    nostop=
+    for hostname in "" "localhost" "$(hostname)" "$(hostname -f)"; do
+      if echo $DISPLAY | grep -q "^$hostname:0.*"; then
+        nostop=yes
+      fi
+    done
+    if [ -z $nostop ]; then
+      invoke-rc.d nodm stop
+    fi
+  fi
+fi
+
+#DEBHELPER#
+
+exit 0
