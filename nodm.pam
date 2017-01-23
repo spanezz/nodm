@@ -24,7 +24,7 @@ session    required   pam_limits.so
 
 # Enable ConsoleKit integration
 session optional pam_loginuid.so
-session optional pam_ck_connector.so
+-session optional pam_ck_connector.so
 
 # Standard Un*x session
 @include common-session
