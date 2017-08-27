@@ -137,6 +137,7 @@ int nodm_display_manager_stop(struct nodm_display_manager* dm)
 }
 
 // Signal handler for wait loop
+static int setup_quit_notifications_done = 0;
 static int quit_signal_caught = 0;
 static void catch_signals (int sig)
 {
@@ -145,6 +146,13 @@ static void catch_signals (int sig)
 
 static int setup_quit_notification(sigset_t* origset)
 {
+    if (quit_signal_caught)
+        return E_USER_QUIT;
+
+    if (setup_quit_notifications_done)
+        return E_SUCCESS;
+
+    setup_quit_notifications_done = 1;
     /* Reset caught signal flag */
     quit_signal_caught = 0;
 
@@ -167,12 +175,6 @@ static int setup_quit_notification(sigset_t* origset)
         return E_PROGRAMMING;
     }
     return E_SUCCESS;
-}
-
-static void shutdown_quit_notification(const sigset_t* origset)
-{
-    if (sigprocmask(SIG_SETMASK, origset, NULL) == -1)
-        log_err("sigprocmask error: %m");
 }
 
 int nodm_display_manager_wait(struct nodm_display_manager* dm, int* session_status)
@@ -227,7 +229,6 @@ int nodm_display_manager_wait(struct nodm_display_manager* dm, int* session_stat
     }
 
 cleanup:
-    shutdown_quit_notification(&origset);
     return res;
 }
 
@@ -352,7 +353,6 @@ static int interruptible_sleep(int seconds)
         }
     }
 
-    shutdown_quit_notification(&origset);
     return res;
 }
 
@@ -369,6 +369,9 @@ int nodm_display_manager_wait_restart_loop(struct nodm_display_manager* dm)
         time_t end = time(NULL);
         nodm_display_manager_stop(dm);
 
+	if (quit_signal_caught)
+	    res = E_USER_QUIT;
+
         switch (res)
         {
             case E_X_SERVER_DIED:
@@ -376,6 +379,7 @@ int nodm_display_manager_wait_restart_loop(struct nodm_display_manager* dm)
             case E_SESSION_DIED:
                 break;
             default:
+		
                 return res;
         }
 
