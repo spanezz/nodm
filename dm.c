@@ -229,7 +229,6 @@ int nodm_display_manager_wait(struct nodm_display_manager* dm, int* session_stat
     }
 
 cleanup:
-    //shutdown_quit_notification(&origset);
     return res;
 }
 
@@ -354,7 +353,6 @@ static int interruptible_sleep(int seconds)
         }
     }
 
-    //shutdown_quit_notification(&origset);
     return res;
 }
 
