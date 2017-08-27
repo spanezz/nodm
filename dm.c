@@ -145,6 +145,9 @@ static void catch_signals (int sig)
 
 static int setup_quit_notification(sigset_t* origset)
 {
+    if (quit_signal_caught)
+	    return E_USER_QUIT;
+
     /* Reset caught signal flag */
     quit_signal_caught = 0;
 
