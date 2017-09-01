@@ -32,7 +32,7 @@ struct nodm_vt
     /// Number of the VT that has been allocated (-1 for none)
     int num;
 
-    /// File decriptor pointing to the open VT (-1 for none)
+    /// File descriptor pointing to the open VT (-1 for none)
     int fd;
 };
 
