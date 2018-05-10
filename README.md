@@ -21,7 +21,7 @@ of least surprise.  This is what is offered:
  - nodm performs VT allocation, looking for a free virtual terminal in which to
    run X and keeping it allocated across X restarts.
  - X is started (by default, /usr/bin/X)
- - once the X esrver is ready to accept connections, the X session is set up:
+ - once the X server is ready to accept connections, the X session is set up:
     - the DISPLAY and WINDOWPATH environment variables are set
     - the session is wrapped in a PAM session, which sets up the user
       environment
