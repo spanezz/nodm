@@ -1,3 +1,23 @@
+# THIS REPOSITORY IS NOT MAINTAINED
+
+I do not use nodm anymore. I do not maintain nodm anymore.
+
+To be really functional, nodm needs to be refactored to properly be a display
+manager with all that it requires in 2019 to be one. It currently does not make
+any effort to do so, and will break in obscure way as a result.
+
+Nobody should really need nodm anymore: [lightdm's autologin now does the right
+thing out of the box](https://www.enricozini.org/blog/2019/himblick/x-autologin/):
+please use that.
+
+If you are really attached to nodm, please consider maintaining it instead:
+fork it, remove this section from the README, and turn it into a well done
+reference implementation of a display manager without a GUI, that integrates
+well with modern setups like lightdm does. I would applaud you for that!
+
+
+# nodm
+
 nodm is a minimal display manager that simply logs in as a given user and
 starts an X session, without asking for username or password.
 
